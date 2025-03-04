@@ -11,8 +11,9 @@ public class CharacterMovementPlayer : MonoBehaviour
     private IInteractible[] _interactibles;
 
     [SerializeField]
-    private float _speed = 4.0f;
-
+    private float _walkSpeed = 3.0f;
+    [SerializeField]
+    private float _runSpeed = 5.0f;
     [SerializeField]
     private float _interactionDistance = 1.25f;
     
@@ -59,8 +60,11 @@ public class CharacterMovementPlayer : MonoBehaviour
             Vector3.up
         ).normalized;
 
+        bool isRunning = Input.GetButton("Run");
+        float speed = isRunning ? _runSpeed : _walkSpeed;
+
         _characterController.Move(
-            ((camForward * vertical + camRight * horizontal).normalized * _speed * Time.deltaTime) +
+            ((camForward * vertical + camRight * horizontal).normalized * speed * Time.deltaTime) +
             (Physics.gravity * Time.deltaTime)
         );
 
