@@ -3726,6 +3726,7 @@ MonoBehaviour:
   _targetHeightOffset: 1
   _verticalMin: -80
   _verticalMax: 80
+  _transitionSpeed: 20
 --- !u!1 &1041980812
 GameObject:
   m_ObjectHideFlags: 0

@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class CharacterManager : MonoBehaviour
 {
+    private CameraControl _cameraControl;
     private CharacterBase[] _characters;
     private CharacterBase _selectedCharacter;
 
@@ -9,12 +10,14 @@ public class CharacterManager : MonoBehaviour
 
     void Awake()
     {
+        _cameraControl = FindFirstObjectByType<CameraControl>();
+        if(_cameraControl == null) throw new System.Exception("Missing camera control");
         _characters = FindObjectsByType<CharacterBase>(FindObjectsSortMode.None);
     }
 
     void Start()
     {
-        SelectCharacter(0);
+        SelectCharacter(0, true);
     }
 
     void Update()
@@ -22,18 +25,31 @@ public class CharacterManager : MonoBehaviour
         int numberKeyPressed = GetNumberKeyPressed();
         if (numberKeyPressed != -1)
         {
-            SelectCharacter(numberKeyPressed - 1);
+            SelectCharacter(numberKeyPressed - 1, false);
         }
     }
 
-    private void SelectCharacter(int index){
+    private void SelectCharacter(int index, bool immediate){
         if(index < 0) throw new System.Exception($"Invalid character index {index}");
         if(index >= _characters.Length) return;
+        if(_selectedCharacter == _characters[index]) return;
 
         foreach(var c in _characters) c.State = State.AI;
-        _characters[index].State = State.Player;
+        _selectedCharacter = null;
 
-        _selectedCharacter = _characters[index];
+        if(immediate){
+            _characters[index].State = State.Player;
+            _selectedCharacter = _characters[index];
+        }
+        else {
+            _cameraControl.SendCameraToNewCharacter(
+                _characters[index],
+                ()=>{
+                    _characters[index].State = State.Player;
+                    _selectedCharacter = _characters[index];
+                }
+            );
+        }
     }
 
     private int GetNumberKeyPressed()
