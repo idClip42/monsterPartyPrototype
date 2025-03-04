@@ -41,10 +41,30 @@ public class CameraControl : MonoBehaviour
         if(_characterManager.SelectedCharacter != null){
             Vector3 direction = GetDirectionFromYawPitch();
             Vector3 positionOffset = direction * _distanceFromTarget;
-            Vector3 position = _characterManager.SelectedCharacter.transform.position +
-                Vector3.up * _targetHeightOffset +
-                positionOffset;
-            this.transform.position = position;
+            Vector3 characterAxis = _characterManager.SelectedCharacter.transform.position +
+                Vector3.up * _targetHeightOffset;
+            Vector3 targetPosition = characterAxis + positionOffset;
+
+            // TODO: If the player character has colliders on it,
+            // TODO: This will be screwy. We'll need to figure out layers.
+
+            // Raycast from the target position to the camera
+            RaycastHit hit;
+            if (Physics.Raycast(characterAxis, direction, out hit, _distanceFromTarget))
+            {
+                var prevTgtPos = targetPosition;
+                
+                // If the ray hits something, adjust the camera position
+                targetPosition = hit.point + -direction * 0.2f; // Push the camera slightly in front of the hit point
+
+                Debug.DrawLine(
+                    prevTgtPos,
+                    targetPosition
+                );
+            }
+
+            // Set the camera's position to the calculated position
+            this.transform.position = targetPosition;
             this.transform.forward = -direction;
         }
     }

@@ -3720,12 +3720,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14872b1704c254c3d80be9ab68bba4d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  horizontalSpeed: 10
-  verticalSpeed: 8
-  distanceFromTarget: 5
-  targetHeightOffset: 1
-  verticalMin: -80
-  verticalMax: 80
+  _horizontalSpeed: 10
+  _verticalSpeed: 8
+  _distanceFromTarget: 5
+  _targetHeightOffset: 1
+  _verticalMin: -80
+  _verticalMax: 80
 --- !u!1 &1041980812
 GameObject:
   m_ObjectHideFlags: 0
@@ -3933,7 +3933,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 484a1532288104b5ca190bb3047daf08, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _speed: 4
+  _walkSpeed: 3
+  _runSpeed: 5
   _interactionDistance: 1.25
 --- !u!143 &1075272459
 CharacterController:
@@ -3977,7 +3978,7 @@ CapsuleCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Radius: 0.5
   m_Height: 2
@@ -5241,7 +5242,7 @@ CapsuleCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Radius: 0.5
   m_Height: 2
@@ -5358,7 +5359,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 484a1532288104b5ca190bb3047daf08, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _speed: 4
+  _walkSpeed: 3
+  _runSpeed: 5
   _interactionDistance: 1.25
 --- !u!143 &1352024432
 CharacterController:
@@ -5934,7 +5936,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 484a1532288104b5ca190bb3047daf08, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _speed: 4
+  _walkSpeed: 3
+  _runSpeed: 5
   _interactionDistance: 1.25
 --- !u!143 &1452315269
 CharacterController:
@@ -5978,7 +5981,7 @@ CapsuleCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Radius: 0.5
   m_Height: 2
