@@ -60,7 +60,7 @@ public class CharacterMovementPlayer : MonoBehaviour
         ).normalized;
 
         _characterController.Move(
-            ((camForward * vertical + camRight * horizontal) * _speed * Time.deltaTime) +
+            ((camForward * vertical + camRight * horizontal).normalized * _speed * Time.deltaTime) +
             (Physics.gravity * Time.deltaTime)
         );
 
