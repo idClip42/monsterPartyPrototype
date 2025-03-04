@@ -11,20 +11,6 @@ public class CharacterMovementAI : MonoBehaviour, IInteractible
     private Transform _behaviorTarget;
     public string CurrentBehavior => $"{_behavior} : {_behaviorTarget?.gameObject?.name}";
 
-    public string InteractionName {
-        get {
-            switch (_behavior)
-            {
-                case Behavior.HoldPosition:
-                    return "Follow";
-                case Behavior.Follow:
-                    return "Stop";
-                default:
-                    throw new System.Exception($"Unhandled behavior: {_behavior}");
-            }
-        }
-    }
-
     public Vector3 InteractionWorldPosition => this.gameObject.transform.position + Vector3.up;
 
     void Awake(){
@@ -58,6 +44,23 @@ public class CharacterMovementAI : MonoBehaviour, IInteractible
         _navMeshAgent.isStopped = this._behavior == Behavior.HoldPosition;
     }
 
+    public string GetInteractionName(CharacterBase interactor) {
+        switch (_behavior)
+        {
+            case Behavior.HoldPosition:
+                return "Follow";
+            case Behavior.Follow:
+                if(_behaviorTarget == interactor.transform){
+                    return "Stop";
+                }
+                else {
+                    return "Follow";
+                }
+            default:
+                throw new System.Exception($"Unhandled behavior: {_behavior}");
+        }
+    }
+
     public void DoInteraction(CharacterBase interactor)
     {
         switch (_behavior)
@@ -66,7 +69,12 @@ public class CharacterMovementAI : MonoBehaviour, IInteractible
                 SetBehavior(Behavior.Follow, interactor.transform);
                 break;
             case Behavior.Follow:
-                SetBehavior(Behavior.HoldPosition, null);
+                if(_behaviorTarget == interactor.transform){
+                    SetBehavior(Behavior.HoldPosition, null);
+                }
+                else {
+                    SetBehavior(Behavior.Follow, interactor.transform);
+                }
                 break;
             default:
                 throw new System.Exception($"Unhandled behavior: {_behavior}");

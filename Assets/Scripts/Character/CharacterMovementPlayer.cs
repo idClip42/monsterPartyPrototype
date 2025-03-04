@@ -5,6 +5,7 @@ using UnityEditor;
 [RequireComponent(typeof(CharacterController))]
 public class CharacterMovementPlayer : MonoBehaviour
 {
+    private CharacterBase _characterBase;
     private CharacterController _characterController;
     private Camera _camera;
     private IInteractible[] _interactibles;
@@ -16,6 +17,10 @@ public class CharacterMovementPlayer : MonoBehaviour
     private float _interactionDistance = 1.25f;
     
     void Awake(){
+        _characterBase = GetComponent<CharacterBase>();
+        if(_characterBase == null)
+            throw new System.Exception($"Null character base on {this.gameObject.name}");
+
         _characterController = GetComponent<CharacterController>();
         if(_characterController == null)
             throw new System.Exception($"Null character controller on {this.gameObject.name}");
@@ -62,10 +67,7 @@ public class CharacterMovementPlayer : MonoBehaviour
         if(Input.GetButtonDown("Interact")){
             var interactible = GetInteractibleWithinReach();
             if(interactible != null){
-                var charBase = GetComponent<CharacterBase>();
-                if(charBase == null)
-                    throw new System.Exception($"No CharacteBase on {this.gameObject.name}");
-                interactible.DoInteraction(charBase);
+                interactible.DoInteraction(_characterBase);
             }
         }
     }
@@ -82,7 +84,7 @@ public class CharacterMovementPlayer : MonoBehaviour
         Handles.color = Color.white;
         Handles.Label(
             interactible.InteractionWorldPosition,
-            interactible.InteractionName
+            interactible.GetInteractionName(_characterBase)
         );
         Handles.color = prevColor;
     }
