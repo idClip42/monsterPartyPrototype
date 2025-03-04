@@ -7,7 +7,7 @@ public class CharacterMovementPlayer : MonoBehaviour
 {
     private CharacterBase _characterBase;
     private CharacterController _characterController;
-    private Camera _camera;
+    private CameraControl _camera;
     private IInteractible[] _interactibles;
 
     [SerializeField]
@@ -25,7 +25,7 @@ public class CharacterMovementPlayer : MonoBehaviour
         if(_characterController == null)
             throw new System.Exception($"Null character controller on {this.gameObject.name}");
 
-        _camera = Camera.main;
+        _camera = FindFirstObjectByType<CameraControl>();
         if(_camera == null)
             throw new System.Exception($"Null camera");
         

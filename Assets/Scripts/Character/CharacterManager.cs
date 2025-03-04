@@ -5,6 +5,8 @@ public class CharacterManager : MonoBehaviour
     private CharacterBase[] _characters;
     private CharacterBase _selectedCharacter;
 
+    public CharacterBase SelectedCharacter => _selectedCharacter;
+
     void Awake()
     {
         _characters = FindObjectsByType<CharacterBase>(FindObjectsSortMode.None);
@@ -30,6 +32,8 @@ public class CharacterManager : MonoBehaviour
 
         foreach(var c in _characters) c.State = State.AI;
         _characters[index].State = State.Player;
+
+        _selectedCharacter = _characters[index];
     }
 
     private int GetNumberKeyPressed()
