@@ -4,17 +4,17 @@ using UnityEngine;
 public class CameraControl : MonoBehaviour
 {
     [SerializeField]
-    private float horizontalSpeed = 10;
+    private float _horizontalSpeed = 10;
     [SerializeField]
-    private float verticalSpeed = 8;
+    private float _verticalSpeed = 8;
     [SerializeField]
-    private float distanceFromTarget = 5;
+    private float _distanceFromTarget = 5;
     [SerializeField]
-    private float targetHeightOffset = 1;
+    private float _targetHeightOffset = 1;
     [SerializeField]
-    private float verticalMin = -80;
+    private float _verticalMin = -80;
     [SerializeField]
-    private float verticalMax = 80;
+    private float _verticalMax = 80;
 
     private CharacterManager _characterManager;
 
@@ -32,17 +32,17 @@ public class CameraControl : MonoBehaviour
     {
         float mouseX = Input.GetAxisRaw("Mouse X");
         float mouseY = Input.GetAxisRaw("Mouse Y");
-        _horizontalAngle += mouseX * horizontalSpeed;
-        _verticalAngle += mouseY * verticalSpeed;
-        _verticalAngle = Mathf.Clamp(_verticalAngle, verticalMin, verticalMax);
+        _horizontalAngle += mouseX * _horizontalSpeed;
+        _verticalAngle += mouseY * _verticalSpeed;
+        _verticalAngle = Mathf.Clamp(_verticalAngle, _verticalMin, _verticalMax);
 
         // TODO: This is for the non-physics movement of the CharacterController
         // TODO: If and when this changes, this'll need to move to FixedUpdate()
         if(_characterManager.SelectedCharacter != null){
             Vector3 direction = GetDirectionFromYawPitch();
-            Vector3 positionOffset = direction * distanceFromTarget;
+            Vector3 positionOffset = direction * _distanceFromTarget;
             Vector3 position = _characterManager.SelectedCharacter.transform.position +
-                Vector3.up * targetHeightOffset +
+                Vector3.up * _targetHeightOffset +
                 positionOffset;
             this.transform.position = position;
             this.transform.forward = -direction;
