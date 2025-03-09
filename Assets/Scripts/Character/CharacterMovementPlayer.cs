@@ -66,11 +66,15 @@ public class CharacterMovementPlayer : MonoBehaviour
             Vector3.up
         ).normalized;
 
+        Vector3 moveDirection = (camForward * vertical + camRight * horizontal).normalized;
+
         bool isRunning = !_crouch.IsCrouching && Input.GetButton("Run");
         float speed = isRunning ? _runSpeed : _walkSpeed;
 
+        float inputMagnitude = new Vector2(horizontal, vertical).magnitude;
+
         _characterController.Move(
-            ((camForward * vertical + camRight * horizontal).normalized * speed * Time.deltaTime) +
+            moveDirection * speed * inputMagnitude * Time.deltaTime +
             (Physics.gravity * Time.deltaTime)
         );
 
