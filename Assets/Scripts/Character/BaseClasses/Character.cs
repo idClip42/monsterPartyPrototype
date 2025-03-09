@@ -66,7 +66,7 @@ public abstract class Character : MonoBehaviour
             ".Trim();
 
             Handles.Label(
-                transform.position + Vector3.up * 2f,
+                transform.position + Vector3.up * 1f,
                 text
             );
             Handles.color = prevColor;

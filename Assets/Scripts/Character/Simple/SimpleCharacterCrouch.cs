@@ -48,7 +48,7 @@ public class SimpleCharacterCrouch : CharacterCrouch
     protected override void DisableCrouch() => ToggleCrouch(false);
 
     private void ToggleCrouch(bool isCrouching){
-        float meshHeight = GetComponent<MeshRenderer>().bounds.extents.y;
+        float meshHeight = GetComponentInChildren<MeshRenderer>().bounds.extents.y;
         float startYScale = transform.localScale.y;
         float newHeight;
         float newYScale;
@@ -82,7 +82,7 @@ public class SimpleCharacterCrouch : CharacterCrouch
         if(this.IsCrouching == false) return false;
         
         float radius = _characterController.radius * _uncrouchRadiusPercentage;
-        Vector3 basePosition = transform.position - Vector3.up * CurrentHeight / 2;
+        Vector3 basePosition = transform.position /* - Vector3.up * CurrentHeight / 2 */;
         Vector3 sphereCastStart = basePosition + Vector3.up * radius;
         float castDistance = StandingHeight - radius * 2;
 

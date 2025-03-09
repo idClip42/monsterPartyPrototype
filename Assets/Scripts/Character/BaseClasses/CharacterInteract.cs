@@ -54,7 +54,7 @@ public abstract class CharacterInteract : MonoBehaviour, ICharacterComponent
         Color prevColor = Handles.color;
         Handles.color = Color.white;
         Handles.Label(
-            _interactibleWithinReach.InteractionWorldPosition,
+            _interactibleWithinReach.InteractionWorldPosition + Vector3.up * 1.0f,
             _interactibleWithinReach.GetInteractionName(_characterBase)
         );
         Handles.color = prevColor;
