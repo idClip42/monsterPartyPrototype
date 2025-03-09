@@ -8,6 +8,9 @@ public class CameraControl : MonoBehaviour
 {
     private enum State { Orbit, Transition };
 
+    [SerializeField] 
+    private LayerMask _collisionLayers;
+
     [SerializeField]
     private float _horizontalSpeed = 10;
     [SerializeField]
@@ -81,13 +84,15 @@ public class CameraControl : MonoBehaviour
             Vector3 characterAxis = GetCharacterAxis(_characterManager.SelectedCharacter);
             Vector3 targetPosition = characterAxis + positionOffset;
 
-            // TODO: If the player character has colliders on it,
-            // TODO: This will be screwy. We'll need to figure out layers.
-
             // Raycast from the target position to the camera
             RaycastHit hit;
-            if (Physics.Raycast(characterAxis, direction, out hit, _distanceFromTarget))
-            {
+            if (Physics.Raycast(
+                characterAxis, 
+                direction, 
+                out hit, 
+                _distanceFromTarget,
+                _collisionLayers
+            )) {
                 var prevTgtPos = targetPosition;
                 
                 // If the ray hits something, adjust the camera position
