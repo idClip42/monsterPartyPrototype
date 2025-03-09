@@ -10,6 +10,8 @@ public class CameraControl : MonoBehaviour
 
     [SerializeField] 
     private LayerMask _collisionLayers;
+    [SerializeField] 
+    private LayerMask _navMeshRaycastLayers;
 
     [SerializeField]
     private float _horizontalSpeed = 10;
@@ -27,6 +29,7 @@ public class CameraControl : MonoBehaviour
     private float _transitionSpeed = 20;
 
     private CharacterManager? _characterManager = null;
+    private NavigationManager? _navManager = null;
 
     private State _currentState = State.Orbit;
     private float _horizontalAngle = 0;
@@ -41,7 +44,11 @@ public class CameraControl : MonoBehaviour
         if(_characterManager == null)
             throw new Exception("Could not find character manager");
 
-        _transitioner = new CameraControlTransition(this);
+        _navManager = FindFirstObjectByType<NavigationManager>();
+        if(_navManager == null)
+            throw new Exception("Could not find NavigationManager");
+
+        _transitioner = new CameraControlTransition(this, _navManager);
     }
 
     void Update()
@@ -118,7 +125,8 @@ public class CameraControl : MonoBehaviour
         _transitioner.Initialize(
             target,
             GetOffsetDirection() * _distanceFromTarget,
-            _transitionSpeed
+            _transitionSpeed,
+            _navMeshRaycastLayers
         );
         _transitionEndCallback = arrivalCallback;
     }

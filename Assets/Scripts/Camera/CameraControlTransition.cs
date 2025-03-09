@@ -6,26 +6,32 @@ using UnityEngine.AI;
 
 public class CameraControlTransition
 {
-    private readonly CameraControl? _cameraControl = null;
+    private readonly CameraControl _cameraControl;
+    private NavigationManager _navManager;
     private Character? _transitionTarget = null;
     private Vector3 _positionOffset = Vector3.zero;
     private float _transitionSpeed = -1;
+    private LayerMask _navMeshRaycastLayers;
 
-    public CameraControlTransition(CameraControl? owner){
+    public CameraControlTransition(CameraControl owner, NavigationManager navManager){
         if(owner == null) throw new Exception("Missing camera control owner.");
+        if(navManager == null) throw new Exception("Missing navManager.");
         _cameraControl = owner;
+        _navManager = navManager;
     }
 
-    public void Initialize(Character target, Vector3 posOffset, float speed){
+    public void Initialize(Character target, Vector3 posOffset, float speed, LayerMask navMeshRaycastLayers){
         _transitionTarget = target;
         _positionOffset = posOffset;
         _transitionSpeed = speed;
+        _navMeshRaycastLayers = navMeshRaycastLayers;
     }
 
     public void Clear(){
         _transitionTarget = null;
         _positionOffset = Vector3.zero;
         _transitionSpeed = 0;
+        _navMeshRaycastLayers = NavMesh.AllAreas;
     }
 
     /// <summary>
@@ -66,7 +72,7 @@ public class CameraControlTransition
         NavMesh.CalculatePath(
             navMeshStartPos, 
             navMeshEndPosition,
-            NavMesh.AllAreas,
+            GetFilter(),
             path
         );
 
@@ -91,17 +97,32 @@ public class CameraControlTransition
         return false;
     }
 
+    private NavMeshQueryFilter GetFilter(){
+        return new NavMeshQueryFilter(){
+            areaMask=NavMesh.AllAreas, 
+            agentTypeID=_navManager.CrouchingAgentTypeId
+        };
+    }
+
     private bool GetClosestNavMeshPointBelow(Vector3 position, out Vector3 navMeshPosition)
     {
-        const float SAMPLE_RADIUS = 2;
+        const float SAMPLE_RADIUS = 3;
+        const float MAX_DIST = 30;
 
         // Create a ray pointing downward
         RaycastHit hit;
-        if (Physics.Raycast(position, Vector3.down, out hit))
+        if (Physics.Raycast(position, Vector3.down, out hit, MAX_DIST, _navMeshRaycastLayers))
         {
+            // Debug.DrawLine(position, hit.point, Color.green, 5);
+            
             // Sample the NavMesh near the hit point
             NavMeshHit navMeshHit;
-            if (NavMesh.SamplePosition(hit.point, out navMeshHit, SAMPLE_RADIUS, NavMesh.AllAreas))
+            if (NavMesh.SamplePosition(
+                hit.point, 
+                out navMeshHit, 
+                SAMPLE_RADIUS, 
+                GetFilter()
+            ))
             {
                 navMeshPosition = navMeshHit.position;
                 return true; // This is the closest point on the NavMesh

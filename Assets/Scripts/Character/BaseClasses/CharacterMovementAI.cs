@@ -9,19 +9,15 @@ public abstract class CharacterMovementAI : MonoBehaviour, IInteractible, IChara
 {
     public enum Behavior { HoldPosition, Follow }
 
-    [SerializeField]
-    private int _standingAgentTypeIndex = 0;
-    [SerializeField]
-    private int _crouchingAgentTypeIndex = 1;
-    private int _standingAgentTypeId = -1;
-    private int _crouchingAgentTypeId = -1;
     private int CurrentAgentTypeId { get {
         if(_crouch == null) return 0;
+        if(_navManager == null) return 0;
         return _crouch.IsCrouching ?
-            _crouchingAgentTypeId : 
-            _standingAgentTypeId;
+            _navManager.CrouchingAgentTypeId : 
+            _navManager.StandingAgentTypeId;
     }}
 
+    private NavigationManager? _navManager = null;
     private NavMeshAgent? _navMeshAgent = null;
     private CharacterCrouch? _crouch = null;
     private Behavior _behavior = Behavior.HoldPosition;
@@ -38,6 +34,10 @@ public abstract class CharacterMovementAI : MonoBehaviour, IInteractible, IChara
     }}
 
     void Awake(){
+        _navManager = FindFirstObjectByType<NavigationManager>();
+        if(_navManager == null)
+            throw new System.Exception($"Null _navManager on {this.gameObject.name}");
+
         _navMeshAgent = GetComponent<NavMeshAgent>();
         if(_navMeshAgent == null)
             throw new System.Exception($"Null nav mesh agent on {this.gameObject.name}");
@@ -46,9 +46,6 @@ public abstract class CharacterMovementAI : MonoBehaviour, IInteractible, IChara
         if(_crouch == null)
             throw new System.Exception($"Null crouch on {this.gameObject.name}");
         _crouch.OnCrouchToggle += OnCrouchToggle;
-
-        _standingAgentTypeId = NavMesh.GetSettingsByIndex(_standingAgentTypeIndex).agentTypeID;
-        _crouchingAgentTypeId = NavMesh.GetSettingsByIndex(_crouchingAgentTypeIndex).agentTypeID;
     }
 
     void OnEnable()
