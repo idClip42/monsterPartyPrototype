@@ -10,10 +10,10 @@ public class SimpleMonster : MonoBehaviour
     private Light? _eye;
 
     [SerializeField]
-    [Range(10, 100)]
+    [Range(5, 100)]
     private float _minRedirectTime = 20;
     [SerializeField]
-    [Range(10, 100)]
+    [Range(5, 100)]
     private float _maxRedirectTime = 60;
 
     private Character[] _characters = {};
