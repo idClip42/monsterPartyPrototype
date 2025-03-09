@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using NUnit.Framework;
 using Unity.AI.Navigation;
 using UnityEngine;
 using UnityEngine.AI;
@@ -23,6 +22,7 @@ public class NavigationManager : MonoBehaviour
             throw new System.Exception("Null _standingNavMesh");
         return _standingNavMesh.agentTypeID;
     }} 
+
     public int CrouchingAgentTypeId { get {
         if(_crouchingNavMesh == null)
             throw new System.Exception("Null _crouchingNavMesh");
@@ -38,6 +38,16 @@ public class NavigationManager : MonoBehaviour
 
         _standingNavPoints = GetPossiblePointsOnNavMesh(_standingNavMesh);
         _crouchingNavPoints = GetPossiblePointsOnNavMesh(_crouchingNavMesh);
+    }
+
+    public Vector3 GetRandomDestinationStanding(){
+        if(_standingNavPoints.Length == 0) throw new System.Exception("No standing nav points!");
+        return _standingNavPoints[Random.Range(0, _standingNavPoints.Length)];
+    }
+
+    public Vector3 GetRandomDestinationCrouching(){
+        if(_crouchingNavPoints.Length == 0) throw new System.Exception("No crouching nav points!");
+        return _crouchingNavPoints[Random.Range(0, _crouchingNavPoints.Length)];
     }
 
     private Vector3[] GetPossiblePointsOnNavMesh(NavMeshSurface navMeshSurface){

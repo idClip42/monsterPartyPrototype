@@ -1,13 +1,25 @@
 using UnityEngine;
-using UnityEngine.XR;
+using UnityEngine.AI;
 
 # nullable enable
 
+[RequireComponent(typeof(NavMeshAgent))]
 public class SimpleMonster : MonoBehaviour
 {
     [SerializeField]
     private Light? _eye;
+
+    [SerializeField]
+    [Range(10, 100)]
+    private float _minRedirectTime = 20;
+    [SerializeField]
+    [Range(10, 100)]
+    private float _maxRedirectTime = 60;
+
     private Character[] _characters = {};
+
+    private NavigationManager? _navManager = null;
+    private NavMeshAgent? _navMeshAgent = null;
 
     void Awake()
     {
@@ -15,6 +27,22 @@ public class SimpleMonster : MonoBehaviour
 
         if(_eye == null)
             throw new System.Exception("Missing eye.");
+
+        _navManager = FindFirstObjectByType<NavigationManager>();
+        if(_navManager == null)
+            throw new System.Exception($"Null _navManager on {this.gameObject.name}");
+
+        _navMeshAgent = GetComponent<NavMeshAgent>();
+        if(_navMeshAgent == null)
+            throw new System.Exception($"Null nav mesh agent on {this.gameObject.name}");
+
+        if(_minRedirectTime > _maxRedirectTime)
+            throw new System.Exception("Invalid redirect times");
+    }
+
+    void Start()
+    {
+        NewDestination();
     }
 
     void Update()
@@ -78,5 +106,16 @@ public class SimpleMonster : MonoBehaviour
                 );
             }
         }
+    }
+
+    private void NewDestination(){
+        if(_navManager == null)
+            throw new System.Exception($"Null _navManager on {this.gameObject.name}");
+        if(_navMeshAgent == null)
+            throw new System.Exception($"Null nav mesh agent on {this.gameObject.name}");
+
+        _navMeshAgent.SetDestination(
+            _navManager.GetRandomDestinationStanding()
+        );
     }
 }
