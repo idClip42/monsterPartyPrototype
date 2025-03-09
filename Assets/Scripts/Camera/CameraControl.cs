@@ -94,7 +94,7 @@ public class CameraControl : MonoBehaviour
         }
     }
 
-    public void SendCameraToNewCharacter(SimpleCharacter target, Action arrivalCallback){
+    public void SendCameraToNewCharacter(Character target, Action arrivalCallback){
         _currentState = State.Transition;
         _transitioner.Initialize(
             target,
@@ -104,7 +104,7 @@ public class CameraControl : MonoBehaviour
         _transitionEndCallback = arrivalCallback;
     }
 
-    public Vector3 GetCharacterAxis(SimpleCharacter target){
+    public Vector3 GetCharacterAxis(Character target){
         Vector3 characterAxis = target.transform.position +
             Vector3.up * _targetHeightOffset;
         return characterAxis;

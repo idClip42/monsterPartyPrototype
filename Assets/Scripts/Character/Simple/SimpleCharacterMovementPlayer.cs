@@ -6,8 +6,8 @@ using UnityEditor;
 [RequireComponent(typeof(SimpleCharacterCrouch))]
 public class SimpleCharacterMovementPlayer : CharacterMovementPlayer
 {
-    private SimpleCharacter _characterBase;
-    private SimpleCharacterCrouch _crouch;
+    private Character _characterBase;
+    private CharacterCrouch _crouch;
     private CharacterController _characterController;
     private CameraControl _camera;
     private IInteractible[] _interactibles;
@@ -20,11 +20,11 @@ public class SimpleCharacterMovementPlayer : CharacterMovementPlayer
     private float _interactionDistance = 1.25f;
     
     void Awake(){
-        _characterBase = GetComponent<SimpleCharacter>();
+        _characterBase = GetComponent<Character>();
         if(_characterBase == null)
             throw new System.Exception($"Null character base on {this.gameObject.name}");
 
-        _crouch = GetComponent<SimpleCharacterCrouch>();
+        _crouch = GetComponent<CharacterCrouch>();
         if(_crouch == null)
             throw new System.Exception($"Null crouch on {this.gameObject.name}");
 
