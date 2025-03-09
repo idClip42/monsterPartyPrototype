@@ -45,6 +45,10 @@ public abstract class Character : MonoBehaviour
         _crouch = GetComponent<CharacterCrouch>();
         if(_crouch == null)
             throw new System.Exception($"Missing CharacterCrouch on {this.gameObject.name}");
+
+        CharacterInteract interact = GetComponent<CharacterInteract>();
+        if(interact == null)
+            throw new System.Exception($"Missing CharacterInteract on {this.gameObject.name}");
         
         _state = State.AI;
     }
