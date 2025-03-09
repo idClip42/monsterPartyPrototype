@@ -46,11 +46,29 @@ public class SimpleMonster : MonoBehaviour
                 lineOfSight = true;
 
             if(lineOfSight){
-                Debug.DrawLine(
-                    _eye.transform.position,
-                    targetPos,
-                    Color.red
-                );
+
+                Vector3 lightDirection = _eye.transform.forward;
+                Vector3 targetDirection = toTarget / distance;
+                float spotAngle = _eye.spotAngle;
+
+                float spotAngleInRadians = spotAngle * Mathf.Deg2Rad;
+                float cosHalfSpotAngle = Mathf.Cos(spotAngleInRadians / 2);
+                float dotProduct = Vector3.Dot(lightDirection, targetDirection);
+                if (dotProduct > cosHalfSpotAngle) {
+                    // Target is within the vision cone
+                    Debug.DrawLine(
+                        _eye.transform.position,
+                        targetPos,
+                        Color.red
+                    );
+                } else {
+                    // Target is outside the vision cone
+                    Debug.DrawLine(
+                        _eye.transform.position,
+                        targetPos,
+                        Color.yellow
+                    );
+                }
             }
             else {
                 Debug.DrawLine(
