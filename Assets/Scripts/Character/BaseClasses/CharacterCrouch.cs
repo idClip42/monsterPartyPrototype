@@ -1,8 +1,10 @@
 using UnityEngine;
 
+#nullable enable
+
 public abstract class CharacterCrouch : MonoBehaviour, ICharacterComponent
 {
-    private Character _characterBase = null;
+    private Character? _characterBase = null;
 
     private bool _isCrouching = false;
     public bool IsCrouching => _isCrouching;
@@ -19,6 +21,7 @@ public abstract class CharacterCrouch : MonoBehaviour, ICharacterComponent
 
     void Update()
     {
+        if(_characterBase == null) throw new System.Exception("Null _characterBase");
         if(_characterBase.State == State.Player){
             if(Input.GetButtonDown("Crouch")){
                 ToggleCrouch();

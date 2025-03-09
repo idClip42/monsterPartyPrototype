@@ -1,17 +1,20 @@
 using UnityEngine;
 
+#nullable enable
+
 public class CharacterManager : MonoBehaviour
 {
-    private CameraControl _cameraControl;
-    private Character[] _characters;
-    private Character _selectedCharacter;
+    private CameraControl? _cameraControl = null;
+    private Character[] _characters = {};
+    private Character? _selectedCharacter = null;
 
-    public Character SelectedCharacter => _selectedCharacter;
+    public Character? SelectedCharacter => _selectedCharacter;
 
     void Awake()
     {
         _cameraControl = FindFirstObjectByType<CameraControl>();
         if(_cameraControl == null) throw new System.Exception("Missing camera control");
+
         _characters = FindObjectsByType<Character>(FindObjectsSortMode.None);
     }
 
@@ -30,7 +33,9 @@ public class CharacterManager : MonoBehaviour
     }
 
     private void SelectCharacter(int index, bool immediate){
+        if(_cameraControl == null) throw new System.Exception("Null _cameraControl");
         if(index < 0) throw new System.Exception($"Invalid character index {index}");
+
         if(index >= _characters.Length) return;
         if(_selectedCharacter == _characters[index]) return;
 

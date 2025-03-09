@@ -2,14 +2,16 @@ using System;
 using UnityEngine;
 using UnityEngine.AI;
 
+#nullable enable
+
 public class CameraControlTransition
 {
-    private readonly CameraControl _cameraControl;
-    private Character _transitionTarget;
-    private Vector3 _positionOffset;
-    private float _transitionSpeed;
+    private readonly CameraControl? _cameraControl = null;
+    private Character? _transitionTarget = null;
+    private Vector3 _positionOffset = Vector3.zero;
+    private float _transitionSpeed = -1;
 
-    public CameraControlTransition(CameraControl owner){
+    public CameraControlTransition(CameraControl? owner){
         if(owner == null) throw new Exception("Missing camera control owner.");
         _cameraControl = owner;
     }
@@ -31,10 +33,11 @@ public class CameraControlTransition
     /// </summary>
     /// <param name="deltaTime"></param>
     /// <returns>Whether to finish transitioning</returns>
-    /// <exception cref="System.Exception"></exception>
+    /// <exception cref="Exception"></exception>
     public bool MoveCamera(float deltaTime){
-        if(_transitionTarget == null) throw new System.Exception("Missing transition target.");
-        if(_transitionSpeed <= 0) throw new System.Exception("Invalid transition speed.");
+        if(_cameraControl == null) throw new Exception("Null _cameraControl");
+        if(_transitionTarget == null) throw new Exception("Missing transition target.");
+        if(_transitionSpeed <= 0) throw new Exception("Invalid transition speed.");
 
         NavMeshPath path = new NavMeshPath();
 

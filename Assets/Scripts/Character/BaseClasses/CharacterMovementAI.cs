@@ -1,14 +1,16 @@
 using UnityEngine;
 using UnityEngine.AI;
 
+#nullable enable
+
 [RequireComponent(typeof(NavMeshAgent))]
 public abstract class CharacterMovementAI : MonoBehaviour, IInteractible, ICharacterComponent
 {
     public enum Behavior { HoldPosition, Follow }
 
-    private NavMeshAgent _navMeshAgent = null;
+    private NavMeshAgent? _navMeshAgent = null;
     private Behavior _behavior = Behavior.HoldPosition;
-    private Transform _behaviorTarget = null;
+    private Transform? _behaviorTarget = null;
     public string CurrentBehavior => $"{_behavior} : {_behaviorTarget?.gameObject?.name}";
 
     public Vector3 InteractionWorldPosition => this.gameObject.transform.position + Vector3.up;
@@ -16,6 +18,7 @@ public abstract class CharacterMovementAI : MonoBehaviour, IInteractible, IChara
     public string DebugName => "AI Movement";
     public string DebugInfo { get {
         if(this.enabled == false) return "Off";
+        if(_navMeshAgent == null) throw new System.Exception("Null _navMeshAgent");
         return $"{_behavior}, {_behaviorTarget?.gameObject?.name}, {_navMeshAgent.speed}";
     }}
 
@@ -27,22 +30,31 @@ public abstract class CharacterMovementAI : MonoBehaviour, IInteractible, IChara
 
     void OnEnable()
     {
+        if(_navMeshAgent == null) return;
         _navMeshAgent.enabled = true;
     }
 
     void OnDisable()
     {
+        if(_navMeshAgent == null) return;
         _navMeshAgent.enabled = false;
     }
 
     void Update()
     {
+        if(_navMeshAgent == null) throw new System.Exception("Null _navMeshAgent");
         if(this._behavior == Behavior.Follow){
+            if(_behaviorTarget == null) throw new System.Exception("Null _behaviorTarget");
             this._navMeshAgent.SetDestination(this._behaviorTarget.transform.position);
         }
     }
 
-    private void SetBehavior(Behavior behavior, Transform target){
+    private void SetBehavior(Behavior behavior, Transform? target){
+        if(_navMeshAgent == null) throw new System.Exception("Null _navMeshAgent");
+
+        if(behavior == Behavior.Follow && target == null)
+            throw new System.Exception("Attempted to set Follow behavior without setting a target.");
+
         this._behavior = behavior;
         this._behaviorTarget = target;
 

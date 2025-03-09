@@ -1,6 +1,8 @@
 using System;
 using UnityEngine;
 
+#nullable enable
+
 [RequireComponent(typeof(Camera))]
 public class CameraControl : MonoBehaviour
 {
@@ -21,14 +23,14 @@ public class CameraControl : MonoBehaviour
     [SerializeField]
     private float _transitionSpeed = 20;
 
-    private CharacterManager _characterManager;
+    private CharacterManager? _characterManager = null;
 
     private State _currentState = State.Orbit;
     private float _horizontalAngle = 0;
     private float _verticalAngle = 0;
 
-    private CameraControlTransition _transitioner;
-    private Action _transitionEndCallback;
+    private CameraControlTransition? _transitioner = null;
+    private Action? _transitionEndCallback = null;
 
     void Awake()
     {
@@ -45,7 +47,13 @@ public class CameraControl : MonoBehaviour
             OrbitControl();
         }
         else if(_currentState == State.Transition){
+            if(_transitioner == null)
+                throw new Exception("Null _transitioner");
+            if(_transitionEndCallback == null)
+                throw new Exception("Null _transitionEndCallback");
+
             bool endTransition = _transitioner.MoveCamera(Time.deltaTime);
+
             if(endTransition){
                 _transitioner.Clear();
                 _transitionEndCallback();
@@ -56,6 +64,9 @@ public class CameraControl : MonoBehaviour
     }
 
     private void OrbitControl(){
+        if(_characterManager == null)
+            throw new Exception("Null _characterManager");
+            
         // TODO: This is for the non-physics movement of the CharacterController
         // TODO: If and when this changes, this'll need to move to FixedUpdate()
         if(_characterManager.SelectedCharacter != null){
@@ -95,6 +106,9 @@ public class CameraControl : MonoBehaviour
     }
 
     public void SendCameraToNewCharacter(Character target, Action arrivalCallback){
+        if(_transitioner == null)
+            throw new Exception("Null _transitioner");
+        
         _currentState = State.Transition;
         _transitioner.Initialize(
             target,

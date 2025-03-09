@@ -3,12 +3,14 @@ using UnityEditor;
 using System.Linq;
 using System;
 
+#nullable enable
+
 public enum State { Player, AI };
 
 public abstract class Character : MonoBehaviour
 {
-    private CharacterMovementPlayer _playerMovement = null;
-    private CharacterMovementAI _aiMovement = null;
+    private CharacterMovementPlayer? _playerMovement = null;
+    private CharacterMovementAI? _aiMovement = null;
 
     private ICharacterComponent[] _components = {};
 
@@ -18,6 +20,9 @@ public abstract class Character : MonoBehaviour
             return _state;
         }
         set {
+            if(_playerMovement == null) throw new Exception("Null _playerMovement");
+            if(_aiMovement == null) throw new Exception("Null _aiMovement");
+
             _state = value;
             switch (_state)
             {
@@ -30,7 +35,7 @@ public abstract class Character : MonoBehaviour
                     _aiMovement.enabled = true;
                     break;
                 default:
-                    throw new System.Exception($"Unknown state enum for {this.gameObject.name}: {_state}");
+                    throw new Exception($"Unknown state enum for {this.gameObject.name}: {_state}");
             }
         }
     }
@@ -39,19 +44,11 @@ public abstract class Character : MonoBehaviour
     {
         _playerMovement = GetComponent<CharacterMovementPlayer>();
         if(_playerMovement == null)
-            throw new System.Exception($"Missing CharacterMovementPlayer on {this.gameObject.name}");
+            throw new Exception($"Missing CharacterMovementPlayer on {this.gameObject.name}");
             
         _aiMovement = GetComponent<CharacterMovementAI>();
         if(_aiMovement == null)
-            throw new System.Exception($"Missing CharacterMovementAI on {this.gameObject.name}");
-            
-        CharacterCrouch crouch = GetComponent<CharacterCrouch>();
-        if(crouch == null)
-            throw new System.Exception($"Missing CharacterCrouch on {this.gameObject.name}");
-
-        CharacterInteract interact = GetComponent<CharacterInteract>();
-        if(interact == null)
-            throw new System.Exception($"Missing CharacterInteract on {this.gameObject.name}");
+            throw new Exception($"Missing CharacterMovementAI on {this.gameObject.name}");
 
         _components = GetComponents<ICharacterComponent>();
     }

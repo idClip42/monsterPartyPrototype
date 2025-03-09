@@ -1,5 +1,7 @@
 using UnityEngine;
 
+#nullable enable
+
 public class SimpleCharacterCrouch : CharacterCrouch
 {
     [SerializeField]

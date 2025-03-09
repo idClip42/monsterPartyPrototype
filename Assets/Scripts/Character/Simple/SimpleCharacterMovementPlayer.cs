@@ -1,10 +1,12 @@
 using UnityEngine;
 
+#nullable enable
+
 [RequireComponent(typeof(CharacterController))]
 [RequireComponent(typeof(SimpleCharacterCrouch))]
 public class SimpleCharacterMovementPlayer : CharacterMovementPlayer
 {
-    private CharacterController _characterController;
+    private CharacterController? _characterController = null;
 
     protected override void Awake()
     {
@@ -17,16 +19,19 @@ public class SimpleCharacterMovementPlayer : CharacterMovementPlayer
 
     void OnEnable()
     {
+        if(_characterController == null) return;
         _characterController.enabled = true;
     }
 
     void OnDisable()
     {
+        if(_characterController == null) return;
         _characterController.enabled = false;
     }
 
     protected override void Move(Vector3 desiredMovementVelocity, float deltaTime)
     {
+        if(_characterController == null) throw new System.Exception("Null _characterController");
         _characterController.Move(
             desiredMovementVelocity * deltaTime +
             (Physics.gravity * deltaTime)

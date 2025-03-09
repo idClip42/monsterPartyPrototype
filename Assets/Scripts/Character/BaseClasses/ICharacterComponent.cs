@@ -1,4 +1,4 @@
-using UnityEngine;
+#nullable enable
 
 public interface ICharacterComponent
 {

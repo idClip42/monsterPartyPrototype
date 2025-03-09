@@ -1,10 +1,12 @@
 using UnityEngine;
 
+#nullable enable
+
 public abstract class CharacterMovementPlayer : MonoBehaviour, ICharacterComponent
 {
-    private Character _characterBase = null;
-    private CharacterCrouch _crouch = null;
-    private CameraControl _camera = null;
+    private Character? _characterBase = null;
+    private CharacterCrouch? _crouch = null;
+    private CameraControl? _camera = null;
 
     [SerializeField]
     private float _walkSpeed = 3.0f;
@@ -33,6 +35,9 @@ public abstract class CharacterMovementPlayer : MonoBehaviour, ICharacterCompone
 
     void Update()
     {
+        if(_crouch == null) throw new System.Exception("Null _crouch");
+        if(_camera == null) throw new System.Exception("Null _camera");
+
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
         bool isRunning = Input.GetButton("Run") && !_crouch.IsCrouching;

@@ -1,5 +1,7 @@
 using UnityEngine;
 
+#nullable enable
+
 public interface IInteractible
 {
     public GameObject gameObject { get; }

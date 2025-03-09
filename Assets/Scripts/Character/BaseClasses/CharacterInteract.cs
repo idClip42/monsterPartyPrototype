@@ -2,17 +2,19 @@ using UnityEngine;
 using UnityEditor;
 using System.Linq;
 
+#nullable enable
+
 public abstract class CharacterInteract : MonoBehaviour, ICharacterComponent
 {
-    private Character _characterBase = null;
-    private IInteractible[] _interactibles = {};
+    private Character? _characterBase = null;
+    private IInteractible?[] _interactibles = {};
 
     [SerializeField]
     private float _interactionDistance = 1.25f;
 
     public string DebugName => "Interaction";
     public string DebugInfo { get {
-        var interactible = GetInteractibleWithinReach();
+        IInteractible? interactible = GetInteractibleWithinReach();
         if(interactible == null) return "None";
         return interactible.gameObject.name;
     }}
@@ -24,13 +26,14 @@ public abstract class CharacterInteract : MonoBehaviour, ICharacterComponent
             throw new System.Exception($"Null character base on {this.gameObject.name}");
         
         _interactibles = FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None)
-            .Where(item => item is IInteractible)
+            .Where(item => item != null && item is IInteractible)
             .Select(item => item as IInteractible)
             .ToArray();
     }
 
     void Update()
     {
+        if(_characterBase == null) throw new System.Exception("Null _characterBase");
         if(_characterBase.State == State.Player){
             if(Input.GetButtonDown("Interact")){
                 var interactible = GetInteractibleWithinReach();
@@ -45,6 +48,7 @@ public abstract class CharacterInteract : MonoBehaviour, ICharacterComponent
     void OnDrawGizmos()
     {
         if(!enabled) return;
+        if(_characterBase == null) return;
 
         var interactible = GetInteractibleWithinReach();
         if(interactible == null) return;
@@ -59,15 +63,14 @@ public abstract class CharacterInteract : MonoBehaviour, ICharacterComponent
     }
 #endif
 
-    private IInteractible GetInteractibleWithinReach(){
-        if(_interactibles == null) return null;
-
+    private IInteractible? GetInteractibleWithinReach(){
         Vector3 refPos = this.transform.position + Vector3.up * 1.0f;
-        IInteractible closest = null;
+        IInteractible? closest = null;
         float closestDistSq = float.MaxValue;
 
         foreach (var interactible in _interactibles)
         {
+            if(interactible == null) continue;
             if(interactible.gameObject == this.gameObject) continue;
             Vector3 posDiff = interactible.InteractionWorldPosition - refPos;
             float distSq = posDiff.sqrMagnitude;
