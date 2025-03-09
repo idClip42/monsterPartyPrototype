@@ -5,10 +5,12 @@ public enum State { Player, AI };
 
 [RequireComponent(typeof(CharacterMovementPlayer))]
 [RequireComponent(typeof(CharacterMovementAI))]
+[RequireComponent(typeof(CharacterCrouch))]
 public class CharacterBase : MonoBehaviour
 {
     private CharacterMovementPlayer _playerMovement;
     private CharacterMovementAI _aiMovement;
+    private CharacterCrouch _crouch;
     private State _state;
 
     public State State {
@@ -38,9 +40,14 @@ public class CharacterBase : MonoBehaviour
         _playerMovement = GetComponent<CharacterMovementPlayer>();
         if(_playerMovement == null)
             throw new System.Exception($"Missing CharacterMovementPlayer on {this.gameObject.name}");
+            
         _aiMovement = GetComponent<CharacterMovementAI>();
         if(_aiMovement == null)
             throw new System.Exception($"Missing CharacterMovementAI on {this.gameObject.name}");
+            
+        _crouch = GetComponent<CharacterCrouch>();
+        if(_crouch == null)
+            throw new System.Exception($"Missing CharacterCrouch on {this.gameObject.name}");
         
         _state = State.AI;
     }
@@ -50,9 +57,17 @@ public class CharacterBase : MonoBehaviour
     {
         Color prevColor = Handles.color;
         Handles.color = Color.white;
+
+        string text = @$"
+{this.gameObject.name}
+{this._state}
+{this._aiMovement?.CurrentBehavior}
+Crouch: {this._crouch?.IsCrouching}
+        ".Trim();
+
         Handles.Label(
             transform.position + Vector3.up * 2f,
-            $"{this.gameObject.name}\n{this._state}\n{this._aiMovement?.CurrentBehavior}"
+            text
         );
         Handles.color = prevColor;
     }

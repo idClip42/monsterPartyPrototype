@@ -3854,6 +3854,7 @@ GameObject:
   - component: {fileID: 1075272457}
   - component: {fileID: 1075272456}
   - component: {fileID: 1075272455}
+  - component: {fileID: 1075272463}
   m_Layer: 0
   m_Name: Player B
   m_TagString: Untagged
@@ -4038,6 +4039,19 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1075272453}
   m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1075272463
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1075272453}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbc2d621f84394440a60157e894f6f64, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _crouchHeightPercentage: 0.5
 --- !u!1001 &1140356561
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5204,6 +5218,7 @@ GameObject:
   - component: {fileID: 1352024430}
   - component: {fileID: 1352024429}
   - component: {fileID: 1352024428}
+  - component: {fileID: 1352024433}
   m_Layer: 0
   m_Name: Player A
   m_TagString: Untagged
@@ -5388,6 +5403,19 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1352024433
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1352024423}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbc2d621f84394440a60157e894f6f64, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _crouchHeightPercentage: 0.5
 --- !u!1 &1364416286
 GameObject:
   m_ObjectHideFlags: 0
@@ -5857,6 +5885,7 @@ GameObject:
   - component: {fileID: 1452315267}
   - component: {fileID: 1452315266}
   - component: {fileID: 1452315265}
+  - component: {fileID: 1452315273}
   m_Layer: 0
   m_Name: Player C
   m_TagString: Untagged
@@ -6041,6 +6070,19 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1452315263}
   m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1452315273
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1452315263}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbc2d621f84394440a60157e894f6f64, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _crouchHeightPercentage: 0.5
 --- !u!1 &1575406759
 GameObject:
   m_ObjectHideFlags: 0

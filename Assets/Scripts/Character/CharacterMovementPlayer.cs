@@ -3,9 +3,11 @@ using UnityEngine;
 using UnityEditor;
 
 [RequireComponent(typeof(CharacterController))]
+[RequireComponent(typeof(CharacterCrouch))]
 public class CharacterMovementPlayer : MonoBehaviour
 {
     private CharacterBase _characterBase;
+    private CharacterCrouch _crouch;
     private CharacterController _characterController;
     private CameraControl _camera;
     private IInteractible[] _interactibles;
@@ -21,6 +23,10 @@ public class CharacterMovementPlayer : MonoBehaviour
         _characterBase = GetComponent<CharacterBase>();
         if(_characterBase == null)
             throw new System.Exception($"Null character base on {this.gameObject.name}");
+
+        _crouch = GetComponent<CharacterCrouch>();
+        if(_crouch == null)
+            throw new System.Exception($"Null crouch on {this.gameObject.name}");
 
         _characterController = GetComponent<CharacterController>();
         if(_characterController == null)
@@ -60,7 +66,7 @@ public class CharacterMovementPlayer : MonoBehaviour
             Vector3.up
         ).normalized;
 
-        bool isRunning = Input.GetButton("Run");
+        bool isRunning = !_crouch.IsCrouching && Input.GetButton("Run");
         float speed = isRunning ? _runSpeed : _walkSpeed;
 
         _characterController.Move(
