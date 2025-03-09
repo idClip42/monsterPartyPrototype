@@ -2726,8 +2726,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _standingNavMesh: {fileID: 423518812}
   _crouchingNavMesh: {fileID: 423518813}
-  _standingAgentTypeIndex: 0
-  _crouchingAgentTypeIndex: 1
 --- !u!1 &440902443
 GameObject:
   m_ObjectHideFlags: 0
