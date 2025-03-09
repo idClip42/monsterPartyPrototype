@@ -1,15 +1,18 @@
 using UnityEngine;
 using UnityEditor;
+using System.Linq;
+using System;
 
 public enum State { Player, AI };
 
 public abstract class Character : MonoBehaviour
 {
-    private CharacterMovementPlayer _playerMovement;
-    private CharacterMovementAI _aiMovement;
-    private CharacterCrouch _crouch;
+    private CharacterMovementPlayer _playerMovement = null;
+    private CharacterMovementAI _aiMovement = null;
 
-    private State _state;
+    private ICharacterComponent[] _components = {};
+
+    private State _state = State.AI;
     public State State {
         get {
             return _state;
@@ -42,15 +45,15 @@ public abstract class Character : MonoBehaviour
         if(_aiMovement == null)
             throw new System.Exception($"Missing CharacterMovementAI on {this.gameObject.name}");
             
-        _crouch = GetComponent<CharacterCrouch>();
-        if(_crouch == null)
+        CharacterCrouch crouch = GetComponent<CharacterCrouch>();
+        if(crouch == null)
             throw new System.Exception($"Missing CharacterCrouch on {this.gameObject.name}");
 
         CharacterInteract interact = GetComponent<CharacterInteract>();
         if(interact == null)
             throw new System.Exception($"Missing CharacterInteract on {this.gameObject.name}");
-        
-        _state = State.AI;
+
+        _components = GetComponents<ICharacterComponent>();
     }
 
     #if UNITY_EDITOR
@@ -60,10 +63,9 @@ public abstract class Character : MonoBehaviour
             Handles.color = Color.white;
 
             string text = @$"
-    {this.gameObject.name}
-    {this._state}
-    {this._aiMovement?.CurrentBehavior}
-    Crouch: {this._crouch?.IsCrouching}
+{this.gameObject.name}
+{this._state}
+{String.Join('\n', _components.Select(c=>$"{c.DebugName}: {c.DebugInfo}"))}
             ".Trim();
 
             Handles.Label(

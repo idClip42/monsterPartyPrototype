@@ -1,18 +1,22 @@
-using System.Linq;
 using UnityEngine;
-using UnityEditor;
 
-public abstract class CharacterMovementPlayer : MonoBehaviour
+public abstract class CharacterMovementPlayer : MonoBehaviour, ICharacterComponent
 {
-    private Character _characterBase;
-    private CharacterCrouch _crouch;
-    private CameraControl _camera;
+    private Character _characterBase = null;
+    private CharacterCrouch _crouch = null;
+    private CameraControl _camera = null;
 
     [SerializeField]
     private float _walkSpeed = 3.0f;
     [SerializeField]
     private float _runSpeed = 5.0f;
-    
+
+    public string DebugName => "Player Movement";
+    public string DebugInfo { get {
+        if(this.enabled == false) return "Off";
+        return "On";
+    }}
+
     protected virtual void Awake(){
         _characterBase = GetComponent<Character>();
         if(_characterBase == null)

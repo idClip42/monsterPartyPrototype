@@ -2,13 +2,20 @@ using UnityEngine;
 using UnityEditor;
 using System.Linq;
 
-public abstract class CharacterInteract : MonoBehaviour
+public abstract class CharacterInteract : MonoBehaviour, ICharacterComponent
 {
-    private Character _characterBase;
-    private IInteractible[] _interactibles;
+    private Character _characterBase = null;
+    private IInteractible[] _interactibles = {};
 
     [SerializeField]
     private float _interactionDistance = 1.25f;
+
+    public string DebugName => "Interaction";
+    public string DebugInfo { get {
+        var interactible = GetInteractibleWithinReach();
+        if(interactible == null) return "None";
+        return interactible.gameObject.name;
+    }}
 
     void Awake()
     {

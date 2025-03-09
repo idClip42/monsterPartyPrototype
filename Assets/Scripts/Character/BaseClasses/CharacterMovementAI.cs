@@ -2,16 +2,22 @@ using UnityEngine;
 using UnityEngine.AI;
 
 [RequireComponent(typeof(NavMeshAgent))]
-public abstract class CharacterMovementAI : MonoBehaviour, IInteractible
+public abstract class CharacterMovementAI : MonoBehaviour, IInteractible, ICharacterComponent
 {
     public enum Behavior { HoldPosition, Follow }
 
-    private NavMeshAgent _navMeshAgent;
-    private Behavior _behavior;
-    private Transform _behaviorTarget;
+    private NavMeshAgent _navMeshAgent = null;
+    private Behavior _behavior = Behavior.HoldPosition;
+    private Transform _behaviorTarget = null;
     public string CurrentBehavior => $"{_behavior} : {_behaviorTarget?.gameObject?.name}";
 
     public Vector3 InteractionWorldPosition => this.gameObject.transform.position + Vector3.up;
+
+    public string DebugName => "AI Movement";
+    public string DebugInfo { get {
+        if(this.enabled == false) return "Off";
+        return $"{_behavior}, {_behaviorTarget?.gameObject?.name}, {_navMeshAgent.speed}";
+    }}
 
     void Awake(){
         _navMeshAgent = GetComponent<NavMeshAgent>();

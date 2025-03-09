@@ -1,11 +1,14 @@
 using UnityEngine;
 
-public abstract class CharacterCrouch : MonoBehaviour
+public abstract class CharacterCrouch : MonoBehaviour, ICharacterComponent
 {
-    private Character _characterBase;
+    private Character _characterBase = null;
 
     private bool _isCrouching = false;
     public bool IsCrouching => _isCrouching;
+
+    public string DebugName => "Crouch";
+    public string DebugInfo => _isCrouching ? "Crouching" : "Standing";
 
     void Awake()
     {
