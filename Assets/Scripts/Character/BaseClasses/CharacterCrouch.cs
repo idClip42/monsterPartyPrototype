@@ -8,11 +8,14 @@ public abstract class CharacterCrouch : MonoBehaviour, ICharacterComponent
 
     private bool _isCrouching = false;
     public bool IsCrouching => _isCrouching;
+    private bool _canUncrouch = false;
 
     public string DebugName => "Crouch";
-    public string DebugInfo => _isCrouching ? "Crouching" : "Standing";
+    public virtual string DebugInfo => _isCrouching ? 
+        $"Crouching ({(_canUncrouch ? "Can Stand" : "Can't Stand")})" : 
+        "Standing";
 
-    void Awake()
+    protected virtual void Awake()
     {
         _characterBase = GetComponent<Character>();
         if(_characterBase == null)
@@ -22,6 +25,9 @@ public abstract class CharacterCrouch : MonoBehaviour, ICharacterComponent
     void Update()
     {
         if(_characterBase == null) throw new System.Exception("Null _characterBase");
+        
+        _canUncrouch = CanUncrouch();
+        
         if(_characterBase.State == State.Player){
             if(Input.GetButtonDown("Crouch")){
                 ToggleCrouch();
@@ -30,11 +36,18 @@ public abstract class CharacterCrouch : MonoBehaviour, ICharacterComponent
     }
 
     private void ToggleCrouch(){
+        if(this._isCrouching && !_canUncrouch)
+            return;
+
         this._isCrouching = !this._isCrouching; 
-        if(this._isCrouching) EnableCrouch();
-        else DisableCrouch();
+        if(this._isCrouching) 
+            EnableCrouch();
+        else 
+            DisableCrouch();
     }
 
     protected abstract void EnableCrouch();
     protected abstract void DisableCrouch();
+
+    protected abstract bool CanUncrouch();
 }
