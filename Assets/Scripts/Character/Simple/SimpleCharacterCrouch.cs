@@ -12,6 +12,10 @@ public class SimpleCharacterCrouch : CharacterCrouch
     [Range(0.1f, 0.7f)]
     private float _crouchHeightPercentage = 0.5f;
 
+    [SerializeField]
+    [Range(0.1f, 1f)]
+    private float _uncrouchRadiusPercentage = 0.9f;
+
     private float CurrentHeight => _characterController ? 
         _characterController.height * transform.localScale.y:
         -1;
@@ -77,7 +81,7 @@ public class SimpleCharacterCrouch : CharacterCrouch
             throw new System.Exception($"Null character controller on {this.gameObject.name}");
         if(this.IsCrouching == false) return false;
         
-        float radius = _characterController.radius;
+        float radius = _characterController.radius * _uncrouchRadiusPercentage;
         Vector3 basePosition = transform.position - Vector3.up * CurrentHeight / 2;
         Vector3 sphereCastStart = basePosition + Vector3.up * radius;
         float castDistance = StandingHeight - radius * 2;
