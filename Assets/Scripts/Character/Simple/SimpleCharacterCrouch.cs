@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 #nullable enable
@@ -14,6 +15,12 @@ public class SimpleCharacterCrouch : CharacterCrouch
     private float CurrentHeight => _characterController ? 
         _characterController.height * transform.localScale.y:
         -1;
+
+    private float StandingHeight => _characterController ? 
+        _characterController.height :
+        -1;
+
+    private RaycastHit uncrouchHitInfo;
 
     public override string DebugInfo => 
         base.DebugInfo + 
@@ -62,8 +69,30 @@ public class SimpleCharacterCrouch : CharacterCrouch
 
     protected override bool CanUncrouch()
     {
+        if(_characterController == null)
+            throw new System.Exception($"Null character controller on {this.gameObject.name}");
         if(this.IsCrouching == false) return false;
         
-        return true;
+        float radius = _characterController.radius;
+        Vector3 basePosition = transform.position - Vector3.up * CurrentHeight / 2;
+        Vector3 sphereCastStart = basePosition + Vector3.up * radius;
+        float castDistance = StandingHeight - radius * 2;
+
+        bool collision = Physics.SphereCast(
+            sphereCastStart,
+            radius,
+            Vector3.up,
+            out uncrouchHitInfo,
+            castDistance
+        );
+
+        if(collision){
+            Debug.DrawLine(sphereCastStart, uncrouchHitInfo.point, Color.yellow);
+        }
+        else {
+            Debug.DrawLine(sphereCastStart, sphereCastStart + Vector3.up * castDistance, Color.white);
+        }
+
+        return !collision;
     }
 }
