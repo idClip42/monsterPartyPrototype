@@ -1,3 +1,4 @@
+using Unity.AI.Navigation;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -6,19 +7,26 @@ using UnityEngine.AI;
 public class NavigationManager : MonoBehaviour
 {
     [SerializeField]
-    private int _standingAgentTypeIndex = 0;
+    private NavMeshSurface? _standingNavMesh;
     [SerializeField]
-    private int _crouchingAgentTypeIndex = 1;
+    private NavMeshSurface? _crouchingNavMesh;
 
-    private int _standingAgentTypeId = -1;
-    private int _crouchingAgentTypeId = -1;
-
-    public int StandingAgentTypeId => _standingAgentTypeId;
-    public int CrouchingAgentTypeId => _crouchingAgentTypeId;
+    public int StandingAgentTypeId { get {
+        if(_standingNavMesh == null)
+            throw new System.Exception("Null _standingNavMesh");
+        return _standingNavMesh.agentTypeID;
+    }} 
+    public int CrouchingAgentTypeId { get {
+        if(_crouchingNavMesh == null)
+            throw new System.Exception("Null _crouchingNavMesh");
+        return _crouchingNavMesh.agentTypeID;
+    }} 
 
     void Awake()
     {
-        _standingAgentTypeId = NavMesh.GetSettingsByIndex(_standingAgentTypeIndex).agentTypeID;
-        _crouchingAgentTypeId = NavMesh.GetSettingsByIndex(_crouchingAgentTypeIndex).agentTypeID;
+        if(_standingNavMesh == null)
+            throw new System.Exception("Null _standingNavMesh");
+        if(_crouchingNavMesh == null)
+            throw new System.Exception("Null _crouchingNavMesh");
     }
 }

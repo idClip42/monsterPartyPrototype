@@ -2724,6 +2724,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f590e64d4b2fa4b4fac336d8fef72fee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _standingNavMesh: {fileID: 423518812}
+  _crouchingNavMesh: {fileID: 423518813}
   _standingAgentTypeIndex: 0
   _crouchingAgentTypeIndex: 1
 --- !u!1 &440902443
