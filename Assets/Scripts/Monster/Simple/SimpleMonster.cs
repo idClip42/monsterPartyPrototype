@@ -21,6 +21,8 @@ public class SimpleMonster : MonoBehaviour
     private NavigationManager? _navManager = null;
     private NavMeshAgent? _navMeshAgent = null;
 
+    private float _timer = 0f;
+
     void Awake()
     {
         _characters = FindObjectsByType<Character>(FindObjectsSortMode.None);
@@ -42,6 +44,10 @@ public class SimpleMonster : MonoBehaviour
 
     void Start()
     {
+        // Set a random timer interval on start
+        SetRandomRedirectInterval();
+
+        // Start with a destination
         NewDestination();
     }
 
@@ -110,6 +116,21 @@ public class SimpleMonster : MonoBehaviour
                 );
             }
         }
+
+        // Countdown timer logic to choose a new destination
+        _timer -= Time.deltaTime;
+
+        if (_timer <= 0f)
+        {
+            NewDestination();
+            SetRandomRedirectInterval(); // Choose a new random interval
+        }
+    }
+
+    private void SetRandomRedirectInterval()
+    {
+        // Randomly select a new interval between min and max
+        _timer = Random.Range(_minRedirectTime, _maxRedirectTime);
     }
 
     private void NewDestination()

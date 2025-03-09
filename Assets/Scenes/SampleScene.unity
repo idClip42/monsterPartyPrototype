@@ -3958,6 +3958,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _eye: {fileID: 1531964679}
+  _minRedirectTime: 5
+  _maxRedirectTime: 15
 --- !u!195 &672855602
 NavMeshAgent:
   m_ObjectHideFlags: 0
