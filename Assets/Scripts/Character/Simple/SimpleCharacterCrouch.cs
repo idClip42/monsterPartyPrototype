@@ -9,7 +9,7 @@ public class SimpleCharacterCrouch : CharacterCrouch
     private float _crouchHeightPercentage = 0.5f;
 
     private bool _isCrouching = false;
-    public bool IsCrouching => _isCrouching;
+    public override bool IsCrouching => _isCrouching;
 
     void Awake()
     {
