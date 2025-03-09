@@ -8,15 +8,15 @@ public abstract class CharacterInteract : MonoBehaviour, ICharacterComponent
 {
     private Character? _characterBase = null;
     private IInteractible?[] _interactibles = {};
+    private IInteractible? _interactibleWithinReach = null;
 
     [SerializeField]
     private float _interactionDistance = 1.25f;
 
     public string DebugName => "Interaction";
     public string DebugInfo { get {
-        IInteractible? interactible = GetInteractibleWithinReach();
-        if(interactible == null) return "None";
-        return interactible.gameObject.name;
+        if(_interactibleWithinReach == null) return "None";
+        return _interactibleWithinReach.gameObject.name;
     }}
 
     void Awake()
@@ -34,11 +34,11 @@ public abstract class CharacterInteract : MonoBehaviour, ICharacterComponent
     void Update()
     {
         if(_characterBase == null) throw new System.Exception("Null _characterBase");
+        _interactibleWithinReach = GetInteractibleWithinReach();
         if(_characterBase.State == State.Player){
             if(Input.GetButtonDown("Interact")){
-                var interactible = GetInteractibleWithinReach();
-                if(interactible != null){
-                    interactible.DoInteraction(_characterBase);
+                if(_interactibleWithinReach != null){
+                    _interactibleWithinReach.DoInteraction(_characterBase);
                 }
             }
         }
@@ -49,15 +49,13 @@ public abstract class CharacterInteract : MonoBehaviour, ICharacterComponent
     {
         if(!enabled) return;
         if(_characterBase == null) return;
-
-        var interactible = GetInteractibleWithinReach();
-        if(interactible == null) return;
+        if(_interactibleWithinReach == null) return;
 
         Color prevColor = Handles.color;
         Handles.color = Color.white;
         Handles.Label(
-            interactible.InteractionWorldPosition,
-            interactible.GetInteractionName(_characterBase)
+            _interactibleWithinReach.InteractionWorldPosition,
+            _interactibleWithinReach.GetInteractionName(_characterBase)
         );
         Handles.color = prevColor;
     }
