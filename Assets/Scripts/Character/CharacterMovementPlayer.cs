@@ -6,7 +6,7 @@ using UnityEditor;
 [RequireComponent(typeof(CharacterCrouch))]
 public class CharacterMovementPlayer : MonoBehaviour
 {
-    private CharacterBase _characterBase;
+    private Character _characterBase;
     private CharacterCrouch _crouch;
     private CharacterController _characterController;
     private CameraControl _camera;
@@ -20,7 +20,7 @@ public class CharacterMovementPlayer : MonoBehaviour
     private float _interactionDistance = 1.25f;
     
     void Awake(){
-        _characterBase = GetComponent<CharacterBase>();
+        _characterBase = GetComponent<Character>();
         if(_characterBase == null)
             throw new System.Exception($"Null character base on {this.gameObject.name}");
 

@@ -44,7 +44,7 @@ public class CharacterMovementAI : MonoBehaviour, IInteractible
         _navMeshAgent.isStopped = this._behavior == Behavior.HoldPosition;
     }
 
-    public string GetInteractionName(CharacterBase interactor) {
+    public string GetInteractionName(Character interactor) {
         switch (_behavior)
         {
             case Behavior.HoldPosition:
@@ -61,7 +61,7 @@ public class CharacterMovementAI : MonoBehaviour, IInteractible
         }
     }
 
-    public void DoInteraction(CharacterBase interactor)
+    public void DoInteraction(Character interactor)
     {
         switch (_behavior)
         {

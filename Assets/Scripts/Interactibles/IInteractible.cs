@@ -4,6 +4,6 @@ public interface IInteractible
 {
     public GameObject gameObject { get; }
     public Vector3 InteractionWorldPosition { get; }
-    public string GetInteractionName(CharacterBase interactor);
-    public void DoInteraction(CharacterBase interactor);
+    public string GetInteractionName(Character interactor);
+    public void DoInteraction(Character interactor);
 }

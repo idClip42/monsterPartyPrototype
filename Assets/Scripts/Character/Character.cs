@@ -6,7 +6,7 @@ public enum State { Player, AI };
 [RequireComponent(typeof(CharacterMovementPlayer))]
 [RequireComponent(typeof(CharacterMovementAI))]
 [RequireComponent(typeof(CharacterCrouch))]
-public class CharacterBase : MonoBehaviour
+public class Character : MonoBehaviour
 {
     private CharacterMovementPlayer _playerMovement;
     private CharacterMovementAI _aiMovement;

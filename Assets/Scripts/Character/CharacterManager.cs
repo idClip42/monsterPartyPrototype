@@ -3,16 +3,16 @@ using UnityEngine;
 public class CharacterManager : MonoBehaviour
 {
     private CameraControl _cameraControl;
-    private CharacterBase[] _characters;
-    private CharacterBase _selectedCharacter;
+    private Character[] _characters;
+    private Character _selectedCharacter;
 
-    public CharacterBase SelectedCharacter => _selectedCharacter;
+    public Character SelectedCharacter => _selectedCharacter;
 
     void Awake()
     {
         _cameraControl = FindFirstObjectByType<CameraControl>();
         if(_cameraControl == null) throw new System.Exception("Missing camera control");
-        _characters = FindObjectsByType<CharacterBase>(FindObjectsSortMode.None);
+        _characters = FindObjectsByType<Character>(FindObjectsSortMode.None);
     }
 
     void Start()
