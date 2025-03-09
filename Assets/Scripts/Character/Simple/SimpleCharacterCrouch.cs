@@ -22,9 +22,13 @@ public class SimpleCharacterCrouch : CharacterCrouch
 
     private RaycastHit uncrouchHitInfo;
 
-    public override string DebugInfo => 
-        base.DebugInfo + 
-        $" (Height: {CurrentHeight}m)";
+    public override string DebugInfo { get {
+        string result = base.DebugInfo;
+        if(uncrouchHitInfo.collider != null)
+            result += $" ({uncrouchHitInfo.collider.gameObject.name})";
+        result += $" (Height: {CurrentHeight}m)";
+        return result;
+    }} 
 
     protected override void Awake()
     {
