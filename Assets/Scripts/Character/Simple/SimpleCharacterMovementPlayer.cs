@@ -3,11 +3,11 @@ using UnityEngine;
 using UnityEditor;
 
 [RequireComponent(typeof(CharacterController))]
-[RequireComponent(typeof(CharacterCrouch))]
-public class CharacterMovementPlayer : MonoBehaviour
+[RequireComponent(typeof(SimpleCharacterCrouch))]
+public class SimpleCharacterMovementPlayer : MonoBehaviour
 {
-    private Character _characterBase;
-    private CharacterCrouch _crouch;
+    private SimpleCharacter _characterBase;
+    private SimpleCharacterCrouch _crouch;
     private CharacterController _characterController;
     private CameraControl _camera;
     private IInteractible[] _interactibles;
@@ -20,11 +20,11 @@ public class CharacterMovementPlayer : MonoBehaviour
     private float _interactionDistance = 1.25f;
     
     void Awake(){
-        _characterBase = GetComponent<Character>();
+        _characterBase = GetComponent<SimpleCharacter>();
         if(_characterBase == null)
             throw new System.Exception($"Null character base on {this.gameObject.name}");
 
-        _crouch = GetComponent<CharacterCrouch>();
+        _crouch = GetComponent<SimpleCharacterCrouch>();
         if(_crouch == null)
             throw new System.Exception($"Null crouch on {this.gameObject.name}");
 

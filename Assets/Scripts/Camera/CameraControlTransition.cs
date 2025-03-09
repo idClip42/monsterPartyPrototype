@@ -5,7 +5,7 @@ using UnityEngine.AI;
 public class CameraControlTransition
 {
     private readonly CameraControl _cameraControl;
-    private Character _transitionTarget;
+    private SimpleCharacter _transitionTarget;
     private Vector3 _positionOffset;
     private float _transitionSpeed;
 
@@ -14,7 +14,7 @@ public class CameraControlTransition
         _cameraControl = owner;
     }
 
-    public void Initialize(Character target, Vector3 posOffset, float speed){
+    public void Initialize(SimpleCharacter target, Vector3 posOffset, float speed){
         _transitionTarget = target;
         _positionOffset = posOffset;
         _transitionSpeed = speed;

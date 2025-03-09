@@ -3,14 +3,14 @@ using UnityEngine;
 
 public enum State { Player, AI };
 
-[RequireComponent(typeof(CharacterMovementPlayer))]
-[RequireComponent(typeof(CharacterMovementAI))]
-[RequireComponent(typeof(CharacterCrouch))]
-public class Character : MonoBehaviour
+[RequireComponent(typeof(SimpleCharacterMovementPlayer))]
+[RequireComponent(typeof(SimpleCharacterMovementAI))]
+[RequireComponent(typeof(SimpleCharacterCrouch))]
+public class SimpleCharacter : MonoBehaviour
 {
-    private CharacterMovementPlayer _playerMovement;
-    private CharacterMovementAI _aiMovement;
-    private CharacterCrouch _crouch;
+    private SimpleCharacterMovementPlayer _playerMovement;
+    private SimpleCharacterMovementAI _aiMovement;
+    private SimpleCharacterCrouch _crouch;
     private State _state;
 
     public State State {
@@ -37,15 +37,15 @@ public class Character : MonoBehaviour
 
     public void Awake()
     {
-        _playerMovement = GetComponent<CharacterMovementPlayer>();
+        _playerMovement = GetComponent<SimpleCharacterMovementPlayer>();
         if(_playerMovement == null)
             throw new System.Exception($"Missing CharacterMovementPlayer on {this.gameObject.name}");
             
-        _aiMovement = GetComponent<CharacterMovementAI>();
+        _aiMovement = GetComponent<SimpleCharacterMovementAI>();
         if(_aiMovement == null)
             throw new System.Exception($"Missing CharacterMovementAI on {this.gameObject.name}");
             
-        _crouch = GetComponent<CharacterCrouch>();
+        _crouch = GetComponent<SimpleCharacterCrouch>();
         if(_crouch == null)
             throw new System.Exception($"Missing CharacterCrouch on {this.gameObject.name}");
         

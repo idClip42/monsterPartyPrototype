@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.AI;
 
 [RequireComponent(typeof(NavMeshAgent))]
-public class CharacterMovementAI : MonoBehaviour, IInteractible
+public class SimpleCharacterMovementAI : MonoBehaviour, IInteractible
 {
     public enum Behavior { HoldPosition, Follow }
 
@@ -44,7 +44,7 @@ public class CharacterMovementAI : MonoBehaviour, IInteractible
         _navMeshAgent.isStopped = this._behavior == Behavior.HoldPosition;
     }
 
-    public string GetInteractionName(Character interactor) {
+    public string GetInteractionName(SimpleCharacter interactor) {
         switch (_behavior)
         {
             case Behavior.HoldPosition:
@@ -61,7 +61,7 @@ public class CharacterMovementAI : MonoBehaviour, IInteractible
         }
     }
 
-    public void DoInteraction(Character interactor)
+    public void DoInteraction(SimpleCharacter interactor)
     {
         switch (_behavior)
         {

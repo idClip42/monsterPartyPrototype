@@ -1,8 +1,8 @@
 using UnityEngine;
 
-public class CharacterCrouch : MonoBehaviour
+public class SimpleCharacterCrouch : MonoBehaviour
 {
-    private Character _characterBase;
+    private SimpleCharacter _characterBase;
 
     [SerializeField]
     [Range(0.1f, 0.7f)]
@@ -13,7 +13,7 @@ public class CharacterCrouch : MonoBehaviour
 
     void Awake()
     {
-        _characterBase = GetComponent<Character>();
+        _characterBase = GetComponent<SimpleCharacter>();
         if(_characterBase == null)
             throw new System.Exception($"Null character base on {this.gameObject.name}");
     }
