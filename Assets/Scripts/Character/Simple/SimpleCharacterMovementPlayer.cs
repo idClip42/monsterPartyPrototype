@@ -4,7 +4,7 @@ using UnityEditor;
 
 [RequireComponent(typeof(CharacterController))]
 [RequireComponent(typeof(SimpleCharacterCrouch))]
-public class SimpleCharacterMovementPlayer : MonoBehaviour
+public class SimpleCharacterMovementPlayer : CharacterMovementPlayer
 {
     private SimpleCharacter _characterBase;
     private SimpleCharacterCrouch _crouch;

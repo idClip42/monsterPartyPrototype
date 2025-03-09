@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class SimpleCharacterCrouch : MonoBehaviour
+public class SimpleCharacterCrouch : CharacterCrouch
 {
     private SimpleCharacter _characterBase;
 
