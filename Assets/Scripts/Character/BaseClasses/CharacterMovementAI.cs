@@ -4,11 +4,26 @@ using UnityEngine.AI;
 #nullable enable
 
 [RequireComponent(typeof(NavMeshAgent))]
+[RequireComponent(typeof(CharacterCrouch))]
 public abstract class CharacterMovementAI : MonoBehaviour, IInteractible, ICharacterComponent
 {
     public enum Behavior { HoldPosition, Follow }
 
+    [SerializeField]
+    private int _standingAgentTypeIndex = 0;
+    [SerializeField]
+    private int _crouchingAgentTypeIndex = 1;
+    private int _standingAgentTypeId = -1;
+    private int _crouchingAgentTypeId = -1;
+    private int CurrentAgentTypeId { get {
+        if(_crouch == null) return 0;
+        return _crouch.IsCrouching ?
+            _crouchingAgentTypeId : 
+            _standingAgentTypeId;
+    }}
+
     private NavMeshAgent? _navMeshAgent = null;
+    private CharacterCrouch? _crouch = null;
     private Behavior _behavior = Behavior.HoldPosition;
     private Transform? _behaviorTarget = null;
     public string CurrentBehavior => $"{_behavior} : {_behaviorTarget?.gameObject?.name}";
@@ -19,13 +34,21 @@ public abstract class CharacterMovementAI : MonoBehaviour, IInteractible, IChara
     public string DebugInfo { get {
         if(this.enabled == false) return "Off";
         if(_navMeshAgent == null) throw new System.Exception("Null _navMeshAgent");
-        return $"{_behavior}, {_behaviorTarget?.gameObject?.name}, {_navMeshAgent.speed}";
+        return $"{_behavior}, {_behaviorTarget?.gameObject?.name}, {_navMeshAgent.speed}m/s, Agent Type: '{NavMesh.GetSettingsNameFromID(CurrentAgentTypeId)}'";
     }}
 
     void Awake(){
         _navMeshAgent = GetComponent<NavMeshAgent>();
         if(_navMeshAgent == null)
             throw new System.Exception($"Null nav mesh agent on {this.gameObject.name}");
+
+        _crouch = GetComponent<CharacterCrouch>();
+        if(_crouch == null)
+            throw new System.Exception($"Null crouch on {this.gameObject.name}");
+        _crouch.OnCrouchToggle += OnCrouchToggle;
+
+        _standingAgentTypeId = NavMesh.GetSettingsByIndex(_standingAgentTypeIndex).agentTypeID;
+        _crouchingAgentTypeId = NavMesh.GetSettingsByIndex(_crouchingAgentTypeIndex).agentTypeID;
     }
 
     void OnEnable()
@@ -47,6 +70,12 @@ public abstract class CharacterMovementAI : MonoBehaviour, IInteractible, IChara
             if(_behaviorTarget == null) throw new System.Exception("Null _behaviorTarget");
             this._navMeshAgent.SetDestination(this._behaviorTarget.transform.position);
         }
+    }
+
+    private void OnCrouchToggle(bool isCrouching){
+        if(_navMeshAgent == null) throw new System.Exception("Null _navMeshAgent");
+        if(_crouch == null) throw new System.Exception("Null _crouch");
+        this._navMeshAgent.agentTypeID = CurrentAgentTypeId;
     }
 
     private void SetBehavior(Behavior behavior, Transform? target){

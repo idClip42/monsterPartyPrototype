@@ -15,6 +15,9 @@ public abstract class CharacterCrouch : MonoBehaviour, ICharacterComponent
         $"Crouching ({(_canUncrouch ? "Can Stand" : "Can't Stand")})" : 
         "Standing";
 
+    public delegate void CrouchToggleHandler(bool isCrouching);
+    public CrouchToggleHandler? OnCrouchToggle;
+
     protected virtual void Awake()
     {
         _characterBase = GetComponent<Character>();
@@ -44,6 +47,7 @@ public abstract class CharacterCrouch : MonoBehaviour, ICharacterComponent
             EnableCrouch();
         else 
             DisableCrouch();
+        OnCrouchToggle?.Invoke(this._isCrouching);
     }
 
     protected abstract void EnableCrouch();
