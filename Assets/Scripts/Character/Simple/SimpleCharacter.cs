@@ -9,7 +9,7 @@ public enum State { Player, AI };
 public class SimpleCharacter : Character
 {
     private SimpleCharacterMovementPlayer _playerMovement;
-    private SimpleCharacterMovementAI _aiMovement;
+    private CharacterMovementAI _aiMovement;
     private SimpleCharacterCrouch _crouch;
     private State _state;
 
@@ -41,7 +41,7 @@ public class SimpleCharacter : Character
         if(_playerMovement == null)
             throw new System.Exception($"Missing CharacterMovementPlayer on {this.gameObject.name}");
             
-        _aiMovement = GetComponent<SimpleCharacterMovementAI>();
+        _aiMovement = GetComponent<CharacterMovementAI>();
         if(_aiMovement == null)
             throw new System.Exception($"Missing CharacterMovementAI on {this.gameObject.name}");
             
