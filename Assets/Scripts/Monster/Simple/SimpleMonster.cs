@@ -37,6 +37,7 @@ public class SimpleMonster : Entity, IDebugInfoProvider
 
         if (_eye == null)
             throw new System.Exception("Missing eye.");
+        _eye.enabled = true;
 
         _navManager = FindFirstObjectByType<NavigationManager>();
         if (_navManager == null)
