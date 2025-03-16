@@ -7,7 +7,7 @@ using UnityEngine.AI;
 [DisallowMultipleComponent]
 public class SimpleMonster : Entity, IDebugInfoProvider
 {
-    private enum State { Wander, Chase }
+    private enum State { Wander, Chase, LostTarget }
     private enum HeadFollowBehavior { LastKnownPos, CurrentPos, LastKnownPlusMovementDirection }
 
     [SerializeField]
@@ -27,6 +27,16 @@ public class SimpleMonster : Entity, IDebugInfoProvider
     private float _maxRedirectTime = 60;
 
     [SerializeField]
+    [Range(5, 20)]
+    private float _minWaitAfterLostTime = 5;
+    [SerializeField]
+    [Range(5, 20)]
+    private float _maxWaitAfterLostTime = 10;
+    [SerializeField]
+    [Range(0, 1)]
+    private float _minWaitAfterLostTimeDist = 0.1f;
+
+    [SerializeField]
     [Range(0, 90)]
     private float _headSwingMaxAngle = 60;
     [SerializeField]
@@ -41,6 +51,7 @@ public class SimpleMonster : Entity, IDebugInfoProvider
     private State _state = State.Wander;
     private float _headSwingTimer = 0;
     private float _newDestinationTimer = 0f;
+    private float _waitAfterLostTimer = 0f;
     private Character? _targetCharacter = null;
     private Vector3? _targetCharacterLastSeenPosition = null;
     private Vector3? _targetCharacterLastSeenVelocity = null;
@@ -57,6 +68,8 @@ public class SimpleMonster : Entity, IDebugInfoProvider
                     return $"Wander: {_newDestinationTimer.ToString("F2")}s";
                 case State.Chase:
                     return $"Chase: {_targetCharacter?.gameObject.name}";
+                case State.LostTarget:
+                    return $"LostTarget: {_targetCharacter?.gameObject.name}, {_waitAfterLostTimer}s";
                 default:
                     throw new System.Exception($"Unrecognized monster state: {this._state}");
             }
@@ -109,6 +122,9 @@ public class SimpleMonster : Entity, IDebugInfoProvider
                 break;
             case State.Chase:
                 UpdateChase();
+                break;
+            case State.LostTarget:
+                UpdateLostTarget(Time.deltaTime);
                 break;
             default:
                 throw new System.Exception($"Unrecognized monster state: {this._state}");
@@ -204,6 +220,28 @@ public class SimpleMonster : Entity, IDebugInfoProvider
         );
     }
 
+    private void UpdateLostTarget(float deltaTime)
+    {
+        if(_navMeshAgent == null)
+            throw new System.Exception($"Null nav mesh agent on {this.gameObject.name}");
+
+        if(_navMeshAgent.remainingDistance < _minWaitAfterLostTimeDist){
+
+            // Zero out everything so that the
+            // head starts looking left and right again
+            this._targetCharacter = null;
+            this._targetCharacterLastSeenPosition = null;
+            this._targetCharacterLastSeenVelocity = null;
+
+            _waitAfterLostTimer -= deltaTime;
+            if(_waitAfterLostTimer <= 0){
+                this._state = State.Wander;
+                NewDestination();
+                SetRandomRedirectInterval();
+            }
+        }
+    }
+
     private void LookForCharacters()
     {
         if (_eye == null)
@@ -292,16 +330,22 @@ public class SimpleMonster : Entity, IDebugInfoProvider
         {
             if (this._state == State.Chase)
             {
-                // TODO: I want it to go to the last
-                // TODO: seen position and hang out there
-                // TODO: in a "Hunt" mode or something.
+                this._state = State.LostTarget;
+                _waitAfterLostTimer = Random.Range(_minWaitAfterLostTime, _maxWaitAfterLostTime);
             }
-            else
+            else if(this._state == State.LostTarget){
+
+            }
+            else if(this._state == State.Wander)
             {
+                // Wander clears everything out (I guess?)
                 this._targetCharacter = null;
                 this._targetCharacterLastSeenPosition = null;
                 this._targetCharacterLastSeenVelocity = null;
                 this._state = State.Wander;
+            }
+            else{
+                throw new System.Exception($"Unhandled state {this._state}");
             }
         }
 
