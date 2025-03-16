@@ -27,6 +27,7 @@ public class SimpleMonster : Entity, IDebugInfoProvider
     private State _state = State.Wander;
     private float _newDestinationTimer = 0f;
     private Character? _targetCharacter = null;
+    private Vector3? _targetCharacterLastSeenPosition = null;
 
     public string DebugName => "Simple Monster";
 
@@ -79,7 +80,7 @@ public class SimpleMonster : Entity, IDebugInfoProvider
 
     private void Update()
     {
-        Look();
+        LookForCharacters();
 
         switch (this._state)
         {
@@ -128,15 +129,15 @@ public class SimpleMonster : Entity, IDebugInfoProvider
     {
         if (_navMeshAgent == null)
             throw new System.Exception($"Null nav mesh agent on {this.gameObject.name}");
-        if (_targetCharacter == null)
+        if (_targetCharacterLastSeenPosition == null)
             throw new System.Exception($"Null target character on {this.gameObject.name}");
 
         _navMeshAgent.SetDestination(
-            this._targetCharacter.transform.position
+            this._targetCharacterLastSeenPosition.Value
         );
     }
 
-    private void Look()
+    private void LookForCharacters()
     {
         if (_eye == null)
             throw new System.Exception("Missing eye.");
@@ -216,12 +217,29 @@ public class SimpleMonster : Entity, IDebugInfoProvider
         if (closestVisibleCharacter != null)
         {
             this._targetCharacter = closestVisibleCharacter;
+            this._targetCharacterLastSeenPosition = closestVisibleCharacter.transform.position;
             this._state = State.Chase;
         }
         else
         {
-            this._targetCharacter = null;
-            this._state = State.Wander;
+            if(this._state == State.Chase)
+            {
+                
+            }
+            else
+            {
+                this._targetCharacter = null;
+                this._targetCharacterLastSeenPosition = null;
+                this._state = State.Wander;
+            }
+        }
+
+        if(this._targetCharacterLastSeenPosition != null){
+            Debug.DrawLine(
+                _eye.transform.position,
+                this._targetCharacterLastSeenPosition.Value,
+                Color.red
+            );
         }
     }
 }
