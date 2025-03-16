@@ -2,6 +2,7 @@ using UnityEngine;
 
 #nullable enable
 
+[DisallowMultipleComponent]
 public abstract class CharacterCrouch : MonoBehaviour, IDebugInfoProvider
 {
     private Character? _characterBase = null;

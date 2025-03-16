@@ -5,6 +5,7 @@ using UnityEngine.AI;
 
 [RequireComponent(typeof(NavMeshAgent))]
 [RequireComponent(typeof(CharacterCrouch))]
+[DisallowMultipleComponent]
 public abstract class CharacterMovementAI : MonoBehaviour, IInteractible, IDebugInfoProvider
 {
     public enum Behavior { HoldPosition, Follow }

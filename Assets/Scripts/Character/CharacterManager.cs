@@ -2,6 +2,7 @@ using UnityEngine;
 
 #nullable enable
 
+[DisallowMultipleComponent]
 public class CharacterManager : MonoBehaviour
 {
     private CameraControl? _cameraControl = null;

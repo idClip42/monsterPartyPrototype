@@ -4,6 +4,7 @@ using UnityEngine.AI;
 # nullable enable
 
 [RequireComponent(typeof(NavMeshAgent))]
+[DisallowMultipleComponent]
 public class SimpleMonster : Entity, IDebugInfoProvider
 {
     [SerializeField]

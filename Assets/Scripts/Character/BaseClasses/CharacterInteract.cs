@@ -4,6 +4,7 @@ using System.Linq;
 
 #nullable enable
 
+[DisallowMultipleComponent]
 public abstract class CharacterInteract : MonoBehaviour, IDebugInfoProvider
 {
     private Character? _characterBase = null;

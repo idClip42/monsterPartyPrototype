@@ -5,6 +5,7 @@ using UnityEngine.AI;
 
 #nullable enable
 
+[DisallowMultipleComponent]
 public class NavigationManager : MonoBehaviour
 {
     private const float INTERVAL = 3;

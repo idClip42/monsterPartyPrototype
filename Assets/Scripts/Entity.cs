@@ -5,6 +5,7 @@ using System;
 
 #nullable enable
 
+[DisallowMultipleComponent]
 public abstract class Entity : MonoBehaviour
 {
     private IDebugInfoProvider[] _debugInfoComponents = {};

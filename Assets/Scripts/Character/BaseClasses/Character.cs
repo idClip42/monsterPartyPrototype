@@ -1,18 +1,15 @@
 using UnityEngine;
-using UnityEditor;
-using System.Linq;
 using System;
 
 #nullable enable
 
 public enum State { Player, AI };
 
+[DisallowMultipleComponent]
 public abstract class Character : Entity, IDebugInfoProvider
 {
     private CharacterMovementPlayer? _playerMovement = null;
     private CharacterMovementAI? _aiMovement = null;
-
-    // private IDebugInfoProvider[] _components = {};
 
     public string DebugName => "Character";
     public string DebugInfo { get {
@@ -56,27 +53,5 @@ public abstract class Character : Entity, IDebugInfoProvider
         _aiMovement = GetComponent<CharacterMovementAI>();
         if(_aiMovement == null)
             throw new Exception($"Missing CharacterMovementAI on {this.gameObject.name}");
-
-        // _components = GetComponents<IDebugInfoProvider>();
     }
-
-//     #if UNITY_EDITOR
-//         void OnDrawGizmos()
-//         {
-//             Color prevColor = Handles.color;
-//             Handles.color = Color.white;
-
-//             string text = @$"
-// {this.gameObject.name}
-// {this._state}
-// {String.Join('\n', _components.Select(c=>$"{c.DebugName}: {c.DebugInfo}"))}
-//             ".Trim();
-
-//             Handles.Label(
-//                 transform.position + Vector3.up * 1f,
-//                 text
-//             );
-//             Handles.color = prevColor;
-//         }
-//     #endif
 }

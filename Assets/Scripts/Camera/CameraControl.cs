@@ -4,6 +4,7 @@ using UnityEngine;
 #nullable enable
 
 [RequireComponent(typeof(Camera))]
+[DisallowMultipleComponent]
 public class CameraControl : MonoBehaviour
 {
     private enum State { Orbit, Transition };
