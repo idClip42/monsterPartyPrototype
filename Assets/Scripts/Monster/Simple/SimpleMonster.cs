@@ -8,7 +8,7 @@ using UnityEngine.AI;
 public class SimpleMonster : Entity, IDebugInfoProvider
 {
     private enum State { Wander, Chase }
-    private enum HeadFollowBehavior { LastKnownPos, CurrentPos }
+    private enum HeadFollowBehavior { LastKnownPos, CurrentPos, LastKnownPlusMovementDirection }
 
     [SerializeField]
     private Transform? _head;
@@ -17,7 +17,7 @@ public class SimpleMonster : Entity, IDebugInfoProvider
     private Light? _eye;
 
     [SerializeField]
-    private HeadFollowBehavior _headFollowBehavior = HeadFollowBehavior.CurrentPos;
+    private HeadFollowBehavior _headFollowBehavior = HeadFollowBehavior.LastKnownPlusMovementDirection;
 
     [SerializeField]
     [Range(5, 100)]
@@ -43,6 +43,7 @@ public class SimpleMonster : Entity, IDebugInfoProvider
     private float _newDestinationTimer = 0f;
     private Character? _targetCharacter = null;
     private Vector3? _targetCharacterLastSeenPosition = null;
+    private Vector3? _targetCharacterLastSeenVelocity = null;
 
     public string DebugName => "Simple Monster";
 
@@ -137,12 +138,30 @@ public class SimpleMonster : Entity, IDebugInfoProvider
         if (_head == null)
             throw new System.Exception("Missing head.");
 
-        Vector3? lookTarget = _headFollowBehavior switch
+        Vector3? lookTarget;
+        switch (_headFollowBehavior)
         {
-            HeadFollowBehavior.LastKnownPos => this._targetCharacterLastSeenPosition,
-            HeadFollowBehavior.CurrentPos => this._targetCharacter?.transform.position,
-            _ => throw new System.Exception($"Unrecognized behavior: {_headFollowBehavior}")
-        };
+            case HeadFollowBehavior.LastKnownPos:
+                if(this._targetCharacterLastSeenPosition == null)
+                    lookTarget = null;
+                else
+                    lookTarget = this._targetCharacterLastSeenPosition;
+                break;
+            case HeadFollowBehavior.CurrentPos:
+                if(this._targetCharacter == null)
+                    lookTarget = null;
+                else
+                    lookTarget = this._targetCharacter.transform.position;
+                break;
+            case HeadFollowBehavior.LastKnownPlusMovementDirection:
+                if(this._targetCharacterLastSeenPosition == null || this._targetCharacterLastSeenVelocity == null)
+                    lookTarget = null;
+                else
+                    lookTarget = this._targetCharacterLastSeenPosition.Value + this._targetCharacterLastSeenVelocity.Value;
+                break;
+            default:
+                throw new System.Exception($"Unrecognized behavior: {_headFollowBehavior}");
+        }
 
         if (lookTarget != null)
         {
@@ -266,6 +285,7 @@ public class SimpleMonster : Entity, IDebugInfoProvider
         {
             this._targetCharacter = closestVisibleCharacter;
             this._targetCharacterLastSeenPosition = closestVisibleCharacter.transform.position;
+            this._targetCharacterLastSeenVelocity = closestVisibleCharacter.CurrentVelocity;
             this._state = State.Chase;
         }
         else
@@ -280,6 +300,7 @@ public class SimpleMonster : Entity, IDebugInfoProvider
             {
                 this._targetCharacter = null;
                 this._targetCharacterLastSeenPosition = null;
+                this._targetCharacterLastSeenVelocity = null;
                 this._state = State.Wander;
             }
         }
@@ -291,6 +312,14 @@ public class SimpleMonster : Entity, IDebugInfoProvider
                 this._targetCharacterLastSeenPosition.Value,
                 Color.red
             );
+
+            if(this._targetCharacterLastSeenVelocity != null){
+                Debug.DrawLine(
+                    this._targetCharacterLastSeenPosition.Value,
+                    this._targetCharacterLastSeenPosition.Value + this._targetCharacterLastSeenVelocity.Value,
+                    Color.red
+                );
+            }
         }
     }
 }

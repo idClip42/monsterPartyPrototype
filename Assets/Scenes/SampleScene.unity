@@ -3722,6 +3722,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _head: {fileID: 254399266}
   _eye: {fileID: 1531964679}
+  _headFollowBehavior: 2
   _minRedirectTime: 5
   _maxRedirectTime: 15
   _headSwingMaxAngle: 30
