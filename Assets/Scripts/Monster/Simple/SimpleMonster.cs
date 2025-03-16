@@ -10,6 +10,9 @@ public class SimpleMonster : Entity, IDebugInfoProvider
     private enum State { Wander, Chase }
 
     [SerializeField]
+    private Transform? _head;
+
+    [SerializeField]
     private Light? _eye;
 
     [SerializeField]
@@ -19,12 +22,20 @@ public class SimpleMonster : Entity, IDebugInfoProvider
     [Range(5, 100)]
     private float _maxRedirectTime = 60;
 
+    [SerializeField]
+    [Range(0, 90)]
+    private float _headSwingMaxAngle = 60;
+    [SerializeField]
+    [Range(1, 10)]
+    private float _headSwingPeriod = 1;
+
     private Character[] _characters = { };
 
     private NavigationManager? _navManager = null;
     private NavMeshAgent? _navMeshAgent = null;
 
     private State _state = State.Wander;
+    private float _headSwingTimer = 0;
     private float _newDestinationTimer = 0f;
     private Character? _targetCharacter = null;
     private Vector3? _targetCharacterLastSeenPosition = null;
@@ -53,6 +64,9 @@ public class SimpleMonster : Entity, IDebugInfoProvider
 
         _characters = FindObjectsByType<Character>(FindObjectsSortMode.None);
 
+        if (_head == null)
+            throw new System.Exception("Missing head.");
+
         if (_eye == null)
             throw new System.Exception("Missing eye.");
         _eye.enabled = true;
@@ -80,6 +94,7 @@ public class SimpleMonster : Entity, IDebugInfoProvider
 
     private void Update()
     {
+        MoveHead(Time.deltaTime);
         LookForCharacters();
 
         switch (this._state)
@@ -111,6 +126,28 @@ public class SimpleMonster : Entity, IDebugInfoProvider
         _navMeshAgent.SetDestination(
             _navManager.GetRandomDestinationStanding()
         );
+    }
+
+    private void MoveHead(float deltaTime)
+    {
+        if (_head == null)
+            throw new System.Exception("Missing head.");
+
+        if (this._targetCharacterLastSeenPosition != null)
+        {
+            // Move head to look at target
+            Vector3 atTarget = (this._targetCharacterLastSeenPosition.Value - this._head.position).normalized;
+            Vector3 projected = Vector3.ProjectOnPlane(atTarget, Vector3.up).normalized;
+            this._head.transform.forward = projected;
+        }
+        else
+        {
+            // Swing left and right
+            _headSwingTimer += deltaTime;
+            float sinCurve = Mathf.Sin(_headSwingTimer * Mathf.PI * 2f / _headSwingPeriod);
+            float angle = sinCurve * _headSwingMaxAngle;
+            this._head.localRotation = Quaternion.Euler(0, angle, 0);
+        }
     }
 
     private void UpdateSearch()
@@ -222,9 +259,11 @@ public class SimpleMonster : Entity, IDebugInfoProvider
         }
         else
         {
-            if(this._state == State.Chase)
+            if (this._state == State.Chase)
             {
-                
+                // TODO: I want it to go to the last
+                // TODO: seen position and hang out there
+                // TODO: in a "Hunt" mode or something.
             }
             else
             {
@@ -234,7 +273,8 @@ public class SimpleMonster : Entity, IDebugInfoProvider
             }
         }
 
-        if(this._targetCharacterLastSeenPosition != null){
+        if (this._targetCharacterLastSeenPosition != null)
+        {
             Debug.DrawLine(
                 _eye.transform.position,
                 this._targetCharacterLastSeenPosition.Value,
