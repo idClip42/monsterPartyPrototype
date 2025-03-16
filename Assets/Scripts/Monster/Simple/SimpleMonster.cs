@@ -8,12 +8,16 @@ using UnityEngine.AI;
 public class SimpleMonster : Entity, IDebugInfoProvider
 {
     private enum State { Wander, Chase }
+    private enum HeadFollowBehavior { LastKnownPos, CurrentPos }
 
     [SerializeField]
     private Transform? _head;
 
     [SerializeField]
     private Light? _eye;
+
+    [SerializeField]
+    private HeadFollowBehavior _headFollowBehavior = HeadFollowBehavior.CurrentPos;
 
     [SerializeField]
     [Range(5, 100)]
@@ -133,10 +137,17 @@ public class SimpleMonster : Entity, IDebugInfoProvider
         if (_head == null)
             throw new System.Exception("Missing head.");
 
-        if (this._targetCharacterLastSeenPosition != null)
+        Vector3? lookTarget = _headFollowBehavior switch
+        {
+            HeadFollowBehavior.LastKnownPos => this._targetCharacterLastSeenPosition,
+            HeadFollowBehavior.CurrentPos => this._targetCharacter?.transform.position,
+            _ => throw new System.Exception($"Unrecognized behavior: {_headFollowBehavior}")
+        };
+
+        if (lookTarget != null)
         {
             // Move head to look at target
-            Vector3 atTarget = (this._targetCharacterLastSeenPosition.Value - this._head.position).normalized;
+            Vector3 atTarget = (lookTarget - this._head.position).Value.normalized;
             Vector3 projected = Vector3.ProjectOnPlane(atTarget, Vector3.up).normalized;
             this._head.transform.forward = projected;
         }
