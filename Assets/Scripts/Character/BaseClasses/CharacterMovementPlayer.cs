@@ -3,7 +3,7 @@ using UnityEngine;
 #nullable enable
 
 [DisallowMultipleComponent]
-public abstract class CharacterMovementPlayer : MonoBehaviour, IDebugInfoProvider
+public abstract class CharacterMovementPlayer : CharacterMovement, IDebugInfoProvider
 {
     private Character? _characterBase = null;
     private CharacterCrouch? _crouch = null;
@@ -17,7 +17,7 @@ public abstract class CharacterMovementPlayer : MonoBehaviour, IDebugInfoProvide
     public string DebugName => "Player Movement";
     public string DebugInfo { get {
         if(this.enabled == false) return "Off";
-        return "On";
+        return $"{this.CurrentVelocity.magnitude} m/s";
     }}
 
     protected virtual void Awake(){

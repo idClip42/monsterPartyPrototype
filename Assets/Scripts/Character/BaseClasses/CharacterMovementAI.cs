@@ -6,7 +6,7 @@ using UnityEngine.AI;
 [RequireComponent(typeof(NavMeshAgent))]
 [RequireComponent(typeof(CharacterCrouch))]
 [DisallowMultipleComponent]
-public abstract class CharacterMovementAI : MonoBehaviour, IInteractible, IDebugInfoProvider
+public abstract class CharacterMovementAI : CharacterMovement, IInteractible, IDebugInfoProvider
 {
     public enum Behavior { HoldPosition, Follow }
 
@@ -31,7 +31,13 @@ public abstract class CharacterMovementAI : MonoBehaviour, IInteractible, IDebug
     public string DebugInfo { get {
         if(this.enabled == false) return "Off";
         if(_navMeshAgent == null) throw new System.Exception("Null _navMeshAgent");
-        return $"{_behavior}, {_behaviorTarget?.gameObject?.name}, {_navMeshAgent.speed}m/s, Agent Type: '{NavMesh.GetSettingsNameFromID(CurrentAgentTypeId)}'";
+        return $"{_behavior}, {_behaviorTarget?.gameObject?.name}, {CurrentVelocity.magnitude} m/s, Agent Type: '{NavMesh.GetSettingsNameFromID(CurrentAgentTypeId)}'";
+    }}
+
+    public override Vector3 CurrentVelocity { get{
+        if(this._navMeshAgent == null)
+            return Vector3.zero;
+        return this._navMeshAgent.velocity;
     }}
 
     private void Awake(){

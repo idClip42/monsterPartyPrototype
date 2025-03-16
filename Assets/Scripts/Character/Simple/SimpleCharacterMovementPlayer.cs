@@ -8,6 +8,10 @@ public class SimpleCharacterMovementPlayer : CharacterMovementPlayer
 {
     private CharacterController? _characterController = null;
 
+    public override Vector3 CurrentVelocity => _characterController ? 
+        _characterController.velocity : 
+        Vector3.zero;
+
     protected override void Awake()
     {
         base.Awake();
