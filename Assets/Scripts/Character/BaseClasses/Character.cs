@@ -60,6 +60,6 @@ public abstract class Character : Entity, IDebugInfoProvider
         if(_aiMovement == null)
             throw new Exception($"Missing CharacterMovementAI on {this.gameObject.name}");
 
-        _lookRaycastTargets = GetComponentsInChildren<CharacterLookRaycastTarget>().Select(item => item.gameObject.transform).ToArray();
+        _lookRaycastTargets = GetComponentsInChildren<CharacterLookRaycastTarget>(false).Select(item => item.gameObject.transform).ToArray();
     }
 }
