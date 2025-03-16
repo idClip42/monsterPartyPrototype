@@ -1,5 +1,8 @@
 using UnityEngine;
 using System;
+using System.Linq;
+using System.Collections.ObjectModel;
+using System.Collections.Generic;
 
 #nullable enable
 
@@ -10,10 +13,13 @@ public abstract class Character : Entity, IDebugInfoProvider
 {
     private CharacterMovementPlayer? _playerMovement = null;
     private CharacterMovementAI? _aiMovement = null;
+    private Transform[] _lookRaycastTargets = {};
+
+    public IReadOnlyCollection<Transform> LookRaycastTargets => _lookRaycastTargets;
 
     public string DebugName => "Character";
     public string DebugInfo { get {
-        return this._state.ToString();
+        return $"{this._state}, {_lookRaycastTargets.Length} Raycast Targets";
     }}
 
     private State _state = State.AI;
@@ -53,5 +59,7 @@ public abstract class Character : Entity, IDebugInfoProvider
         _aiMovement = GetComponent<CharacterMovementAI>();
         if(_aiMovement == null)
             throw new Exception($"Missing CharacterMovementAI on {this.gameObject.name}");
+
+        _lookRaycastTargets = GetComponentsInChildren<CharacterLookRaycastTarget>().Select(item => item.gameObject.transform).ToArray();
     }
 }
