@@ -4,7 +4,7 @@ using UnityEngine.AI;
 # nullable enable
 
 [RequireComponent(typeof(NavMeshAgent))]
-public class SimpleMonster : Entity
+public class SimpleMonster : Entity, IDebugInfoProvider
 {
     [SerializeField]
     private Light? _eye;
@@ -22,6 +22,12 @@ public class SimpleMonster : Entity
     private NavMeshAgent? _navMeshAgent = null;
 
     private float _timer = 0f;
+
+    public string DebugName => "Simple Monster";
+
+    public string DebugInfo { get {
+        return $"{_timer.ToString("F2")}s";
+    }}
 
     protected override void Awake()
     {
