@@ -52,12 +52,16 @@ public abstract class CharacterMovementPlayer : CharacterMovement, IDebugInfoPro
             Vector3.up
         ).normalized;
 
-        Vector3 moveDirection = (camForward * vertical + camRight * horizontal).normalized;
         float speed = isRunning ? _runSpeed : _walkSpeed;
-        float inputMagnitude = new Vector2(horizontal, vertical).magnitude;
+
+        // TODO: This isn't a perfect solution.
+        // TODO: Surely there's a real solution out there somewhere.
+        Vector3 input = camForward * vertical + camRight * horizontal;
+        Vector3 clampedInput = Vector3.ClampMagnitude(input, 1);
+        Vector3 desiredVelocity = clampedInput * speed;
 
         Move(
-            moveDirection * speed * inputMagnitude,
+            desiredVelocity,
             Time.deltaTime
         );
     }
