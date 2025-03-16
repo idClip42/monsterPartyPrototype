@@ -7,6 +7,8 @@ using UnityEngine.AI;
 [DisallowMultipleComponent]
 public class SimpleMonster : Entity, IDebugInfoProvider
 {
+    private enum State { Searching, Chasing }
+
     [SerializeField]
     private Light? _eye;
 
@@ -17,18 +19,32 @@ public class SimpleMonster : Entity, IDebugInfoProvider
     [Range(5, 100)]
     private float _maxRedirectTime = 60;
 
-    private Character[] _characters = {};
+    private Character[] _characters = { };
 
     private NavigationManager? _navManager = null;
     private NavMeshAgent? _navMeshAgent = null;
 
-    private float _timer = 0f;
+    private State _state = State.Searching;
+    private float _newDestinationTimer = 0f;
+    private Character? _targetCharacter = null;
 
     public string DebugName => "Simple Monster";
 
-    public string DebugInfo { get {
-        return $"{_timer.ToString("F2")}s";
-    }}
+    public string DebugInfo
+    {
+        get
+        {
+            switch (this._state)
+            {
+                case State.Searching:
+                    return $"Searching: {_newDestinationTimer.ToString("F2")}s";
+                case State.Chasing:
+                    return $"Chasing: {_targetCharacter?.gameObject.name}";
+                default:
+                    throw new System.Exception($"Unrecognized monster state: {this._state}");
+            }
+        }
+    }
 
     protected override void Awake()
     {
@@ -63,8 +79,70 @@ public class SimpleMonster : Entity, IDebugInfoProvider
 
     private void Update()
     {
+        Look();
+
+        switch (this._state)
+        {
+            case State.Searching:
+                UpdateSearch();
+                break;
+            case State.Chasing:
+                UpdateChase();
+                break;
+            default:
+                throw new System.Exception($"Unrecognized monster state: {this._state}");
+        }
+    }
+
+    private void SetRandomRedirectInterval()
+    {
+        // Randomly select a new interval between min and max
+        _newDestinationTimer = Random.Range(_minRedirectTime, _maxRedirectTime);
+    }
+
+    private void NewDestination()
+    {
+        if (_navManager == null)
+            throw new System.Exception($"Null _navManager on {this.gameObject.name}");
+        if (_navMeshAgent == null)
+            throw new System.Exception($"Null nav mesh agent on {this.gameObject.name}");
+
+        _navMeshAgent.SetDestination(
+            _navManager.GetRandomDestinationStanding()
+        );
+    }
+
+    private void UpdateSearch()
+    {
+        // Countdown timer logic to choose a new destination
+        _newDestinationTimer -= Time.deltaTime;
+
+        if (_newDestinationTimer <= 0f)
+        {
+            NewDestination();
+            SetRandomRedirectInterval(); // Choose a new random interval
+        }
+    }
+
+    private void UpdateChase()
+    {
+        if (_navMeshAgent == null)
+            throw new System.Exception($"Null nav mesh agent on {this.gameObject.name}");
+        if (_targetCharacter == null)
+            throw new System.Exception($"Null target character on {this.gameObject.name}");
+
+        _navMeshAgent.SetDestination(
+            this._targetCharacter.transform.position
+        );
+    }
+
+    private void Look()
+    {
         if (_eye == null)
             throw new System.Exception("Missing eye.");
+
+        Character? closestVisibleCharacter = null;
+        float closestDistance = float.MaxValue;
 
         RaycastHit hitInfo;
         foreach (var targetCharacter in _characters)
@@ -102,6 +180,12 @@ public class SimpleMonster : Entity, IDebugInfoProvider
                     if (dotProduct > cosHalfSpotAngle)
                     {
                         // Target is within the vision cone
+                        if (distance < closestDistance)
+                        {
+                            closestVisibleCharacter = targetCharacter;
+                            closestDistance = distance;
+                        }
+
                         Debug.DrawLine(
                             _eye.transform.position,
                             targetPos,
@@ -129,31 +213,15 @@ public class SimpleMonster : Entity, IDebugInfoProvider
             }
         }
 
-        // Countdown timer logic to choose a new destination
-        _timer -= Time.deltaTime;
-
-        if (_timer <= 0f)
+        if (closestVisibleCharacter != null)
         {
-            NewDestination();
-            SetRandomRedirectInterval(); // Choose a new random interval
+            this._targetCharacter = closestVisibleCharacter;
+            this._state = State.Chasing;
         }
-    }
-
-    private void SetRandomRedirectInterval()
-    {
-        // Randomly select a new interval between min and max
-        _timer = Random.Range(_minRedirectTime, _maxRedirectTime);
-    }
-
-    private void NewDestination()
-    {
-        if (_navManager == null)
-            throw new System.Exception($"Null _navManager on {this.gameObject.name}");
-        if (_navMeshAgent == null)
-            throw new System.Exception($"Null nav mesh agent on {this.gameObject.name}");
-
-        _navMeshAgent.SetDestination(
-            _navManager.GetRandomDestinationStanding()
-        );
+        else
+        {
+            this._targetCharacter = null;
+            this._state = State.Searching;
+        }
     }
 }
