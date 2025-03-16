@@ -21,6 +21,18 @@ public abstract class Character : Entity, IDebugInfoProvider
         return $"{this._state}, {_lookRaycastTargets.Length} Raycast Targets";
     }}
 
+    public Vector3 CurrentVelocity { get{
+        if(_playerMovement != null && _playerMovement.enabled){
+            return _playerMovement.CurrentVelocity;
+        }
+        else if(_aiMovement != null && _aiMovement.enabled){
+            return _aiMovement.CurrentVelocity;
+        }
+        else {
+            return Vector3.zero;
+        }
+    }}
+
     private State _state = State.AI;
     public State State {
         get {
