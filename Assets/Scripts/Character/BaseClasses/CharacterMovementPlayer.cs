@@ -17,7 +17,7 @@ public abstract class CharacterMovementPlayer : CharacterMovement, IDebugInfoPro
     public string DebugName => "Player Movement";
     public string DebugInfo { get {
         if(this.enabled == false) return "Off";
-        return $"{this.CurrentVelocity.magnitude} m/s";
+        return $"{this.CurrentVelocity.magnitude:F2} m/s";
     }}
 
     protected virtual void Awake(){

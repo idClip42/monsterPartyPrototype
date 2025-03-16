@@ -31,7 +31,7 @@ public abstract class CharacterMovementAI : CharacterMovement, IInteractible, ID
     public string DebugInfo { get {
         if(this.enabled == false) return "Off";
         if(_navMeshAgent == null) throw new System.Exception("Null _navMeshAgent");
-        return $"{_behavior}, {_behaviorTarget?.gameObject?.name}, {CurrentVelocity.magnitude} m/s, Agent Type: '{NavMesh.GetSettingsNameFromID(CurrentAgentTypeId)}'";
+        return $"{_behavior}, {_behaviorTarget?.gameObject?.name}, {CurrentVelocity.magnitude:F2} m/s, Agent Type: '{NavMesh.GetSettingsNameFromID(CurrentAgentTypeId)}'";
     }}
 
     public override Vector3 CurrentVelocity { get{
