@@ -4,7 +4,7 @@ using UnityEngine.AI;
 # nullable enable
 
 [RequireComponent(typeof(NavMeshAgent))]
-public class SimpleMonster : MonoBehaviour
+public class SimpleMonster : Entity
 {
     [SerializeField]
     private Light? _eye;
@@ -23,8 +23,10 @@ public class SimpleMonster : MonoBehaviour
 
     private float _timer = 0f;
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+
         _characters = FindObjectsByType<Character>(FindObjectsSortMode.None);
 
         if (_eye == null)
