@@ -2,7 +2,7 @@ using UnityEngine;
 
 #nullable enable
 
-public abstract class CharacterMovementPlayer : MonoBehaviour, ICharacterComponent
+public abstract class CharacterMovementPlayer : MonoBehaviour, IDebugInfoProvider
 {
     private Character? _characterBase = null;
     private CharacterCrouch? _crouch = null;
@@ -33,7 +33,7 @@ public abstract class CharacterMovementPlayer : MonoBehaviour, ICharacterCompone
             throw new System.Exception($"Null camera");
     }
 
-    void Update()
+    private void Update()
     {
         if(_crouch == null) throw new System.Exception("Null _crouch");
         if(_camera == null) throw new System.Exception("Null _camera");

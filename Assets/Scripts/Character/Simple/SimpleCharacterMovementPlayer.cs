@@ -17,13 +17,13 @@ public class SimpleCharacterMovementPlayer : CharacterMovementPlayer
             throw new System.Exception($"Null character controller on {this.gameObject.name}");
     }
 
-    void OnEnable()
+    private void OnEnable()
     {
         if(_characterController == null) return;
         _characterController.enabled = true;
     }
 
-    void OnDisable()
+    private void OnDisable()
     {
         if(_characterController == null) return;
         _characterController.enabled = false;

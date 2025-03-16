@@ -2,7 +2,7 @@ using UnityEngine;
 
 #nullable enable
 
-public abstract class CharacterCrouch : MonoBehaviour, ICharacterComponent
+public abstract class CharacterCrouch : MonoBehaviour, IDebugInfoProvider
 {
     private Character? _characterBase = null;
 
@@ -25,7 +25,7 @@ public abstract class CharacterCrouch : MonoBehaviour, ICharacterComponent
             throw new System.Exception($"Null character base on {this.gameObject.name}");
     }
 
-    void Update()
+    private void Update()
     {
         if(_characterBase == null) throw new System.Exception("Null _characterBase");
         

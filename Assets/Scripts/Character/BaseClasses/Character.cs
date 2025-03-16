@@ -7,12 +7,17 @@ using System;
 
 public enum State { Player, AI };
 
-public abstract class Character : MonoBehaviour
+public abstract class Character : Entity, IDebugInfoProvider
 {
     private CharacterMovementPlayer? _playerMovement = null;
     private CharacterMovementAI? _aiMovement = null;
 
-    private ICharacterComponent[] _components = {};
+    // private IDebugInfoProvider[] _components = {};
+
+    public string DebugName => "Character";
+    public string DebugInfo { get {
+        return this._state.ToString();
+    }}
 
     private State _state = State.AI;
     public State State {
@@ -40,8 +45,10 @@ public abstract class Character : MonoBehaviour
         }
     }
 
-    public void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+
         _playerMovement = GetComponent<CharacterMovementPlayer>();
         if(_playerMovement == null)
             throw new Exception($"Missing CharacterMovementPlayer on {this.gameObject.name}");
@@ -50,26 +57,26 @@ public abstract class Character : MonoBehaviour
         if(_aiMovement == null)
             throw new Exception($"Missing CharacterMovementAI on {this.gameObject.name}");
 
-        _components = GetComponents<ICharacterComponent>();
+        // _components = GetComponents<IDebugInfoProvider>();
     }
 
-    #if UNITY_EDITOR
-        void OnDrawGizmos()
-        {
-            Color prevColor = Handles.color;
-            Handles.color = Color.white;
+//     #if UNITY_EDITOR
+//         void OnDrawGizmos()
+//         {
+//             Color prevColor = Handles.color;
+//             Handles.color = Color.white;
 
-            string text = @$"
-{this.gameObject.name}
-{this._state}
-{String.Join('\n', _components.Select(c=>$"{c.DebugName}: {c.DebugInfo}"))}
-            ".Trim();
+//             string text = @$"
+// {this.gameObject.name}
+// {this._state}
+// {String.Join('\n', _components.Select(c=>$"{c.DebugName}: {c.DebugInfo}"))}
+//             ".Trim();
 
-            Handles.Label(
-                transform.position + Vector3.up * 1f,
-                text
-            );
-            Handles.color = prevColor;
-        }
-    #endif
+//             Handles.Label(
+//                 transform.position + Vector3.up * 1f,
+//                 text
+//             );
+//             Handles.color = prevColor;
+//         }
+//     #endif
 }

@@ -10,7 +10,7 @@ public class CharacterManager : MonoBehaviour
 
     public Character? SelectedCharacter => _selectedCharacter;
 
-    void Awake()
+    private void Awake()
     {
         _cameraControl = FindFirstObjectByType<CameraControl>();
         if(_cameraControl == null) throw new System.Exception("Missing camera control");
@@ -18,12 +18,12 @@ public class CharacterManager : MonoBehaviour
         _characters = FindObjectsByType<Character>(FindObjectsSortMode.None);
     }
 
-    void Start()
+    private void Start()
     {
         SelectCharacter(0, true);
     }
 
-    void Update()
+    private void Update()
     {
         int numberKeyPressed = GetNumberKeyPressed();
         if (numberKeyPressed != -1)

@@ -4,7 +4,7 @@ using System.Linq;
 
 #nullable enable
 
-public abstract class CharacterInteract : MonoBehaviour, ICharacterComponent
+public abstract class CharacterInteract : MonoBehaviour, IDebugInfoProvider
 {
     private Character? _characterBase = null;
     private IInteractible?[] _interactibles = {};
@@ -19,7 +19,7 @@ public abstract class CharacterInteract : MonoBehaviour, ICharacterComponent
         return _interactibleWithinReach.gameObject.name;
     }}
 
-    void Awake()
+    private void Awake()
     {
         _characterBase = GetComponent<Character>();
         if(_characterBase == null)
@@ -31,7 +31,7 @@ public abstract class CharacterInteract : MonoBehaviour, ICharacterComponent
             .ToArray();
     }
 
-    void Update()
+    private void Update()
     {
         if(_characterBase == null) throw new System.Exception("Null _characterBase");
         _interactibleWithinReach = GetInteractibleWithinReach();
@@ -45,7 +45,7 @@ public abstract class CharacterInteract : MonoBehaviour, ICharacterComponent
     }
 
 #if UNITY_EDITOR
-    void OnDrawGizmos()
+    private void OnDrawGizmos()
     {
         if(!enabled) return;
         if(_characterBase == null) return;

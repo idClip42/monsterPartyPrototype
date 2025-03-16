@@ -38,7 +38,7 @@ public class CameraControl : MonoBehaviour
     private CameraControlTransition? _transitioner = null;
     private Action? _transitionEndCallback = null;
 
-    void Awake()
+    private void Awake()
     {
         _characterManager = FindFirstObjectByType<CharacterManager>();
         if(_characterManager == null)
@@ -51,7 +51,7 @@ public class CameraControl : MonoBehaviour
         _transitioner = new CameraControlTransition(this, _navManager);
     }
 
-    void Update()
+    private void Update()
     {
         if(_currentState == State.Orbit){
             OrbitControl();

@@ -29,7 +29,7 @@ public class NavigationManager : MonoBehaviour
         return _crouchingNavMesh.agentTypeID;
     }} 
 
-    void Awake()
+    private void Awake()
     {
         if(_standingNavMesh == null)
             throw new System.Exception("Null _standingNavMesh");

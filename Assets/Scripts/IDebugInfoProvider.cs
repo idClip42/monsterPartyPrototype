@@ -1,6 +1,6 @@
 #nullable enable
 
-public interface ICharacterComponent
+public interface IDebugInfoProvider
 {
     public string DebugName { get; }
     public string DebugInfo { get; }

@@ -23,7 +23,7 @@ public class SimpleMonster : MonoBehaviour
 
     private float _timer = 0f;
 
-    void Awake()
+    private void Awake()
     {
         _characters = FindObjectsByType<Character>(FindObjectsSortMode.None);
 
@@ -42,7 +42,7 @@ public class SimpleMonster : MonoBehaviour
             throw new System.Exception("Invalid redirect times");
     }
 
-    void Start()
+    private void Start()
     {
         // Set a random timer interval on start
         SetRandomRedirectInterval();
@@ -51,7 +51,7 @@ public class SimpleMonster : MonoBehaviour
         NewDestination();
     }
 
-    void Update()
+    private void Update()
     {
         if (_eye == null)
             throw new System.Exception("Missing eye.");

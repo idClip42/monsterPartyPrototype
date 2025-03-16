@@ -5,7 +5,7 @@ using UnityEngine.AI;
 
 [RequireComponent(typeof(NavMeshAgent))]
 [RequireComponent(typeof(CharacterCrouch))]
-public abstract class CharacterMovementAI : MonoBehaviour, IInteractible, ICharacterComponent
+public abstract class CharacterMovementAI : MonoBehaviour, IInteractible, IDebugInfoProvider
 {
     public enum Behavior { HoldPosition, Follow }
 
@@ -33,7 +33,7 @@ public abstract class CharacterMovementAI : MonoBehaviour, IInteractible, IChara
         return $"{_behavior}, {_behaviorTarget?.gameObject?.name}, {_navMeshAgent.speed}m/s, Agent Type: '{NavMesh.GetSettingsNameFromID(CurrentAgentTypeId)}'";
     }}
 
-    void Awake(){
+    private void Awake(){
         _navManager = FindFirstObjectByType<NavigationManager>();
         if(_navManager == null)
             throw new System.Exception($"Null _navManager on {this.gameObject.name}");
@@ -48,19 +48,19 @@ public abstract class CharacterMovementAI : MonoBehaviour, IInteractible, IChara
         _crouch.OnCrouchToggle += OnCrouchToggle;
     }
 
-    void OnEnable()
+    private void OnEnable()
     {
         if(_navMeshAgent == null) return;
         _navMeshAgent.enabled = true;
     }
 
-    void OnDisable()
+    private void OnDisable()
     {
         if(_navMeshAgent == null) return;
         _navMeshAgent.enabled = false;
     }
 
-    void Update()
+    private void Update()
     {
         if(_navMeshAgent == null) throw new System.Exception("Null _navMeshAgent");
         if(this._behavior == Behavior.Follow){
