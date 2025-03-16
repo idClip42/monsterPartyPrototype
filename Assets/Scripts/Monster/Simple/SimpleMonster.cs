@@ -7,7 +7,7 @@ using UnityEngine.AI;
 [DisallowMultipleComponent]
 public class SimpleMonster : Entity, IDebugInfoProvider
 {
-    private enum State { Searching, Chasing }
+    private enum State { Wander, Chase }
 
     [SerializeField]
     private Light? _eye;
@@ -24,7 +24,7 @@ public class SimpleMonster : Entity, IDebugInfoProvider
     private NavigationManager? _navManager = null;
     private NavMeshAgent? _navMeshAgent = null;
 
-    private State _state = State.Searching;
+    private State _state = State.Wander;
     private float _newDestinationTimer = 0f;
     private Character? _targetCharacter = null;
 
@@ -36,10 +36,10 @@ public class SimpleMonster : Entity, IDebugInfoProvider
         {
             switch (this._state)
             {
-                case State.Searching:
-                    return $"Searching: {_newDestinationTimer.ToString("F2")}s";
-                case State.Chasing:
-                    return $"Chasing: {_targetCharacter?.gameObject.name}";
+                case State.Wander:
+                    return $"Wander: {_newDestinationTimer.ToString("F2")}s";
+                case State.Chase:
+                    return $"Chase: {_targetCharacter?.gameObject.name}";
                 default:
                     throw new System.Exception($"Unrecognized monster state: {this._state}");
             }
@@ -83,10 +83,10 @@ public class SimpleMonster : Entity, IDebugInfoProvider
 
         switch (this._state)
         {
-            case State.Searching:
+            case State.Wander:
                 UpdateSearch();
                 break;
-            case State.Chasing:
+            case State.Chase:
                 UpdateChase();
                 break;
             default:
@@ -216,12 +216,12 @@ public class SimpleMonster : Entity, IDebugInfoProvider
         if (closestVisibleCharacter != null)
         {
             this._targetCharacter = closestVisibleCharacter;
-            this._state = State.Chasing;
+            this._state = State.Chase;
         }
         else
         {
             this._targetCharacter = null;
-            this._state = State.Searching;
+            this._state = State.Wander;
         }
     }
 }
