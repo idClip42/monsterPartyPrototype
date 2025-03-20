@@ -43,6 +43,10 @@ public class SimpleMonster : Entity, IDebugInfoProvider
     [Range(1, 10)]
     private float _headSwingPeriod = 1;
 
+    [SerializeField]
+    [Range(0, 3)]
+    private float _chaseDelay = 1;
+
     private Character[] _characters = { };
 
     private NavigationManager? _navManager = null;
@@ -52,6 +56,7 @@ public class SimpleMonster : Entity, IDebugInfoProvider
     private float _headSwingTimer = 0;
     private float _newDestinationTimer = 0f;
     private float _waitAfterLostTimer = 0f;
+    private float _chaseDelayTimer = 0f;
     private Character? _targetCharacter = null;
     private Vector3? _targetCharacterLastSeenPosition = null;
     private Vector3? _targetCharacterLastSeenVelocity = null;
@@ -65,7 +70,7 @@ public class SimpleMonster : Entity, IDebugInfoProvider
             switch (this._state)
             {
                 case State.Wander:
-                    return $"Wander: {_newDestinationTimer.ToString("F2")}s";
+                    return $"Wander: {_newDestinationTimer.ToString("F2")}s (Chase: {_chaseDelayTimer:F2}s)";
                 case State.Chase:
                     return $"Chase: {_targetCharacter?.gameObject.name}";
                 case State.LostTarget:
@@ -113,7 +118,7 @@ public class SimpleMonster : Entity, IDebugInfoProvider
     private void Update()
     {
         MoveHead(Time.deltaTime);
-        LookForCharacters();
+        LookForCharacters(Time.deltaTime);
 
         switch (this._state)
         {
@@ -242,7 +247,7 @@ public class SimpleMonster : Entity, IDebugInfoProvider
         }
     }
 
-    private void LookForCharacters()
+    private void LookForCharacters(float deltaTime)
     {
         if (_eye == null)
             throw new System.Exception("Missing eye.");
@@ -319,12 +324,27 @@ public class SimpleMonster : Entity, IDebugInfoProvider
             }
         }
 
+        bool wasNull = this._targetCharacter == null;
+        bool isNull = closestVisibleCharacter == null;
+        if(wasNull != isNull){
+            this._chaseDelayTimer = this._chaseDelay;
+        }
+
         if (closestVisibleCharacter != null)
         {
             this._targetCharacter = closestVisibleCharacter;
             this._targetCharacterLastSeenPosition = closestVisibleCharacter.transform.position;
             this._targetCharacterLastSeenVelocity = closestVisibleCharacter.CurrentVelocity;
-            this._state = State.Chase;
+
+            if(this._state == State.Wander){
+                this._chaseDelayTimer -= deltaTime;
+                if(this._chaseDelayTimer <= 0){
+                    this._state = State.Chase;
+                }
+            }
+            else {
+                this._state = State.Chase;
+            }
         }
         else
         {

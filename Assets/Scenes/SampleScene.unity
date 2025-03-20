@@ -3244,6 +3244,7 @@ MonoBehaviour:
   _minWaitAfterLostTimeDist: 0.1
   _headSwingMaxAngle: 30
   _headSwingPeriod: 3
+  _chaseDelay: 1
 --- !u!195 &672855602
 NavMeshAgent:
   m_ObjectHideFlags: 0
