@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine;
 
 #nullable enable
@@ -17,6 +18,9 @@ public class CharacterManager : MonoBehaviour
         if(_cameraControl == null) throw new System.Exception("Missing camera control");
 
         _characters = FindObjectsByType<Character>(FindObjectsSortMode.None);
+        foreach(Character c in _characters){
+            c.OnDeath += OnCharacterDeath;
+        }
     }
 
     private void Start()
@@ -34,25 +38,30 @@ public class CharacterManager : MonoBehaviour
     }
 
     private void SelectCharacter(int index, bool immediate){
-        if(_cameraControl == null) throw new System.Exception("Null _cameraControl");
         if(index < 0) throw new System.Exception($"Invalid character index {index}");
-
         if(index >= _characters.Length) return;
-        if(_selectedCharacter == _characters[index]) return;
+        SelectCharacter(_characters[index], immediate);
+    }
 
-        foreach(var c in _characters) c.Brain = Character.BrainType.AI;
+    private void SelectCharacter(Character newSelection, bool immediate){
+        if(_cameraControl == null) throw new System.Exception("Null _cameraControl");
+
+        if(_selectedCharacter == newSelection) return;
+        if(newSelection.Alive == false) return;
+
+        foreach(var c in _characters) c.State = Character.StateType.AI;
         _selectedCharacter = null;
 
         if(immediate){
-            _characters[index].Brain = Character.BrainType.Player;
-            _selectedCharacter = _characters[index];
+            newSelection.State = Character.StateType.Player;
+            _selectedCharacter = newSelection;
         }
         else {
             _cameraControl.SendCameraToNewCharacter(
-                _characters[index],
+                newSelection,
                 ()=>{
-                    _characters[index].Brain = Character.BrainType.Player;
-                    _selectedCharacter = _characters[index];
+                    newSelection.State = Character.StateType.Player;
+                    _selectedCharacter = newSelection;
                 }
             );
         }
@@ -69,5 +78,14 @@ public class CharacterManager : MonoBehaviour
             }
         }
         return -1; // No number key pressed
+    }
+
+    private void OnCharacterDeath(Entity deadCharacter){
+        if(this._selectedCharacter == deadCharacter){
+            bool isAnyoneStillAlive = _characters.Any(c=>c.Alive);
+            if(isAnyoneStillAlive == false) return;
+            Character autoSwitchChar = _characters.First(c=>c.Alive);
+            SelectCharacter( autoSwitchChar, true );
+        }
     }
 }

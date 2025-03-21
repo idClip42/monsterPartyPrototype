@@ -32,7 +32,7 @@ public abstract class CharacterCrouch : MonoBehaviour, IDebugInfoProvider
         
         _canUncrouch = CanUncrouch();
         
-        if(_characterBase.Brain == Character.BrainType.Player){
+        if(_characterBase.State == Character.StateType.Player){
             if(Input.GetButtonDown("Crouch")){
                 ToggleCrouch();
             }

@@ -2,13 +2,14 @@ using UnityEngine;
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using UnityEditor.PackageManager;
 
 #nullable enable
 
 [DisallowMultipleComponent]
 public abstract class Character : Entity, IDebugInfoProvider
 {
-    public enum BrainType { Player, AI };
+    public enum StateType { Player, AI, Dead };
 
     private CharacterMovementPlayer? _playerMovement = null;
     private CharacterMovementAI? _aiMovement = null;
@@ -33,8 +34,8 @@ public abstract class Character : Entity, IDebugInfoProvider
         }
     }}
 
-    private BrainType _state = BrainType.AI;
-    public BrainType Brain {
+    private StateType _state = StateType.AI;
+    public StateType State {
         get {
             return _state;
         }
@@ -45,13 +46,17 @@ public abstract class Character : Entity, IDebugInfoProvider
             _state = value;
             switch (_state)
             {
-                case BrainType.Player:
+                case StateType.Player:
                     _playerMovement.enabled = true;
                     _aiMovement.enabled = false;
                     break;
-                case BrainType.AI:
+                case StateType.AI:
                     _playerMovement.enabled = false;
                     _aiMovement.enabled = true;
+                    break;
+                case StateType.Dead:
+                    _playerMovement.enabled = false;
+                    _aiMovement.enabled = false;
                     break;
                 default:
                     throw new Exception($"Unknown state enum for {this.gameObject.name}: {_state}");
@@ -72,5 +77,17 @@ public abstract class Character : Entity, IDebugInfoProvider
             throw new Exception($"Missing CharacterMovementAI on {this.gameObject.name}");
 
         _lookRaycastTargets = GetComponentsInChildren<CharacterLookRaycastTarget>(false).Select(item => item.gameObject.transform).ToArray();
+
+        this.OnDeath += HandleDeath;
+    }
+
+    public void Kill(){
+        this.Die();
+    }
+
+    private void HandleDeath(Entity deadEntity){
+        if(deadEntity != this)
+            throw new Exception("This function should only be called for own death.");
+        this.State = StateType.Dead;
     }
 }
