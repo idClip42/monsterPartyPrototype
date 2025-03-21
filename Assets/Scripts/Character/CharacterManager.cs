@@ -40,18 +40,18 @@ public class CharacterManager : MonoBehaviour
         if(index >= _characters.Length) return;
         if(_selectedCharacter == _characters[index]) return;
 
-        foreach(var c in _characters) c.State = State.AI;
+        foreach(var c in _characters) c.Brain = Character.BrainType.AI;
         _selectedCharacter = null;
 
         if(immediate){
-            _characters[index].State = State.Player;
+            _characters[index].Brain = Character.BrainType.Player;
             _selectedCharacter = _characters[index];
         }
         else {
             _cameraControl.SendCameraToNewCharacter(
                 _characters[index],
                 ()=>{
-                    _characters[index].State = State.Player;
+                    _characters[index].Brain = Character.BrainType.Player;
                     _selectedCharacter = _characters[index];
                 }
             );

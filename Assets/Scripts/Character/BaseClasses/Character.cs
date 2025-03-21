@@ -5,11 +5,11 @@ using System.Collections.Generic;
 
 #nullable enable
 
-public enum State { Player, AI };
-
 [DisallowMultipleComponent]
 public abstract class Character : Entity, IDebugInfoProvider
 {
+    public enum BrainType { Player, AI };
+
     private CharacterMovementPlayer? _playerMovement = null;
     private CharacterMovementAI? _aiMovement = null;
     private Transform[] _lookRaycastTargets = {};
@@ -33,8 +33,8 @@ public abstract class Character : Entity, IDebugInfoProvider
         }
     }}
 
-    private State _state = State.AI;
-    public State State {
+    private BrainType _state = BrainType.AI;
+    public BrainType Brain {
         get {
             return _state;
         }
@@ -45,11 +45,11 @@ public abstract class Character : Entity, IDebugInfoProvider
             _state = value;
             switch (_state)
             {
-                case State.Player:
+                case BrainType.Player:
                     _playerMovement.enabled = true;
                     _aiMovement.enabled = false;
                     break;
-                case State.AI:
+                case BrainType.AI:
                     _playerMovement.enabled = false;
                     _aiMovement.enabled = true;
                     break;

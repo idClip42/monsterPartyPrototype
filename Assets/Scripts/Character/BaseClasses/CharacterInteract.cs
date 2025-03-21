@@ -36,7 +36,7 @@ public abstract class CharacterInteract : MonoBehaviour, IDebugInfoProvider
     {
         if(_characterBase == null) throw new System.Exception("Null _characterBase");
         _interactibleWithinReach = GetInteractibleWithinReach();
-        if(_characterBase.State == State.Player){
+        if(_characterBase.Brain == Character.BrainType.Player){
             if(Input.GetButtonDown("Interact")){
                 if(_interactibleWithinReach != null){
                     _interactibleWithinReach.DoInteraction(_characterBase);
