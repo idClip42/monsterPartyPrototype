@@ -7,7 +7,7 @@ using UnityEngine.AI;
 [DisallowMultipleComponent]
 public class SimpleMonster : Entity, IDebugInfoProvider
 {
-    private enum State { Wander, Chase, LostTarget }
+    public enum State { Wander, Chase, LostTarget }
     private enum HeadFollowBehavior { LastKnownPos, CurrentPos, LastKnownPlusMovementDirection }
 
     [SerializeField]
@@ -20,21 +20,10 @@ public class SimpleMonster : Entity, IDebugInfoProvider
     private HeadFollowBehavior _headFollowBehavior = HeadFollowBehavior.LastKnownPlusMovementDirection;
 
     [SerializeField]
-    [Range(5, 100)]
-    private float _minRedirectTime = 20;
-    [SerializeField]
-    [Range(5, 100)]
-    private float _maxRedirectTime = 60;
+    private SimpleMonsterStateWander.Config? _wanderConfig;
 
     [SerializeField]
-    [Range(5, 20)]
-    private float _minWaitAfterLostTime = 5;
-    [SerializeField]
-    [Range(5, 20)]
-    private float _maxWaitAfterLostTime = 10;
-    [SerializeField]
-    [Range(0, 1)]
-    private float _minWaitAfterLostTimeDist = 0.1f;
+    private SimpleMonsterStateLostTarget.Config? _lostTargetConfig;
 
     [SerializeField]
     [Range(0, 90)]
@@ -43,10 +32,6 @@ public class SimpleMonster : Entity, IDebugInfoProvider
     [Range(1, 10)]
     private float _headSwingPeriod = 1;
 
-    [SerializeField]
-    [Range(0, 3)]
-    private float _chaseDelay = 1;
-
     private Character[] _characters = { };
 
     private NavigationManager? _navManager = null;
@@ -54,12 +39,14 @@ public class SimpleMonster : Entity, IDebugInfoProvider
 
     private State _state = State.Wander;
     private float _headSwingTimer = 0;
-    private float _newDestinationTimer = 0f;
-    private float _waitAfterLostTimer = 0f;
-    private float _chaseDelayTimer = 0f;
+
     private Character? _targetCharacter = null;
     private Vector3? _targetCharacterLastSeenPosition = null;
     private Vector3? _targetCharacterLastSeenVelocity = null;
+
+    private SimpleMonsterStateWander? _wanderBehavior = null;
+    private SimpleMonsterStateChase? _chaseBehavior = null;
+    private SimpleMonsterStateLostTarget? _lostTargetBehavior = null;
 
     public string DebugName => "Simple Monster";
 
@@ -70,11 +57,17 @@ public class SimpleMonster : Entity, IDebugInfoProvider
             switch (this._state)
             {
                 case State.Wander:
-                    return $"Wander: {_newDestinationTimer.ToString("F2")}s (Chase: {_chaseDelayTimer:F2}s)";
+                    if(_wanderBehavior == null)
+                        return "Missing wander behavior";
+                    return _wanderBehavior.DebugInfo;
                 case State.Chase:
-                    return $"Chase: {_targetCharacter?.gameObject.name}";
+                    if(_chaseBehavior == null)
+                        return "Missing chase behavior";
+                    return _chaseBehavior.DebugInfo;
                 case State.LostTarget:
-                    return $"LostTarget: {_targetCharacter?.gameObject.name}, {_waitAfterLostTimer}s";
+                    if(_lostTargetBehavior == null)
+                        return "Missing lost target behavior";
+                    return _lostTargetBehavior.DebugInfo;
                 default:
                     throw new System.Exception($"Unrecognized monster state: {this._state}");
             }
@@ -102,17 +95,23 @@ public class SimpleMonster : Entity, IDebugInfoProvider
         if (_navMeshAgent == null)
             throw new System.Exception($"Null nav mesh agent on {this.gameObject.name}");
 
-        if (_minRedirectTime > _maxRedirectTime)
-            throw new System.Exception("Invalid redirect times");
+        if(_wanderConfig == null)
+            throw new System.Exception($"Missing wander config on {this.gameObject.name}");
+        if(_lostTargetConfig == null)
+            throw new System.Exception($"Missing lost target config on {this.gameObject.name}");
+
+        _wanderBehavior = new SimpleMonsterStateWander(_wanderConfig, _navManager);
+        _chaseBehavior = new SimpleMonsterStateChase();
+        _lostTargetBehavior = new SimpleMonsterStateLostTarget(_lostTargetConfig);
     }
 
     private void Start()
     {
-        // Set a random timer interval on start
-        SetRandomRedirectInterval();
-
-        // Start with a destination
-        NewDestination();
+        if(_wanderBehavior == null)
+            throw new System.Exception($"Missing wander behavior on {this.gameObject.name}");
+        if (_navMeshAgent == null)
+            throw new System.Exception($"Null nav mesh agent on {this.gameObject.name}");
+        _wanderBehavior.Start(_navMeshAgent);
     }
 
     private void Update()
@@ -120,38 +119,70 @@ public class SimpleMonster : Entity, IDebugInfoProvider
         MoveHead(Time.deltaTime);
         LookForCharacters(Time.deltaTime);
 
+        if(_wanderBehavior == null)
+            throw new System.Exception($"Missing wander behavior on {this.gameObject.name}");
+        if(_chaseBehavior == null)
+            throw new System.Exception($"Missing chase behavior on {this.gameObject.name}");
+        if(_lostTargetBehavior == null)
+            throw new System.Exception($"Missing lost target behavior on {this.gameObject.name}");
+        if (_navMeshAgent == null)
+            throw new System.Exception($"Null nav mesh agent on {this.gameObject.name}");
+
+        var currentKnowledge = new SimpleMonsterState.Knowledge(){
+            visibleTarget = _targetCharacter,
+            lastSeenPosition = _targetCharacterLastSeenPosition,
+            lastSeenVelocity = _targetCharacterLastSeenVelocity
+        };
+
+        State newState;
         switch (this._state)
         {
             case State.Wander:
-                UpdateSearch();
+                newState = _wanderBehavior.OnUpdate(Time.deltaTime, currentKnowledge, _navMeshAgent);
                 break;
             case State.Chase:
-                UpdateChase();
+                newState = _chaseBehavior.OnUpdate(Time.deltaTime, currentKnowledge, _navMeshAgent);
                 break;
             case State.LostTarget:
-                UpdateLostTarget(Time.deltaTime);
+                newState = _lostTargetBehavior.OnUpdate(Time.deltaTime, currentKnowledge, _navMeshAgent);
                 break;
             default:
                 throw new System.Exception($"Unrecognized monster state: {this._state}");
         }
-    }
 
-    private void SetRandomRedirectInterval()
-    {
-        // Randomly select a new interval between min and max
-        _newDestinationTimer = Random.Range(_minRedirectTime, _maxRedirectTime);
-    }
+        if(newState != this._state){
+            switch (this._state)
+            {
+                case State.Wander:
+                    _wanderBehavior.Stop(_navMeshAgent);
+                    break;
+                case State.Chase:
+                    _chaseBehavior.Stop(_navMeshAgent);
+                    break;
+                case State.LostTarget:
+                    _lostTargetBehavior.Stop(_navMeshAgent);
+                    break;
+                default:
+                    throw new System.Exception($"Unrecognized monster state: {this._state}");
+            }
 
-    private void NewDestination()
-    {
-        if (_navManager == null)
-            throw new System.Exception($"Null _navManager on {this.gameObject.name}");
-        if (_navMeshAgent == null)
-            throw new System.Exception($"Null nav mesh agent on {this.gameObject.name}");
+            switch (newState)
+            {
+                case State.Wander:
+                    _wanderBehavior.Start(_navMeshAgent);
+                    break;
+                case State.Chase:
+                    _chaseBehavior.Start(_navMeshAgent);
+                    break;
+                case State.LostTarget:
+                    _lostTargetBehavior.Start(_navMeshAgent);
+                    break;
+                default:
+                    throw new System.Exception($"Unrecognized monster state: {this._state}");
+            }
 
-        _navMeshAgent.SetDestination(
-            _navManager.GetRandomDestinationStanding()
-        );
+            this._state = newState;
+        }
     }
 
     private void MoveHead(float deltaTime)
@@ -198,52 +229,6 @@ public class SimpleMonster : Entity, IDebugInfoProvider
             float sinCurve = Mathf.Sin(_headSwingTimer * Mathf.PI * 2f / _headSwingPeriod);
             float angle = sinCurve * _headSwingMaxAngle;
             this._head.localRotation = Quaternion.Euler(0, angle, 0);
-        }
-    }
-
-    private void UpdateSearch()
-    {
-        // Countdown timer logic to choose a new destination
-        _newDestinationTimer -= Time.deltaTime;
-
-        if (_newDestinationTimer <= 0f)
-        {
-            NewDestination();
-            SetRandomRedirectInterval(); // Choose a new random interval
-        }
-    }
-
-    private void UpdateChase()
-    {
-        if (_navMeshAgent == null)
-            throw new System.Exception($"Null nav mesh agent on {this.gameObject.name}");
-        if (_targetCharacterLastSeenPosition == null)
-            throw new System.Exception($"Null target character on {this.gameObject.name}");
-
-        _navMeshAgent.SetDestination(
-            this._targetCharacterLastSeenPosition.Value
-        );
-    }
-
-    private void UpdateLostTarget(float deltaTime)
-    {
-        if(_navMeshAgent == null)
-            throw new System.Exception($"Null nav mesh agent on {this.gameObject.name}");
-
-        if(_navMeshAgent.remainingDistance < _minWaitAfterLostTimeDist){
-
-            // Zero out everything so that the
-            // head starts looking left and right again
-            this._targetCharacter = null;
-            this._targetCharacterLastSeenPosition = null;
-            this._targetCharacterLastSeenVelocity = null;
-
-            _waitAfterLostTimer -= deltaTime;
-            if(_waitAfterLostTimer <= 0){
-                this._state = State.Wander;
-                NewDestination();
-                SetRandomRedirectInterval();
-            }
         }
     }
 
@@ -324,49 +309,15 @@ public class SimpleMonster : Entity, IDebugInfoProvider
             }
         }
 
-        bool wasNull = this._targetCharacter == null;
-        bool isNull = closestVisibleCharacter == null;
-        if(wasNull != isNull){
-            this._chaseDelayTimer = this._chaseDelay;
-        }
-
         if (closestVisibleCharacter != null)
         {
             this._targetCharacter = closestVisibleCharacter;
             this._targetCharacterLastSeenPosition = closestVisibleCharacter.transform.position;
             this._targetCharacterLastSeenVelocity = closestVisibleCharacter.CurrentVelocity;
-
-            if(this._state == State.Wander){
-                this._chaseDelayTimer -= deltaTime;
-                if(this._chaseDelayTimer <= 0){
-                    this._state = State.Chase;
-                }
-            }
-            else {
-                this._state = State.Chase;
-            }
         }
         else
         {
-            if (this._state == State.Chase)
-            {
-                this._state = State.LostTarget;
-                _waitAfterLostTimer = Random.Range(_minWaitAfterLostTime, _maxWaitAfterLostTime);
-            }
-            else if(this._state == State.LostTarget){
-
-            }
-            else if(this._state == State.Wander)
-            {
-                // Wander clears everything out (I guess?)
-                this._targetCharacter = null;
-                this._targetCharacterLastSeenPosition = null;
-                this._targetCharacterLastSeenVelocity = null;
-                this._state = State.Wander;
-            }
-            else{
-                throw new System.Exception($"Unhandled state {this._state}");
-            }
+            this._targetCharacter = null;
         }
 
         if (this._targetCharacterLastSeenPosition != null)
