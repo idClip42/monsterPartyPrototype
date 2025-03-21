@@ -3234,17 +3234,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 900ec7d08d3094829acfd2ae886f0a55, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _head: {fileID: 254399266}
-  _eye: {fileID: 1531964679}
-  _headFollowBehavior: 2
-  _minRedirectTime: 5
-  _maxRedirectTime: 15
-  _minWaitAfterLostTime: 5
-  _maxWaitAfterLostTime: 10
-  _minWaitAfterLostTimeDist: 0.1
-  _headSwingMaxAngle: 30
-  _headSwingPeriod: 3
-  _chaseDelay: 1
+  _headConfig:
+    head: {fileID: 254399266}
+    eye: {fileID: 1531964679}
+    headFollowBehavior: 2
+    headSwingMaxAngle: 60
+    headSwingPeriod: 3
+  _wanderConfig:
+    minRedirectTime: 20
+    maxRedirectTime: 60
+    chaseDelay: 1
+  _lostTargetConfig:
+    minWaitAfterLostTime: 5
+    maxWaitAfterLostTime: 10
+    minWaitAfterLostTimeDist: 0.1
 --- !u!195 &672855602
 NavMeshAgent:
   m_ObjectHideFlags: 0
