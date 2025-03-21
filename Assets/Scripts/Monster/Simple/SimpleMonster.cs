@@ -215,7 +215,7 @@ public class SimpleMonster : Entity, IDebugInfoProvider
                 throw new System.Exception($"Unrecognized behavior: {_headFollowBehavior}");
         }
 
-        if (lookTarget != null)
+        if (lookTarget != null && this._targetCharacter != null)
         {
             // Move head to look at target
             Vector3 atTarget = (lookTarget - this._head.position).Value.normalized;
