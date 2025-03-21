@@ -89,5 +89,6 @@ public abstract class Character : Entity, IDebugInfoProvider
         if(deadEntity != this)
             throw new Exception("This function should only be called for own death.");
         this.State = StateType.Dead;
+        transform.Rotate(90, 0, 0);
     }
 }
