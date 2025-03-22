@@ -6,6 +6,7 @@ using UnityEngine;
 [RequireComponent(typeof(SimpleCharacterMovementAI))]
 [RequireComponent(typeof(SimpleCharacterCrouch))]
 [RequireComponent(typeof(SimpleCharacterInteract))]
+[RequireComponent(typeof(SimpleCharacterNoiseLevel))]
 public class SimpleCharacter : Character
 {
     [SerializeField]
