@@ -2,19 +2,41 @@ using UnityEngine;
 using System;
 using System.Linq;
 using System.Collections.Generic;
-using UnityEditor.PackageManager;
 
 #nullable enable
 
 [DisallowMultipleComponent]
 public abstract class Character : Entity, IDebugInfoProvider
 {
+    [System.Serializable]
+    public class MovementConfig{
+        [SerializeField]
+        [Range(1,10)]
+        private float _crouchSpeed = 2.0f;
+        
+        [SerializeField]
+        [Range(1,10)]
+        private float _walkSpeed = 3.0f;
+        
+        [SerializeField]
+        [Range(1,10)]
+        private float _runSpeed = 5.0f;
+
+        public float CrouchSpeed => _crouchSpeed;
+        public float WalkSpeed => _walkSpeed;
+        public float RunSpeed => _runSpeed;
+    }
+
     public enum StateType { Player, AI };
+
+    [SerializeField]
+    private MovementConfig _movementConfig;
 
     private CharacterMovementPlayer? _playerMovement = null;
     private CharacterMovementAI? _aiMovement = null;
     private Transform[] _lookRaycastTargets = {};
 
+    public MovementConfig Movement => _movementConfig;
     public IReadOnlyCollection<Transform> LookRaycastTargets => _lookRaycastTargets;
 
     public string DebugName => "Character";

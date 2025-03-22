@@ -5,16 +5,9 @@ using UnityEngine;
 [DisallowMultipleComponent]
 public abstract class CharacterMovementPlayer : CharacterMovement, IDebugInfoProvider
 {
-    private Character? _characterBase = null;
+    private Character? _character = null;
     private CharacterCrouch? _crouch = null;
     private CameraControl? _camera = null;
-
-    [SerializeField]
-    private float _crouchSpeed = 2.0f;
-    [SerializeField]
-    private float _walkSpeed = 3.0f;
-    [SerializeField]
-    private float _runSpeed = 5.0f;
 
     public string DebugName => "Player Movement";
     public string DebugInfo { get {
@@ -23,8 +16,8 @@ public abstract class CharacterMovementPlayer : CharacterMovement, IDebugInfoPro
     }}
 
     protected virtual void Awake(){
-        _characterBase = GetComponent<Character>();
-        if(_characterBase == null)
+        _character = GetComponent<Character>();
+        if(_character == null)
             throw new System.Exception($"Null character base on {this.gameObject.name}");
 
         _crouch = GetComponent<CharacterCrouch>();
@@ -38,8 +31,12 @@ public abstract class CharacterMovementPlayer : CharacterMovement, IDebugInfoPro
 
     private void Update()
     {
-        if(_crouch == null) throw new System.Exception("Null _crouch");
-        if(_camera == null) throw new System.Exception("Null _camera");
+        if(_character == null)
+            throw new System.Exception("Null _characterBase");
+        if(_crouch == null)
+            throw new System.Exception("Null _crouch");
+        if(_camera == null)
+            throw new System.Exception("Null _camera");
 
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
@@ -56,11 +53,11 @@ public abstract class CharacterMovementPlayer : CharacterMovement, IDebugInfoPro
 
         float speed;
         if(_crouch.IsCrouching)
-            speed = _crouchSpeed;
+            speed = _character.Movement.CrouchSpeed;
         else if(runButtonDown)
-            speed = _runSpeed;
+            speed = _character.Movement.RunSpeed;
         else
-            speed = _walkSpeed;
+            speed = _character.Movement.WalkSpeed;
 
         // TODO: This isn't a perfect solution.
         // TODO: Surely there's a real solution out there somewhere.

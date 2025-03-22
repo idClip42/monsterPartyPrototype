@@ -76,7 +76,18 @@ public abstract class CharacterMovementAI : CharacterMovement, IInteractible, ID
 
     private void Update()
     {
-        if(_navMeshAgent == null) throw new System.Exception("Null _navMeshAgent");
+        if(_character == null)
+            throw new System.Exception($"Null character on {this.gameObject.name}");
+        if(_navMeshAgent == null) 
+            throw new System.Exception("Null _navMeshAgent");
+        if(_crouch == null) 
+            throw new System.Exception("Null _crouch");
+
+        if(_crouch.IsCrouching)
+            _navMeshAgent.speed = _character.Movement.CrouchSpeed;
+        else
+            _navMeshAgent.speed = _character.Movement.WalkSpeed;
+
         if(this._behavior == Behavior.Follow){
             if(_behaviorTarget == null) throw new System.Exception("Null _behaviorTarget");
             this._navMeshAgent.SetDestination(this._behaviorTarget.transform.position);
