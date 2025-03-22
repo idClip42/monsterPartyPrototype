@@ -207,7 +207,7 @@ public class SimpleMonster : Entity, IDebugInfoProvider
         if(_headConfig.eye != null && _headBehavior != null){
             float[] sightDebugHeights = new float[]{ 
                 transform.position.y, 
-                _headConfig.eye.transform.position.y
+                // _headConfig.eye.transform.position.y
             };
             foreach(float height in sightDebugHeights){
                 Vector3 origin = new Vector3(_headConfig.eye.transform.position.x, height, _headConfig.eye.transform.position.z);
@@ -223,6 +223,18 @@ public class SimpleMonster : Entity, IDebugInfoProvider
                 );
                 Handles.DrawLine(origin, origin + leftEdgeDirection * _headBehavior.MaxSightDistance);
                 Handles.DrawLine(origin, origin + rightEdgeDirection * _headBehavior.MaxSightDistance);
+
+                // Draw some extra lines for the hell of it.
+                const int INTERVAL = 5;
+                for(int i = INTERVAL; i < _headBehavior.MaxSightDistance; i += INTERVAL){
+                    Handles.DrawWireArc(
+                        origin,
+                        Vector3.up,
+                        leftEdgeDirection,
+                        _headBehavior.FieldOfView,
+                        i
+                    );
+                }
             }
         }
         
