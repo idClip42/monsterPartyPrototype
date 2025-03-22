@@ -8,7 +8,7 @@ public class SimpleCharacterNoiseLevel : CharacterNoiseLevel
 {
     [SerializeField]
     [Range(0, 10)]
-    private float _minNoiseSpeed = 1.85f;
+    private float _minNoiseSpeed = 1.6f;
 
     [SerializeField]
     [Range(0, 10)]
@@ -20,7 +20,7 @@ public class SimpleCharacterNoiseLevel : CharacterNoiseLevel
 
     [SerializeField]
     [Range(0, 100)]
-    private float _maxNoiseDistance = 30;
+    private float _maxNoiseDistance = 20;
 
     private float _currentNoiseRadius;
 
@@ -57,7 +57,7 @@ public class SimpleCharacterNoiseLevel : CharacterNoiseLevel
     void OnDrawGizmosSelected()
     {
         Color prevColor = Handles.color;
-        Handles.color = Color.white;
+        Handles.color = Color.cyan;
         Handles.DrawWireDisc(
             transform.position,
             Vector3.up,
