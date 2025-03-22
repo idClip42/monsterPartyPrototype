@@ -3251,6 +3251,7 @@ MonoBehaviour:
     speed: 4
     acceleration: 8
     searchDelay: 1
+    chaseTargetMode: 0
   _searchConfig:
     speed: 2
     acceleration: 8
