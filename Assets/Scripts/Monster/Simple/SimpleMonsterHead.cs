@@ -23,8 +23,15 @@ public class SimpleMonsterHead{
         [SerializeField]
         [Range(1, 10)]
         public float headSwingPeriod = 3;
+
+        [SerializeField]
+        public LayerMask generalLookRaycastMask = Physics.AllLayers;
+
+        [SerializeField]
+        public LayerMask chaseLookRaycastMask = Physics.AllLayers;
     }
 
+    private SimpleMonster _monster;
     private Config _config;
     private Character[] _characters = { };
     private float _headSwingTimer = 0;
@@ -39,7 +46,8 @@ public class SimpleMonsterHead{
         lastSeenVelocity = _targetCharacterLastSeenVelocity
     };
 
-    public SimpleMonsterHead(Config config, Character[] characters){
+    public SimpleMonsterHead(SimpleMonster monster, Config config, Character[] characters){
+        this._monster = monster;
         this._config = config;
         this._characters = characters;
     }
@@ -116,13 +124,21 @@ public class SimpleMonsterHead{
                 Vector3 toTarget = targetPos - _config.eye.transform.position;
                 float distance = toTarget.magnitude;
 
+                LayerMask raycastMask = _config.generalLookRaycastMask;
+                if(this._monster.CurrentState == SimpleMonster.State.Chase && 
+                    targetCharacter == this._targetCharacter
+                ){
+                    raycastMask = _config.chaseLookRaycastMask;
+                }
+
                 // If we hit nothing, we have a clear line of sight
                 // to the target character.
                 bool lineOfSight = !Physics.Raycast(
                     _config.eye.transform.position,
                     toTarget / distance,
                     out hitInfo,
-                    distance
+                    distance,
+                    raycastMask
                 );
 
                 // If we hit something

@@ -33,6 +33,7 @@ public class SimpleMonster : Entity, IDebugInfoProvider
     private SimpleMonsterStateChase? _chaseBehavior = null;
     private SimpleMonsterStateSearch? _searchBehavior = null;
 
+    public State CurrentState => this._state;
     public string DebugName => "Simple Monster";
 
     public string DebugInfo
@@ -81,6 +82,7 @@ public class SimpleMonster : Entity, IDebugInfoProvider
             throw new System.Exception($"Null nav mesh agent on {this.gameObject.name}");
 
         _headBehavior = new SimpleMonsterHead(
+            this,
             _headConfig, 
             FindObjectsByType<Character>(FindObjectsSortMode.None)
         );
