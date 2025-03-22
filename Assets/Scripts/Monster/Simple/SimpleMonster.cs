@@ -163,11 +163,14 @@ public class SimpleMonster : Entity, IDebugInfoProvider
     protected override void OnDrawGizmos() {
         if(_headConfig == null)
             throw new System.Exception($"Missing head config on {this.gameObject.name}");
+        if(_headConfig.eye == null)
+            throw new System.Exception($"Missing eye on {this.gameObject.name}");
 
         base.OnDrawGizmos();
 
         Color prevColor = Handles.color;
-        Handles.color = Color.red;
+        // Handles.color = Color.red;
+        Handles.color = _headConfig.eye.color;
 
         Handles.DrawWireDisc(
             transform.position,
