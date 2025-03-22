@@ -3752,8 +3752,8 @@ MonoBehaviour:
     m_Bits: 64
   _horizontalSpeed: 10
   _verticalSpeed: 8
-  _distanceFromTarget: 5
-  _targetHeightOffset: 1
+  _distanceFromTarget: 2.5
+  _targetHeightOffset: 1.5
   _verticalMin: -80
   _verticalMax: 80
   _transitionSpeed: 20
