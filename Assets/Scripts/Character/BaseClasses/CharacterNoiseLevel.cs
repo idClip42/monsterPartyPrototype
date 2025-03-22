@@ -7,7 +7,7 @@ using UnityEditor;
 public abstract class CharacterNoiseLevel : MonoBehaviour, IDebugInfoProvider
 {
     private Character? _character = null;
-    protected Character? Character => _character;
+    public Character? Character => _character;
 
     public abstract float CurrentNoiseRadius { get; }
 

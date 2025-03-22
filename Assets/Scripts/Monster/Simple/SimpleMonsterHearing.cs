@@ -42,6 +42,10 @@ public class SimpleMonsterHearing{
 
         Vector3 myPos = this._monster.transform.position;
         foreach(var character in this._characters){
+            // Dead men tell no tales.
+            if(character.Character == null) throw new System.Exception("Sound character is null.");
+            if(character.Character.Alive == false) continue;
+
             Vector3 charPos = character.transform.position;
 
             // We first filter out anything whose linear
