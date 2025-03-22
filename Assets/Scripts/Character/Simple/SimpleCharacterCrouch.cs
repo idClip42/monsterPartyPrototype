@@ -6,6 +6,7 @@ using UnityEngine;
 [RequireComponent(typeof(CharacterController))]
 public class SimpleCharacterCrouch : CharacterCrouch
 {
+    private SimpleCharacter? _character = null;
     private CharacterController? _characterController = null;
 
     [SerializeField]
@@ -38,28 +39,48 @@ public class SimpleCharacterCrouch : CharacterCrouch
     {
         base.Awake();
         
+        _character = GetComponent<SimpleCharacter>();
+        if(_character == null)
+            throw new Exception($"Null character on {this.gameObject.name}");
+        
         _characterController = GetComponent<CharacterController>();
         if(_characterController == null)
-            throw new System.Exception($"Null character controller on {this.gameObject.name}");
+            throw new Exception($"Null character controller on {this.gameObject.name}");
     }
+
+#if UNITY_EDITOR
+    void OnDrawGizmosSelected()
+    {
+        if(_character != null){
+            Debug.DrawLine(
+                transform.position,
+                transform.position + Vector3.up * _character.ModelHeight * _crouchHeightPercentage,
+                Color.green
+            );
+        }
+    }
+#endif
 
     protected override void EnableCrouch() => ToggleCrouch(true);
 
     protected override void DisableCrouch() => ToggleCrouch(false);
 
     private void ToggleCrouch(bool isCrouching){
-        float meshHeight = GetComponentInChildren<MeshRenderer>().bounds.extents.y;
+        if(_character == null)
+            throw new Exception($"Null character on {this.gameObject.name}");
+        
+        // float meshHeight = _character.ModelHeight;
         float startYScale = transform.localScale.y;
-        float newHeight;
+        // float newHeight;
         float newYScale;
 
         if(isCrouching){
             newYScale = startYScale * _crouchHeightPercentage;
-            newHeight = meshHeight * _crouchHeightPercentage;
+            // newHeight = meshHeight * _crouchHeightPercentage;
         }
         else {
             newYScale = startYScale / _crouchHeightPercentage;
-            newHeight = meshHeight / _crouchHeightPercentage;
+            // newHeight = meshHeight / _crouchHeightPercentage;
         }
 
         transform.localScale = new Vector3(
@@ -68,17 +89,14 @@ public class SimpleCharacterCrouch : CharacterCrouch
             transform.localScale.z
         );
 
-        transform.position += new Vector3(
-            0,
-            (newHeight - meshHeight) / 2,
-            0
-        );
+        // TODO: Character shifts up 1/4 of their height on crouch
+        // TODO: Character shifts down 1/4 of their height on uncrouch
     }
 
     protected override bool CanUncrouch()
     {
         if(_characterController == null)
-            throw new System.Exception($"Null character controller on {this.gameObject.name}");
+            throw new Exception($"Null character controller on {this.gameObject.name}");
         if(this.IsCrouching == false) return false;
         
         float radius = _characterController.radius * _uncrouchRadiusPercentage;
