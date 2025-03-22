@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
@@ -48,20 +49,21 @@ public class SimpleMonster : Entity, IDebugInfoProvider
             string speedInfo = this._navMeshAgent ?
                 $"{this._navMeshAgent.velocity.magnitude:F2} m/s." :
                 "0 m/s.";
+            string soundInfo = $"{_currentSoundInfo.Length} sounds, {_currentSoundInfo.Count(s=>s.isAudible)} audible.";
             switch (this._state)
             {
                 case State.Wander:
                     if(_wanderBehavior == null)
                         return "Missing wander behavior";
-                    return $"{speedInfo} {_wanderBehavior.DebugInfo}";
+                    return $"{speedInfo} {soundInfo} {_wanderBehavior.DebugInfo}";
                 case State.Chase:
                     if(_chaseBehavior == null)
                         return "Missing chase behavior";
-                    return $"{speedInfo} {_chaseBehavior.DebugInfo}";
+                    return $"{speedInfo} {soundInfo} {_chaseBehavior.DebugInfo}";
                 case State.Search:
                     if(_searchBehavior == null)
                         return "Missing search behavior";
-                    return $"{speedInfo} {_searchBehavior.DebugInfo}";
+                    return $"{speedInfo} {soundInfo} {_searchBehavior.DebugInfo}";
                 default:
                     throw new System.Exception($"Unrecognized monster state: {this._state}");
             }
