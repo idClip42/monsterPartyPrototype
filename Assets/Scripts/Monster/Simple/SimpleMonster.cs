@@ -136,11 +136,11 @@ public class SimpleMonster : Entity, IDebugInfoProvider
 
         if(newState != this._state){
             currentBehavior.Stop(_navMeshAgent);
-            SimpleMonsterState nextBehavior = this._state switch {
+            SimpleMonsterState nextBehavior = newState switch {
                 State.Wander => _wanderBehavior,
                 State.Chase => _chaseBehavior,
                 State.Search => _searchBehavior,
-                _ => throw new System.Exception($"Unrecognzied monster state '{this._state}'")
+                _ => throw new System.Exception($"Unrecognzied monster state '{newState}'")
             };
             nextBehavior.Start(_navMeshAgent);
 
