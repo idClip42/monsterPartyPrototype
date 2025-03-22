@@ -33,12 +33,11 @@ public class SimpleCharacter : Character
         if(_model == null)
             throw new System.Exception($"Missing model on {gameObject.name}");
             
-        Vector3 velocity = this.CurrentVelocity;
-        if(velocity != Vector3.zero){
-            Vector3 projectedMovementVelocity = Vector3.ProjectOnPlane(
-                velocity,
-                Vector3.up
-            );
+        Vector3 projectedMovementVelocity = Vector3.ProjectOnPlane(
+            this.CurrentVelocity,
+            Vector3.up
+        );
+        if(projectedMovementVelocity != Vector3.zero){
             Vector3 direction = projectedMovementVelocity.normalized;
             _model.transform.forward = direction;
         }
