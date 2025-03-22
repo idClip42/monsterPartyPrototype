@@ -28,6 +28,22 @@ public class SimpleCharacter : Character
         }
     }
 
+    void Update()
+    {
+        if(_model == null)
+            throw new System.Exception($"Missing model on {gameObject.name}");
+            
+        Vector3 velocity = this.CurrentVelocity;
+        if(velocity != Vector3.zero){
+            Vector3 projectedMovementVelocity = Vector3.ProjectOnPlane(
+                velocity,
+                Vector3.up
+            );
+            Vector3 direction = projectedMovementVelocity.normalized;
+            _model.transform.forward = direction;
+        }
+    }
+
     protected override void HandleDeath(Entity deadEntity)
     {
         base.HandleDeath(deadEntity);
