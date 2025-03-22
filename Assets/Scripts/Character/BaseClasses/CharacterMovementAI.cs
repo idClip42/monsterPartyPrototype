@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -20,12 +21,14 @@ public abstract class CharacterMovementAI : CharacterMovement, IInteractible, ID
 
     private NavigationManager? _navManager = null;
     private NavMeshAgent? _navMeshAgent = null;
+    private Character? _character = null;
     private CharacterCrouch? _crouch = null;
     private Behavior _behavior = Behavior.HoldPosition;
     private Transform? _behaviorTarget = null;
     public string CurrentBehavior => $"{_behavior} : {_behaviorTarget?.gameObject?.name}";
 
     public Vector3 InteractionWorldPosition => this.gameObject.transform.position + Vector3.up;
+    public bool IsInteractible => this._character ? this._character.Alive : false;
 
     public string DebugName => "AI Movement";
     public string DebugInfo { get {
@@ -48,6 +51,10 @@ public abstract class CharacterMovementAI : CharacterMovement, IInteractible, ID
         _navMeshAgent = GetComponent<NavMeshAgent>();
         if(_navMeshAgent == null)
             throw new System.Exception($"Null nav mesh agent on {this.gameObject.name}");
+
+        _character = GetComponent<Character>();
+        if(_character == null)
+            throw new System.Exception($"Null character on {this.gameObject.name}");
 
         _crouch = GetComponent<CharacterCrouch>();
         if(_crouch == null)

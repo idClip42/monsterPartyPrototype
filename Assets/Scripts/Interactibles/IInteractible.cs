@@ -4,8 +4,9 @@ using UnityEngine;
 
 public interface IInteractible
 {
-    public GameObject gameObject { get; }
-    public Vector3 InteractionWorldPosition { get; }
-    public string GetInteractionName(Character interactor);
-    public void DoInteraction(Character interactor);
+    GameObject gameObject { get; }
+    bool IsInteractible { get; }
+    Vector3 InteractionWorldPosition { get; }
+    string GetInteractionName(Character interactor);
+    void DoInteraction(Character interactor);
 }

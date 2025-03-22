@@ -35,8 +35,9 @@ public abstract class CharacterInteract : MonoBehaviour, IDebugInfoProvider
     private void Update()
     {
         if(_characterBase == null) throw new System.Exception("Null _characterBase");
-        _interactibleWithinReach = GetInteractibleWithinReach();
+
         if(_characterBase.State == Character.StateType.Player){
+            _interactibleWithinReach = GetInteractibleWithinReach();
             if(Input.GetButtonDown("Interact")){
                 if(_interactibleWithinReach != null){
                     _interactibleWithinReach.DoInteraction(_characterBase);
@@ -50,6 +51,7 @@ public abstract class CharacterInteract : MonoBehaviour, IDebugInfoProvider
     {
         if(!enabled) return;
         if(_characterBase == null) return;
+        if(_characterBase.State != Character.StateType.Player) return;
         if(_interactibleWithinReach == null) return;
 
         Color prevColor = Handles.color;
@@ -71,6 +73,7 @@ public abstract class CharacterInteract : MonoBehaviour, IDebugInfoProvider
         {
             if(interactible == null) continue;
             if(interactible.gameObject == this.gameObject) continue;
+            if(interactible.IsInteractible == false) continue;
             Vector3 posDiff = interactible.InteractionWorldPosition - refPos;
             float distSq = posDiff.sqrMagnitude;
             if (distSq < closestDistSq)
