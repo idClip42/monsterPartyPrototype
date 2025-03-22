@@ -14,6 +14,15 @@ public class SimpleMonsterHead{
         public Light? eye;
 
         [SerializeField]
+        public Color wanderLightColor = Color.white;
+
+        [SerializeField]
+        public Color chaseLightColor = Color.red;
+
+        [SerializeField]
+        public Color searchLightColor = Color.yellow;
+
+        [SerializeField]
         [Range(10, 100)]
         public float maxSightDistance = 20;
 
@@ -72,6 +81,12 @@ public class SimpleMonsterHead{
             throw new System.Exception("Missing eye.");
         this._config.eye.range = this._config.maxSightDistance;
         this._config.eye.spotAngle = this._config.fieldOfView;
+        this._config.eye.color = this._monster.CurrentState switch{
+            SimpleMonster.State.Wander => this._config.wanderLightColor,
+            SimpleMonster.State.Chase => this._config.chaseLightColor,
+            SimpleMonster.State.Search => this._config.searchLightColor,
+            _ => throw new System.Exception($"Unrecognized state '{this._monster.CurrentState}'")
+        };
 
         MoveHead(deltaTime);
         LookForCharacters(deltaTime);
