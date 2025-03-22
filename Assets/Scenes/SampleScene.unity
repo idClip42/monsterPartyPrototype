@@ -3227,6 +3227,9 @@ MonoBehaviour:
   _headConfig:
     head: {fileID: 315233453}
     eye: {fileID: 1531964679}
+    wanderLightColor: {r: 1, g: 1, b: 1, a: 1}
+    chaseLightColor: {r: 1, g: 0, b: 0, a: 1}
+    searchLightColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
     maxSightDistance: 20
     fieldOfView: 100
     headFollowBehavior: 2
@@ -3247,6 +3250,7 @@ MonoBehaviour:
   _chaseConfig:
     speed: 4
     acceleration: 8
+    searchDelay: 1
   _searchConfig:
     speed: 2
     acceleration: 8
