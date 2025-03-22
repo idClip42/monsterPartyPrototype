@@ -30,11 +30,13 @@ public class SimpleMonster : Entity, IDebugInfoProvider
     private NavMeshAgent? _navMeshAgent = null;
 
     private State _state = State.Wander;
+    private SimpleMonsterHearing.SoundInfo[] _currentSoundInfo = {};
 
     private SimpleMonsterHead? _headBehavior = null;
     private SimpleMonsterStateWander? _wanderBehavior = null;
     private SimpleMonsterStateChase? _chaseBehavior = null;
     private SimpleMonsterStateSearch? _searchBehavior = null;
+    private SimpleMonsterHearing? _hearing = null;
 
     public State CurrentState => this._state;
     public string DebugName => "Simple Monster";
@@ -76,10 +78,16 @@ public class SimpleMonster : Entity, IDebugInfoProvider
             throw new System.Exception("Missing head.");
         if (_headConfig.eye == null)
             throw new System.Exception("Missing eye.");
+
+        var charactersArray = FindObjectsByType<Character>(FindObjectsSortMode.None);
+        if(charactersArray.Length == 0){
+            Debug.LogWarning($"{this.gameObject.name} found no Characters in the scene.");
+        }
+
         _headBehavior = new SimpleMonsterHead(
             this,
             _headConfig, 
-            FindObjectsByType<Character>(FindObjectsSortMode.None)
+            charactersArray
         );
 
         _navManager = FindFirstObjectByType<NavigationManager>();
@@ -99,6 +107,7 @@ public class SimpleMonster : Entity, IDebugInfoProvider
         _wanderBehavior = new SimpleMonsterStateWander(_wanderConfig, _navManager);
         _chaseBehavior = new SimpleMonsterStateChase(_chaseConfig);
         _searchBehavior = new SimpleMonsterStateSearch(_searchConfig);
+        _hearing = new SimpleMonsterHearing(this, charactersArray, _navManager);
     }
 
     private void Start()
@@ -114,6 +123,8 @@ public class SimpleMonster : Entity, IDebugInfoProvider
     {
         if(_headBehavior == null)
             throw new System.Exception($"Missing head behavior on {this.gameObject.name}");
+        if(_hearing == null)
+            throw new System.Exception($"Missing hearing on {this.gameObject.name}");
         if(_wanderBehavior == null)
             throw new System.Exception($"Missing wander behavior on {this.gameObject.name}");
         if(_chaseBehavior == null)
@@ -122,6 +133,8 @@ public class SimpleMonster : Entity, IDebugInfoProvider
             throw new System.Exception($"Missing search behavior on {this.gameObject.name}");
         if (_navMeshAgent == null)
             throw new System.Exception($"Null nav mesh agent on {this.gameObject.name}");
+
+        this._currentSoundInfo = _hearing.CheckForSounds();
 
         SimpleMonsterState currentBehavior = this._state switch {
             State.Wander => _wanderBehavior,
@@ -210,6 +223,13 @@ public class SimpleMonster : Entity, IDebugInfoProvider
                     );
                 }
             }
+        }
+
+        // Draw sound paths for sounds
+        foreach(var sound in _currentSoundInfo){
+            Handles.color = sound.isAudible ? Color.yellow : Color.cyan;
+            for (int i = 1; i < sound.pathToSound.Length; i++)
+                Handles.DrawLine(sound.pathToSound[i-1], sound.pathToSound[i]);
         }
         
         Handles.color = prevColor;
