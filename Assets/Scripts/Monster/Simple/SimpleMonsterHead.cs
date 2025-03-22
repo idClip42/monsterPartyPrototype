@@ -107,6 +107,9 @@ public class SimpleMonsterHead{
         RaycastHit hitInfo;
         foreach (var targetCharacter in _characters)
         {
+            if(targetCharacter.Alive == false)
+                continue;
+
             foreach (Transform target in targetCharacter.LookRaycastTargets)
             {
                 Vector3 targetPos = target.position;

@@ -3248,6 +3248,7 @@ MonoBehaviour:
     minWaitAfterLostTime: 5
     maxWaitAfterLostTime: 10
     minWaitAfterLostTimeDist: 0.1
+  _killRadius: 1
 --- !u!195 &672855602
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -4480,7 +4481,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4756834836762160371, guid: 1a6f7091659134c41bea88d80e38bbd5, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6996440682272187744, guid: 1a6f7091659134c41bea88d80e38bbd5, type: 3}
       propertyPath: m_LocalPosition.x
@@ -4872,7 +4873,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4756834836762160371, guid: 1a6f7091659134c41bea88d80e38bbd5, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6996440682272187744, guid: 1a6f7091659134c41bea88d80e38bbd5, type: 3}
       propertyPath: m_LocalPosition.x

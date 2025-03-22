@@ -1,3 +1,4 @@
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -17,6 +18,10 @@ public class SimpleMonster : Entity, IDebugInfoProvider
 
     [SerializeField]
     private SimpleMonsterStateLostTarget.Config? _lostTargetConfig;
+
+    [SerializeField]
+    [Range(0.5f, 3)]
+    private float _killRadius = 1;
 
     private NavigationManager? _navManager = null;
     private NavMeshAgent? _navMeshAgent = null;
@@ -164,5 +169,33 @@ public class SimpleMonster : Entity, IDebugInfoProvider
 
             this._state = newState;
         }
+
+        if(this._state == State.Chase && currentKnowledge.visibleTarget){
+            Vector3 targetPos = currentKnowledge.visibleTarget.transform.position;
+            Vector3 myPos = transform.position;
+            Vector3 posDiff = targetPos - myPos;
+            float sqrDistance = posDiff.sqrMagnitude;
+            float threshold = this._killRadius * this._killRadius;
+            if(sqrDistance < threshold){
+                currentKnowledge.visibleTarget.Kill();
+            }
+        }
     }
+
+#if UNITY_EDITOR
+    protected override void OnDrawGizmos() {
+        base.OnDrawGizmos();
+
+        Color prevColor = Handles.color;
+        Handles.color = Color.red;
+
+        Handles.DrawWireDisc(
+            transform.position,
+            Vector3.up,
+            _killRadius
+        );
+        
+        Handles.color = prevColor;
+    }
+#endif
 }
