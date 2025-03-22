@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEditor;
 
+#nullable enable
+
 [CustomEditor(typeof(Character), true)] // 'true' makes this apply to subclasses as well
 public class CharacterEditor : EntityEditor
 {
