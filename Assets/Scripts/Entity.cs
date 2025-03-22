@@ -40,6 +40,8 @@ public abstract class Entity : MonoBehaviour
 #endif
 
     protected void Die(){
+        if(_alive == false)
+            throw new Exception("You cannot kill that which is already dead!");
         _alive = false;
         OnDeath?.Invoke(this);
     }

@@ -9,7 +9,7 @@ using UnityEditor.PackageManager;
 [DisallowMultipleComponent]
 public abstract class Character : Entity, IDebugInfoProvider
 {
-    public enum StateType { Player, AI, Dead };
+    public enum StateType { Player, AI };
 
     private CharacterMovementPlayer? _playerMovement = null;
     private CharacterMovementAI? _aiMovement = null;
@@ -44,6 +44,7 @@ public abstract class Character : Entity, IDebugInfoProvider
             if(_aiMovement == null) throw new Exception("Null _aiMovement");
 
             _state = value;
+            if(this.Alive == false) return;
             switch (_state)
             {
                 case StateType.Player:
@@ -53,10 +54,6 @@ public abstract class Character : Entity, IDebugInfoProvider
                 case StateType.AI:
                     _playerMovement.enabled = false;
                     _aiMovement.enabled = true;
-                    break;
-                case StateType.Dead:
-                    _playerMovement.enabled = false;
-                    _aiMovement.enabled = false;
                     break;
                 default:
                     throw new Exception($"Unknown state enum for {this.gameObject.name}: {_state}");
@@ -85,10 +82,15 @@ public abstract class Character : Entity, IDebugInfoProvider
         this.Die();
     }
 
-    private void HandleDeath(Entity deadEntity){
+    protected virtual void HandleDeath(Entity deadEntity){        
         if(deadEntity != this)
             throw new Exception("This function should only be called for own death.");
-        this.State = StateType.Dead;
-        transform.Rotate(90, 0, 0);
+        if(_playerMovement == null) 
+            throw new Exception("Null _playerMovement");
+        if(_aiMovement == null) 
+            throw new Exception("Null _aiMovement");
+
+        _playerMovement.enabled = false;
+        _aiMovement.enabled = false;
     }
 }

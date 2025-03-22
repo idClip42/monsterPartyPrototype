@@ -8,5 +8,9 @@ using UnityEngine;
 [RequireComponent(typeof(SimpleCharacterInteract))]
 public class SimpleCharacter : Character
 {
-
+    protected override void HandleDeath(Entity deadEntity)
+    {
+        base.HandleDeath(deadEntity);
+        transform.Rotate(90, 0, 0);
+    }
 }
