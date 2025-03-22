@@ -8,7 +8,7 @@ using UnityEngine.AI;
 [DisallowMultipleComponent]
 public class SimpleMonster : Entity, IDebugInfoProvider
 {
-    public enum State { Wander, Chase, LostTarget }
+    public enum State { Wander, Chase, Search }
 
     [SerializeField]
     private SimpleMonsterHead.Config _headConfig;
@@ -17,7 +17,7 @@ public class SimpleMonster : Entity, IDebugInfoProvider
     private SimpleMonsterStateWander.Config? _wanderConfig;
 
     [SerializeField]
-    private SimpleMonsterStateLostTarget.Config? _lostTargetConfig;
+    private SimpleMonsterStateSearch.Config? _searchConfig;
 
     [SerializeField]
     [Range(0.5f, 3)]
@@ -31,7 +31,7 @@ public class SimpleMonster : Entity, IDebugInfoProvider
     private SimpleMonsterHead? _headBehavior = null;
     private SimpleMonsterStateWander? _wanderBehavior = null;
     private SimpleMonsterStateChase? _chaseBehavior = null;
-    private SimpleMonsterStateLostTarget? _lostTargetBehavior = null;
+    private SimpleMonsterStateSearch? _searchBehavior = null;
 
     public string DebugName => "Simple Monster";
 
@@ -49,10 +49,10 @@ public class SimpleMonster : Entity, IDebugInfoProvider
                     if(_chaseBehavior == null)
                         return "Missing chase behavior";
                     return _chaseBehavior.DebugInfo;
-                case State.LostTarget:
-                    if(_lostTargetBehavior == null)
-                        return "Missing lost target behavior";
-                    return _lostTargetBehavior.DebugInfo;
+                case State.Search:
+                    if(_searchBehavior == null)
+                        return "Missing search behavior";
+                    return _searchBehavior.DebugInfo;
                 default:
                     throw new System.Exception($"Unrecognized monster state: {this._state}");
             }
@@ -87,12 +87,12 @@ public class SimpleMonster : Entity, IDebugInfoProvider
 
         if(_wanderConfig == null)
             throw new System.Exception($"Missing wander config on {this.gameObject.name}");
-        if(_lostTargetConfig == null)
-            throw new System.Exception($"Missing lost target config on {this.gameObject.name}");
+        if(_searchConfig == null)
+            throw new System.Exception($"Missing search config on {this.gameObject.name}");
 
         _wanderBehavior = new SimpleMonsterStateWander(_wanderConfig, _navManager);
         _chaseBehavior = new SimpleMonsterStateChase();
-        _lostTargetBehavior = new SimpleMonsterStateLostTarget(_lostTargetConfig);
+        _searchBehavior = new SimpleMonsterStateSearch(_searchConfig);
     }
 
     private void Start()
@@ -112,8 +112,8 @@ public class SimpleMonster : Entity, IDebugInfoProvider
             throw new System.Exception($"Missing wander behavior on {this.gameObject.name}");
         if(_chaseBehavior == null)
             throw new System.Exception($"Missing chase behavior on {this.gameObject.name}");
-        if(_lostTargetBehavior == null)
-            throw new System.Exception($"Missing lost target behavior on {this.gameObject.name}");
+        if(_searchBehavior == null)
+            throw new System.Exception($"Missing search behavior on {this.gameObject.name}");
         if (_navMeshAgent == null)
             throw new System.Exception($"Null nav mesh agent on {this.gameObject.name}");
 
@@ -129,8 +129,8 @@ public class SimpleMonster : Entity, IDebugInfoProvider
             case State.Chase:
                 newState = _chaseBehavior.OnUpdate(Time.deltaTime, currentKnowledge, _navMeshAgent);
                 break;
-            case State.LostTarget:
-                newState = _lostTargetBehavior.OnUpdate(Time.deltaTime, currentKnowledge, _navMeshAgent);
+            case State.Search:
+                newState = _searchBehavior.OnUpdate(Time.deltaTime, currentKnowledge, _navMeshAgent);
                 break;
             default:
                 throw new System.Exception($"Unrecognized monster state: {this._state}");
@@ -145,8 +145,8 @@ public class SimpleMonster : Entity, IDebugInfoProvider
                 case State.Chase:
                     _chaseBehavior.Stop(_navMeshAgent);
                     break;
-                case State.LostTarget:
-                    _lostTargetBehavior.Stop(_navMeshAgent);
+                case State.Search:
+                    _searchBehavior.Stop(_navMeshAgent);
                     break;
                 default:
                     throw new System.Exception($"Unrecognized monster state: {this._state}");
@@ -160,8 +160,8 @@ public class SimpleMonster : Entity, IDebugInfoProvider
                 case State.Chase:
                     _chaseBehavior.Start(_navMeshAgent);
                     break;
-                case State.LostTarget:
-                    _lostTargetBehavior.Start(_navMeshAgent);
+                case State.Search:
+                    _searchBehavior.Start(_navMeshAgent);
                     break;
                 default:
                     throw new System.Exception($"Unrecognized monster state: {this._state}");

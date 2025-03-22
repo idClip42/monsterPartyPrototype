@@ -3,33 +3,33 @@ using UnityEngine.AI;
 
 # nullable enable
 
-public class SimpleMonsterStateLostTarget : SimpleMonsterState
+public class SimpleMonsterStateSearch : SimpleMonsterState
 {
     [System.Serializable]
     public class Config {
         [SerializeField]
         [Range(5, 20)]
-        public float minWaitAfterLostTime = 5;
+        public float minWaitAfterSearchTime = 5;
         [SerializeField]
         [Range(5, 20)]
-        public float maxWaitAfterLostTime = 10;
+        public float maxWaitAfterSearchTime = 10;
         [SerializeField]
         [Range(0, 1)]
-        public float minWaitAfterLostTimeDist = 0.1f;
+        public float minWaitAfterSearchTimeDist = 0.1f;
     }
 
     private Config _config;
-    private float _waitAfterLostTimer = 0f;
+    private float _waitAfterSearchTimer = 0f;
 
-    public override string DebugInfo => $"LostTarget: {_waitAfterLostTimer}s";
+    public override string DebugInfo => $"Search: {_waitAfterSearchTimer}s";
 
-    public SimpleMonsterStateLostTarget(Config config){
+    public SimpleMonsterStateSearch(Config config){
         this._config = config;
     }
 
     public override void Start(NavMeshAgent agent)
     {
-        _waitAfterLostTimer = Random.Range(_config.minWaitAfterLostTime, _config.maxWaitAfterLostTime);
+        _waitAfterSearchTimer = Random.Range(_config.minWaitAfterSearchTime, _config.maxWaitAfterSearchTime);
     }
 
     public override void Stop(NavMeshAgent agent)
@@ -43,13 +43,13 @@ public class SimpleMonsterStateLostTarget : SimpleMonsterState
             return SimpleMonster.State.Chase;
         }
 
-        if(agent.remainingDistance < _config.minWaitAfterLostTimeDist){
-            _waitAfterLostTimer -= deltaTime;
-            if(_waitAfterLostTimer <= 0){
+        if(agent.remainingDistance < _config.minWaitAfterSearchTimeDist){
+            _waitAfterSearchTimer -= deltaTime;
+            if(_waitAfterSearchTimer <= 0){
                 return SimpleMonster.State.Wander;
             }
         }
 
-        return SimpleMonster.State.LostTarget;
+        return SimpleMonster.State.Search;
     }
 }

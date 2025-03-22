@@ -20,7 +20,7 @@ public class SimpleMonsterStateChase : SimpleMonsterState
     {
         _targetCharacter = currentKnowledge.visibleTarget;
         if(_targetCharacter == null){
-            return SimpleMonster.State.LostTarget;
+            return SimpleMonster.State.Search;
         }
 
         if(currentKnowledge.lastSeenPosition == null){
