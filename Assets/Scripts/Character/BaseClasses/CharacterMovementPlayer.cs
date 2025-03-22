@@ -10,6 +10,8 @@ public abstract class CharacterMovementPlayer : CharacterMovement, IDebugInfoPro
     private CameraControl? _camera = null;
 
     [SerializeField]
+    private float _crouchSpeed = 2.0f;
+    [SerializeField]
     private float _walkSpeed = 3.0f;
     [SerializeField]
     private float _runSpeed = 5.0f;
@@ -41,7 +43,7 @@ public abstract class CharacterMovementPlayer : CharacterMovement, IDebugInfoPro
 
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
-        bool isRunning = Input.GetButton("Run") && !_crouch.IsCrouching;
+        bool runButtonDown = Input.GetButton("Run");
 
         Vector3 camForward = Vector3.ProjectOnPlane(
             _camera.transform.forward,
@@ -52,7 +54,13 @@ public abstract class CharacterMovementPlayer : CharacterMovement, IDebugInfoPro
             Vector3.up
         ).normalized;
 
-        float speed = isRunning ? _runSpeed : _walkSpeed;
+        float speed;
+        if(_crouch.IsCrouching)
+            speed = _crouchSpeed;
+        else if(runButtonDown)
+            speed = _runSpeed;
+        else
+            speed = _walkSpeed;
 
         // TODO: This isn't a perfect solution.
         // TODO: Surely there's a real solution out there somewhere.
