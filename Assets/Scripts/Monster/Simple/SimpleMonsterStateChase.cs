@@ -18,6 +18,12 @@ public class SimpleMonsterStateChase : SimpleMonsterState
         [SerializeField]
         [Range(0,2)]
         public float searchDelay = 1;
+
+        [System.Serializable]
+        public enum ChaseTargetMode { ActualPosition, LastSeenPosition };
+
+        [SerializeField]
+        public ChaseTargetMode chaseTargetMode = ChaseTargetMode.ActualPosition;
     }
 
     private Config _config;
@@ -68,18 +74,33 @@ public class SimpleMonsterStateChase : SimpleMonsterState
             // Always reset the search delay timer
             // if we have a line of sight to a target
             _searchDelayTimer = _config.searchDelay;
+
+            // Store our most-recently seen target
+            _targetCharacter = currentKnowledge.visibleTarget;
         }
 
-        _targetCharacter = currentKnowledge.visibleTarget;
-
-        if(currentKnowledge.lastSeenPosition == null){
-            Debug.LogWarning("We shouldn't be missing a last seen position. Canceling Chase.");
-            return SimpleMonster.State.Wander;
+        Vector3 chaseTargetPosition;
+        if(_config.chaseTargetMode == Config.ChaseTargetMode.ActualPosition)
+        {
+            if(_targetCharacter == null){
+                Debug.LogWarning("We shouldn't be missing a target character. Canceling Chase.");
+                return SimpleMonster.State.Wander;
+            }
+            chaseTargetPosition = _targetCharacter.transform.position;
         }
-
-        agent.SetDestination(
-            currentKnowledge.lastSeenPosition.Value
-        );
+        else if(_config.chaseTargetMode == Config.ChaseTargetMode.LastSeenPosition)
+        {
+            if(currentKnowledge.lastSeenPosition == null){
+                Debug.LogWarning("We shouldn't be missing a last seen position. Canceling Chase.");
+                return SimpleMonster.State.Wander;
+            }
+            chaseTargetPosition = currentKnowledge.lastSeenPosition.Value;
+        }
+        else 
+        {
+            throw new System.Exception($"Unhandled chase target mode '{_config.chaseTargetMode}'");
+        }
+        agent.SetDestination(chaseTargetPosition);
         return SimpleMonster.State.Chase;
     }
 }
