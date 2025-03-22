@@ -77,7 +77,6 @@ public class SimpleMonster : Entity, IDebugInfoProvider
 
         if (_headConfig.eye == null)
             throw new System.Exception("Missing eye.");
-        _headConfig.eye.enabled = true;
 
         _navManager = FindFirstObjectByType<NavigationManager>();
         if (_navManager == null)
@@ -204,6 +203,28 @@ public class SimpleMonster : Entity, IDebugInfoProvider
             Vector3.up,
             _killRadius
         );
+
+        if(_headConfig.eye != null && _headBehavior != null){
+            float[] sightDebugHeights = new float[]{ 
+                transform.position.y, 
+                _headConfig.eye.transform.position.y
+            };
+            foreach(float height in sightDebugHeights){
+                Vector3 origin = new Vector3(_headConfig.eye.transform.position.x, height, _headConfig.eye.transform.position.z);
+                Vector3 projectedForward = Vector3.ProjectOnPlane(_headConfig.eye.transform.forward, Vector3.up).normalized;
+                Vector3 leftEdgeDirection = Quaternion.Euler(0, -_headBehavior.FieldOfView/2, 0) * projectedForward;
+                Vector3 rightEdgeDirection = Quaternion.Euler(0, _headBehavior.FieldOfView/2, 0) * projectedForward;
+                Handles.DrawWireArc(
+                    origin,
+                    Vector3.up,
+                    leftEdgeDirection,
+                    _headBehavior.FieldOfView,
+                    _headBehavior.MaxSightDistance
+                );
+                Handles.DrawLine(origin, origin + leftEdgeDirection * _headBehavior.MaxSightDistance);
+                Handles.DrawLine(origin, origin + rightEdgeDirection * _headBehavior.MaxSightDistance);
+            }
+        }
         
         Handles.color = prevColor;
     }

@@ -14,6 +14,14 @@ public class SimpleMonsterHead{
         public Light? eye;
 
         [SerializeField]
+        [Range(10, 100)]
+        public float maxSightDistance = 20;
+
+        [SerializeField]
+        [Range(1, 179)]
+        public float fieldOfView = 100;
+
+        [SerializeField]
         public HeadFollowBehavior headFollowBehavior = HeadFollowBehavior.LastKnownPlusMovementDirection;
 
         [SerializeField]
@@ -40,6 +48,9 @@ public class SimpleMonsterHead{
     private Vector3? _targetCharacterLastSeenPosition = null;
     private Vector3? _targetCharacterLastSeenVelocity = null;
 
+    public float MaxSightDistance => _config.maxSightDistance;
+    public float FieldOfView => _config.eye ? _config.eye.spotAngle : 0;
+
     public SimpleMonsterState.Knowledge CurrentKnowledge => new SimpleMonsterState.Knowledge(){
         visibleTarget = _targetCharacter,
         lastSeenPosition = _targetCharacterLastSeenPosition,
@@ -50,9 +61,18 @@ public class SimpleMonsterHead{
         this._monster = monster;
         this._config = config;
         this._characters = characters;
+
+        if(this._config.eye == null)
+            throw new System.Exception("Missing eye.");
+        this._config.eye.enabled = true;
     }
 
     public void OnUpdate(float deltaTime){
+        if(this._config.eye == null)
+            throw new System.Exception("Missing eye.");
+        this._config.eye.range = this._config.maxSightDistance;
+        this._config.eye.spotAngle = this._config.fieldOfView;
+
         MoveHead(deltaTime);
         LookForCharacters(deltaTime);
     }
@@ -124,6 +144,9 @@ public class SimpleMonsterHead{
                 Vector3 toTarget = targetPos - _config.eye.transform.position;
                 float distance = toTarget.magnitude;
 
+                if(distance > MaxSightDistance)
+                    continue;
+
                 LayerMask raycastMask = _config.generalLookRaycastMask;
                 if(this._monster.CurrentState == SimpleMonster.State.Chase && 
                     targetCharacter == this._targetCharacter
@@ -151,9 +174,8 @@ public class SimpleMonsterHead{
                 {
                     Vector3 lightDirection = _config.eye.transform.forward;
                     Vector3 targetDirection = toTarget / distance;
-                    float spotAngle = _config.eye.spotAngle;
 
-                    float spotAngleInRadians = spotAngle * Mathf.Deg2Rad;
+                    float spotAngleInRadians = FieldOfView * Mathf.Deg2Rad;
                     float cosHalfSpotAngle = Mathf.Cos(spotAngleInRadians / 2);
                     float dotProduct = Vector3.Dot(lightDirection, targetDirection);
                     if (dotProduct > cosHalfSpotAngle)

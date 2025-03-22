@@ -3227,6 +3227,8 @@ MonoBehaviour:
   _headConfig:
     head: {fileID: 315233453}
     eye: {fileID: 1531964679}
+    maxSightDistance: 20
+    fieldOfView: 100
     headFollowBehavior: 2
     headSwingMaxAngle: 60
     headSwingPeriod: 3
@@ -3237,10 +3239,17 @@ MonoBehaviour:
       serializedVersion: 2
       m_Bits: 64
   _wanderConfig:
+    speed: 2
+    acceleration: 8
     minRedirectTime: 20
     maxRedirectTime: 60
     chaseDelay: 1
+  _chaseConfig:
+    speed: 4
+    acceleration: 8
   _searchConfig:
+    speed: 2
+    acceleration: 8
     minWaitAfterSearchTime: 5
     maxWaitAfterSearchTime: 10
     minWaitAfterSearchTimeDist: 0.1
