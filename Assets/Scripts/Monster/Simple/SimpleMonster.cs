@@ -123,55 +123,26 @@ public class SimpleMonster : Entity, IDebugInfoProvider
         if (_navMeshAgent == null)
             throw new System.Exception($"Null nav mesh agent on {this.gameObject.name}");
 
-        _headBehavior.OnUpdate(Time.deltaTime);
-        var currentKnowledge = _headBehavior.CurrentKnowledge;
+        SimpleMonsterState currentBehavior = this._state switch {
+            State.Wander => _wanderBehavior,
+            State.Chase => _chaseBehavior,
+            State.Search => _searchBehavior,
+            _ => throw new System.Exception($"Unrecognzied monster state '{this._state}'")
+        };
 
-        State newState;
-        switch (this._state)
-        {
-            case State.Wander:
-                newState = _wanderBehavior.OnUpdate(Time.deltaTime, currentKnowledge, _navMeshAgent);
-                break;
-            case State.Chase:
-                newState = _chaseBehavior.OnUpdate(Time.deltaTime, currentKnowledge, _navMeshAgent);
-                break;
-            case State.Search:
-                newState = _searchBehavior.OnUpdate(Time.deltaTime, currentKnowledge, _navMeshAgent);
-                break;
-            default:
-                throw new System.Exception($"Unrecognized monster state: {this._state}");
-        }
+        _headBehavior.OnUpdate(Time.deltaTime, currentBehavior);
+        var currentKnowledge = _headBehavior.CurrentKnowledge;
+        State newState = currentBehavior.OnUpdate(Time.deltaTime, currentKnowledge, _navMeshAgent);
 
         if(newState != this._state){
-            switch (this._state)
-            {
-                case State.Wander:
-                    _wanderBehavior.Stop(_navMeshAgent);
-                    break;
-                case State.Chase:
-                    _chaseBehavior.Stop(_navMeshAgent);
-                    break;
-                case State.Search:
-                    _searchBehavior.Stop(_navMeshAgent);
-                    break;
-                default:
-                    throw new System.Exception($"Unrecognized monster state: {this._state}");
-            }
-
-            switch (newState)
-            {
-                case State.Wander:
-                    _wanderBehavior.Start(_navMeshAgent);
-                    break;
-                case State.Chase:
-                    _chaseBehavior.Start(_navMeshAgent);
-                    break;
-                case State.Search:
-                    _searchBehavior.Start(_navMeshAgent);
-                    break;
-                default:
-                    throw new System.Exception($"Unrecognized monster state: {this._state}");
-            }
+            currentBehavior.Stop(_navMeshAgent);
+            SimpleMonsterState nextBehavior = this._state switch {
+                State.Wander => _wanderBehavior,
+                State.Chase => _chaseBehavior,
+                State.Search => _searchBehavior,
+                _ => throw new System.Exception($"Unrecognzied monster state '{this._state}'")
+            };
+            nextBehavior.Start(_navMeshAgent);
 
             this._state = newState;
         }

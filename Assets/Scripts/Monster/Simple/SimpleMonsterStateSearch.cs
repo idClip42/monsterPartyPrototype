@@ -29,7 +29,16 @@ public class SimpleMonsterStateSearch : SimpleMonsterState
     }
 
     private Config _config;
+    private float _waitTime = 0f;
     private float _waitAfterSearchTimer = 0f;
+
+    public override SimpleMonster.State NextState { get {
+        return SimpleMonster.State.Wander;
+    }}
+
+    public override float ProgressToNextState { get {
+        return (_waitTime - _waitAfterSearchTimer) / _waitTime;
+    }}
 
     public override string DebugInfo => $"Search: {_waitAfterSearchTimer}s";
 
@@ -41,7 +50,8 @@ public class SimpleMonsterStateSearch : SimpleMonsterState
     {
         agent.speed = _config.speed;
         agent.acceleration = _config.acceleration;
-        _waitAfterSearchTimer = Random.Range(_config.minWaitAfterSearchTime, _config.maxWaitAfterSearchTime);
+        _waitTime = Random.Range(_config.minWaitAfterSearchTime, _config.maxWaitAfterSearchTime);
+        _waitAfterSearchTimer = _waitTime;
     }
 
     public override void Stop(NavMeshAgent agent)

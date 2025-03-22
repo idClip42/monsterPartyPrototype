@@ -34,6 +34,16 @@ public class SimpleMonsterStateWander : SimpleMonsterState
     private float _chaseDelayTimer = 0f;
     private Character? _previousFrameTarget = null;
 
+    public override SimpleMonster.State NextState { get{
+        if(_chaseDelayTimer == _config.chaseDelay)
+            return SimpleMonster.State.Wander;
+        return SimpleMonster.State.Chase;
+    }}
+
+    public override float ProgressToNextState { get {
+        return (_config.chaseDelay - _chaseDelayTimer) / _config.chaseDelay;
+    }}
+    
     public override string DebugInfo => $"Wander: {_newDestinationTimer:F2}s (Chase: {_chaseDelayTimer:F2}s)";
 
     public SimpleMonsterStateWander(Config config, NavigationManager navManager){

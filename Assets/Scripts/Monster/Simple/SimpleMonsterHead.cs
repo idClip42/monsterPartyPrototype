@@ -76,17 +76,26 @@ public class SimpleMonsterHead{
         this._config.eye.enabled = true;
     }
 
-    public void OnUpdate(float deltaTime){
+    public void OnUpdate(float deltaTime, SimpleMonsterState currentStateInfo){
         if(this._config.eye == null)
             throw new System.Exception("Missing eye.");
         this._config.eye.range = this._config.maxSightDistance;
         this._config.eye.spotAngle = this._config.fieldOfView;
-        this._config.eye.color = this._monster.CurrentState switch{
+       
+        Color currentColor = this._monster.CurrentState switch{
             SimpleMonster.State.Wander => this._config.wanderLightColor,
             SimpleMonster.State.Chase => this._config.chaseLightColor,
             SimpleMonster.State.Search => this._config.searchLightColor,
             _ => throw new System.Exception($"Unrecognized state '{this._monster.CurrentState}'")
         };
+        Color nextColor = currentStateInfo.NextState switch{
+            SimpleMonster.State.Wander => this._config.wanderLightColor,
+            SimpleMonster.State.Chase => this._config.chaseLightColor,
+            SimpleMonster.State.Search => this._config.searchLightColor,
+            _ => throw new System.Exception($"Unrecognized state '{this._monster.CurrentState}'")
+        };
+        Color transitionColor = Color.Lerp(currentColor, nextColor, currentStateInfo.ProgressToNextState);
+        this._config.eye.color = transitionColor;
 
         MoveHead(deltaTime);
         LookForCharacters(deltaTime);

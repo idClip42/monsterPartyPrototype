@@ -19,6 +19,16 @@ public class SimpleMonsterStateChase : SimpleMonsterState
     private Config _config;
     private Character? _targetCharacter = null;
 
+    public override SimpleMonster.State NextState { get {
+        if(_targetCharacter == null)
+            return SimpleMonster.State.Search;
+        return SimpleMonster.State.Chase;
+    }}
+
+    public override float ProgressToNextState { get {
+        return 0;
+    }}
+
     public override string DebugInfo => $"Chase: {_targetCharacter?.gameObject.name}";
 
     public SimpleMonsterStateChase(Config config){
