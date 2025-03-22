@@ -8,6 +8,14 @@ public class SimpleMonsterStateWander : SimpleMonsterState
     [System.Serializable]
     public class Config {
         [SerializeField]
+        [Range(1,6)]
+        public float speed = 2;
+
+        [SerializeField]
+        [Range(1,20)]
+        public float acceleration = 8;
+
+        [SerializeField]
         [Range(5, 100)]
         public float minRedirectTime = 20;
 
@@ -38,6 +46,8 @@ public class SimpleMonsterStateWander : SimpleMonsterState
 
     public override void Start(NavMeshAgent agent)
     {
+        agent.speed = _config.speed;
+        agent.acceleration = _config.acceleration;
         Redirect(agent);
     }
 

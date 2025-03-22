@@ -5,11 +5,31 @@ using UnityEngine.AI;
 
 public class SimpleMonsterStateChase : SimpleMonsterState
 {
+    [System.Serializable]
+    public class Config {
+        [SerializeField]
+        [Range(1,6)]
+        public float speed = 4;
+
+        [SerializeField]
+        [Range(1,20)]
+        public float acceleration = 8;
+    }
+
+    private Config _config;
     private Character? _targetCharacter = null;
 
     public override string DebugInfo => $"Chase: {_targetCharacter?.gameObject.name}";
 
-    public override void Start(NavMeshAgent agent) { }
+    public SimpleMonsterStateChase(Config config){
+        this._config = config;
+    }
+
+    public override void Start(NavMeshAgent agent) 
+    {
+        agent.speed = _config.speed;
+        agent.acceleration = _config.acceleration;
+    }
 
     public override void Stop(NavMeshAgent agent) 
     { 

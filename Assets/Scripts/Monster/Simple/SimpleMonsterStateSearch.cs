@@ -8,11 +8,21 @@ public class SimpleMonsterStateSearch : SimpleMonsterState
     [System.Serializable]
     public class Config {
         [SerializeField]
+        [Range(1,6)]
+        public float speed = 2;
+
+        [SerializeField]
+        [Range(1,20)]
+        public float acceleration = 8;
+
+        [SerializeField]
         [Range(5, 20)]
         public float minWaitAfterSearchTime = 5;
+
         [SerializeField]
         [Range(5, 20)]
         public float maxWaitAfterSearchTime = 10;
+
         [SerializeField]
         [Range(0, 1)]
         public float minWaitAfterSearchTimeDist = 0.1f;
@@ -29,6 +39,8 @@ public class SimpleMonsterStateSearch : SimpleMonsterState
 
     public override void Start(NavMeshAgent agent)
     {
+        agent.speed = _config.speed;
+        agent.acceleration = _config.acceleration;
         _waitAfterSearchTimer = Random.Range(_config.minWaitAfterSearchTime, _config.maxWaitAfterSearchTime);
     }
 

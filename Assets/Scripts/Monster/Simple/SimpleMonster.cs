@@ -17,6 +17,9 @@ public class SimpleMonster : Entity, IDebugInfoProvider
     private SimpleMonsterStateWander.Config? _wanderConfig;
 
     [SerializeField]
+    private SimpleMonsterStateChase.Config? _chaseConfig;
+
+    [SerializeField]
     private SimpleMonsterStateSearch.Config? _searchConfig;
 
     [SerializeField]
@@ -40,20 +43,23 @@ public class SimpleMonster : Entity, IDebugInfoProvider
     {
         get
         {
+            string speedInfo = this._navMeshAgent ?
+                $"{this._navMeshAgent.velocity.magnitude:F2} m/s." :
+                "0 m/s.";
             switch (this._state)
             {
                 case State.Wander:
                     if(_wanderBehavior == null)
                         return "Missing wander behavior";
-                    return _wanderBehavior.DebugInfo;
+                    return $"{speedInfo} {_wanderBehavior.DebugInfo}";
                 case State.Chase:
                     if(_chaseBehavior == null)
                         return "Missing chase behavior";
-                    return _chaseBehavior.DebugInfo;
+                    return $"{speedInfo} {_chaseBehavior.DebugInfo}";
                 case State.Search:
                     if(_searchBehavior == null)
                         return "Missing search behavior";
-                    return _searchBehavior.DebugInfo;
+                    return $"{speedInfo} {_searchBehavior.DebugInfo}";
                 default:
                     throw new System.Exception($"Unrecognized monster state: {this._state}");
             }
@@ -89,11 +95,13 @@ public class SimpleMonster : Entity, IDebugInfoProvider
 
         if(_wanderConfig == null)
             throw new System.Exception($"Missing wander config on {this.gameObject.name}");
+        if(_chaseConfig == null)
+            throw new System.Exception($"Missing chase config on {this.gameObject.name}");
         if(_searchConfig == null)
             throw new System.Exception($"Missing search config on {this.gameObject.name}");
 
         _wanderBehavior = new SimpleMonsterStateWander(_wanderConfig, _navManager);
-        _chaseBehavior = new SimpleMonsterStateChase();
+        _chaseBehavior = new SimpleMonsterStateChase(_chaseConfig);
         _searchBehavior = new SimpleMonsterStateSearch(_searchConfig);
     }
 
