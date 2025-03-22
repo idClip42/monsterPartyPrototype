@@ -81,6 +81,9 @@ public class SimpleMonsterStateWander : SimpleMonsterState
                 }
             }
         }
+        else {
+            this._chaseDelayTimer = this._config.chaseDelay;
+        }
         _previousFrameTarget = currentKnowledge.visibleTarget;
 
         // Remain in the wander state
