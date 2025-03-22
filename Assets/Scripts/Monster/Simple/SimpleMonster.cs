@@ -11,7 +11,7 @@ public class SimpleMonster : Entity, IDebugInfoProvider
     public enum State { Wander, Chase, Search }
 
     [SerializeField]
-    private SimpleMonsterHead.Config _headConfig;
+    private SimpleMonsterHead.Config? _headConfig;
 
     [SerializeField]
     private SimpleMonsterStateWander.Config? _wanderConfig;
@@ -70,27 +70,24 @@ public class SimpleMonster : Entity, IDebugInfoProvider
     {
         base.Awake();
 
-        var characters = FindObjectsByType<Character>(FindObjectsSortMode.None);
-
+        if(_headConfig == null)
+            throw new System.Exception($"Missing head config on {this.gameObject.name}");
         if (_headConfig.head == null)
             throw new System.Exception("Missing head.");
-
         if (_headConfig.eye == null)
             throw new System.Exception("Missing eye.");
-
-        _navManager = FindFirstObjectByType<NavigationManager>();
-        if (_navManager == null)
-            throw new System.Exception($"Null _navManager on {this.gameObject.name}");
-
-        _navMeshAgent = GetComponent<NavMeshAgent>();
-        if (_navMeshAgent == null)
-            throw new System.Exception($"Null nav mesh agent on {this.gameObject.name}");
-
         _headBehavior = new SimpleMonsterHead(
             this,
             _headConfig, 
             FindObjectsByType<Character>(FindObjectsSortMode.None)
         );
+
+        _navManager = FindFirstObjectByType<NavigationManager>();
+        if (_navManager == null)
+            throw new System.Exception($"Null _navManager on {this.gameObject.name}");
+        _navMeshAgent = GetComponent<NavMeshAgent>();
+        if (_navMeshAgent == null)
+            throw new System.Exception($"Null nav mesh agent on {this.gameObject.name}");
 
         if(_wanderConfig == null)
             throw new System.Exception($"Missing wander config on {this.gameObject.name}");
@@ -193,6 +190,9 @@ public class SimpleMonster : Entity, IDebugInfoProvider
 
 #if UNITY_EDITOR
     protected override void OnDrawGizmos() {
+        if(_headConfig == null)
+            throw new System.Exception($"Missing head config on {this.gameObject.name}");
+
         base.OnDrawGizmos();
 
         Color prevColor = Handles.color;

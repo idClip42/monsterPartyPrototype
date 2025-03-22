@@ -30,13 +30,17 @@ public abstract class Character : Entity, IDebugInfoProvider
     public enum StateType { Player, AI };
 
     [SerializeField]
-    private MovementConfig _movementConfig;
+    private MovementConfig? _movementConfig;
 
     private CharacterMovementPlayer? _playerMovement = null;
     private CharacterMovementAI? _aiMovement = null;
     private Transform[] _lookRaycastTargets = {};
 
-    public MovementConfig Movement => _movementConfig;
+    public MovementConfig Movement { get{
+        if(_movementConfig == null)
+            throw new Exception("Missing movement config. Should never happen.");
+        return _movementConfig;
+    }}
     public IReadOnlyCollection<Transform> LookRaycastTargets => _lookRaycastTargets;
 
     public string DebugName => "Character";
