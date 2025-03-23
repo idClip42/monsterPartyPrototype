@@ -5,7 +5,6 @@ using UnityEngine.AI;
 #nullable enable
 
 [RequireComponent(typeof(NavMeshAgent))]
-[RequireComponent(typeof(CharacterComponentCrouch))]
 [DisallowMultipleComponent]
 public abstract class CharacterComponentMovementAI : CharacterComponentMovement, IInteractible
 {
