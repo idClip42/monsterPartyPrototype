@@ -78,11 +78,14 @@ public abstract class Character : Entity, IDebugInfoProvider
             return _state;
         }
         set {
-            if(PlayerMovement == null) throw new Exception("Null _playerMovement");
-            if(AIMovement == null) throw new Exception("Null _aiMovement");
+            if(PlayerMovement == null) 
+                throw new Exception("Null PlayerMovement");
+            if(AIMovement == null) 
+                throw new Exception("Null AIMovement");
 
             _state = value;
             if(this.Alive == false) return;
+
             switch (_state)
             {
                 case StateType.Player:

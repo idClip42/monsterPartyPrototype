@@ -99,8 +99,10 @@ public abstract class CharacterComponentMovementAI : CharacterComponentMovement,
             throw new System.Exception($"Null crouch on {this.gameObject.name}");
 
         if(this._behavior == Behavior.Follow){
-            if(_behaviorTarget == null) throw new System.Exception("Null _behaviorTarget");
-            if(_behaviorTarget.Crouch == null) throw new System.Exception("Null _behaviorTarget.Crouch");
+            if(_behaviorTarget == null) 
+                throw new System.Exception("Null _behaviorTarget");
+            if(_behaviorTarget.Crouch == null) 
+                throw new System.Exception("Null _behaviorTarget.Crouch");
 
             this._navMeshAgent.SetDestination(this._behaviorTarget.transform.position);
             this.Character.Crouch.SetCrouching(this._behaviorTarget.Crouch.IsCrouching);
@@ -113,12 +115,14 @@ public abstract class CharacterComponentMovementAI : CharacterComponentMovement,
     }
 
     private void OnCrouchToggle(bool isCrouching){
-        if(_navMeshAgent == null) throw new System.Exception("Null _navMeshAgent");
+        if(_navMeshAgent == null) 
+            throw new System.Exception("Null _navMeshAgent");
         this._navMeshAgent.agentTypeID = CurrentAgentTypeId;
     }
 
     private void SetBehavior(Behavior behavior, Character? target){
-        if(_navMeshAgent == null) throw new System.Exception("Null _navMeshAgent");
+        if(_navMeshAgent == null) 
+            throw new System.Exception("Null _navMeshAgent");
 
         if(behavior == Behavior.Follow && target == null)
             throw new System.Exception("Attempted to set Follow behavior without setting a target.");
