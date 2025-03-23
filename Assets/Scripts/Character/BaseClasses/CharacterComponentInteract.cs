@@ -6,7 +6,7 @@ using System.Collections.Generic;
 #nullable enable
 
 [DisallowMultipleComponent]
-public abstract class CharacterInteract : CharacterComponent
+public abstract class CharacterComponentInteract : CharacterComponent
 {
     private IInteractible?[] _interactibles = {};
     private IInteractible? _interactibleWithinReach = null;

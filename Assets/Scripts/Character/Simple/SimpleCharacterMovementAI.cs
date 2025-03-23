@@ -3,7 +3,7 @@ using UnityEngine.AI;
 
 #nullable enable
 
-public class SimpleCharacterMovementAI : CharacterMovementAI
+public class SimpleCharacterMovementAI : CharacterComponentMovementAI
 {
     
 }

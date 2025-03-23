@@ -4,7 +4,7 @@ using UnityEditor;
 #nullable enable
 
 [DisallowMultipleComponent]
-public class SimpleCharacterNoiseLevel : CharacterNoiseLevel
+public class SimpleCharacterNoiseLevel : CharacterComponentNoiseLevel
 {
     [SerializeField]
     [Range(0, 10)]

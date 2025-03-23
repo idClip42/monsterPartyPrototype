@@ -5,11 +5,11 @@ using System.Collections.Generic;
 
 #nullable enable
 
-[RequireComponent(typeof(CharacterMovementPlayer))]
-[RequireComponent(typeof(CharacterMovementAI))]
-[RequireComponent(typeof(CharacterCrouch))]
-[RequireComponent(typeof(CharacterInteract))]
-[RequireComponent(typeof(CharacterNoiseLevel))]
+[RequireComponent(typeof(CharacterComponentMovementPlayer))]
+[RequireComponent(typeof(CharacterComponentMovementAI))]
+[RequireComponent(typeof(CharacterComponentCrouch))]
+[RequireComponent(typeof(CharacterComponentInteract))]
+[RequireComponent(typeof(CharacterComponentNoiseLevel))]
 [DisallowMultipleComponent]
 public abstract class Character : Entity, IDebugInfoProvider
 {
@@ -39,11 +39,11 @@ public abstract class Character : Entity, IDebugInfoProvider
 
     private Transform[] _lookRaycastTargets = {};
 
-    public abstract CharacterCrouch? Crouch { get; }
-    public abstract CharacterInteract? Interact { get; }
-    public abstract CharacterMovementPlayer? PlayerMovement { get; }
-    public abstract CharacterMovementAI? AIMovement { get; }
-    public abstract CharacterNoiseLevel? NoiseLevel { get; }
+    public abstract CharacterComponentCrouch? Crouch { get; }
+    public abstract CharacterComponentInteract? Interact { get; }
+    public abstract CharacterComponentMovementPlayer? PlayerMovement { get; }
+    public abstract CharacterComponentMovementAI? AIMovement { get; }
+    public abstract CharacterComponentNoiseLevel? NoiseLevel { get; }
 
     public MovementConfig Movement { get{
         if(_movementConfig == null)

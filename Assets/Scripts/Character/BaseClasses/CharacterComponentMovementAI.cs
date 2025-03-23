@@ -1,14 +1,13 @@
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.AI;
 
 #nullable enable
 
 [RequireComponent(typeof(NavMeshAgent))]
-[RequireComponent(typeof(CharacterCrouch))]
+[RequireComponent(typeof(CharacterComponentCrouch))]
 [DisallowMultipleComponent]
-public abstract class CharacterMovementAI : CharacterMovement, IInteractible
+public abstract class CharacterComponentMovementAI : CharacterComponentMovement, IInteractible
 {
     public enum Behavior { HoldPosition, Follow }
 

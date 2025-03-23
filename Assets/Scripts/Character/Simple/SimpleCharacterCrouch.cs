@@ -7,7 +7,7 @@ using UnityEngine;
 
 [RequireComponent(typeof(SimpleCharacter))]
 [RequireComponent(typeof(CharacterController))]
-public class SimpleCharacterCrouch : CharacterCrouch
+public class SimpleCharacterCrouch : CharacterComponentCrouch
 {
     private SimpleCharacter? _character = null;
     private CharacterController? _characterController = null;

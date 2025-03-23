@@ -1,6 +1,6 @@
 #nullable enable
 
-public class SimpleCharacterInteract : CharacterInteract
+public class SimpleCharacterInteract : CharacterComponentInteract
 {
     
 }

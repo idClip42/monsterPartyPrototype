@@ -4,7 +4,7 @@ using UnityEngine;
 #nullable enable
 
 [DisallowMultipleComponent]
-public abstract class CharacterMovementPlayer : CharacterMovement
+public abstract class CharacterComponentMovementPlayer : CharacterComponentMovement
 {
     private CameraControl? _camera = null;
 

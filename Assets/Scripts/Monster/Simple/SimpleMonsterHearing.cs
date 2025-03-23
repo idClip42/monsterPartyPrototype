@@ -14,7 +14,7 @@ public class SimpleMonsterHearing{
     }
 
     private SimpleMonster _monster;
-    private CharacterNoiseLevel[] _characters = { };
+    private CharacterComponentNoiseLevel[] _characters = { };
 
     private List<SoundInfo> _reusableChecksList = new List<SoundInfo>();
     private NavMeshPath _reusableNavmeshPath = new NavMeshPath();
@@ -24,7 +24,7 @@ public class SimpleMonsterHearing{
         this._monster = monster;
 
         this._characters = characters.Select(
-            c=>c.gameObject.GetComponent<CharacterNoiseLevel>()
+            c=>c.gameObject.GetComponent<CharacterComponentNoiseLevel>()
         ).ToArray();
         if(this._characters.Length == 0)
             Debug.LogWarning("SimpleMonsterHearing has no characters.");

@@ -4,7 +4,7 @@ using UnityEngine;
 #nullable enable
 
 [DisallowMultipleComponent]
-public abstract class CharacterCrouch : CharacterComponent
+public abstract class CharacterComponentCrouch : CharacterComponent
 {
     private bool _isCrouching = false;
     public bool IsCrouching => _isCrouching;

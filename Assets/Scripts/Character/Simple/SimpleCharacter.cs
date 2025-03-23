@@ -22,11 +22,11 @@ public class SimpleCharacter : Character
     private SimpleCharacterMovementAI? _aiMovement = null;
     private SimpleCharacterNoiseLevel? _noiseLevel = null;
 
-    public override CharacterCrouch? Crouch => _crouch;
-    public override CharacterInteract? Interact => _interact;
-    public override CharacterMovementPlayer? PlayerMovement => _playerMovement;
-    public override CharacterMovementAI? AIMovement => _aiMovement;
-    public override CharacterNoiseLevel? NoiseLevel => _noiseLevel;
+    public override CharacterComponentCrouch? Crouch => _crouch;
+    public override CharacterComponentInteract? Interact => _interact;
+    public override CharacterComponentMovementPlayer? PlayerMovement => _playerMovement;
+    public override CharacterComponentMovementAI? AIMovement => _aiMovement;
+    public override CharacterComponentNoiseLevel? NoiseLevel => _noiseLevel;
 
     protected override void Awake()
     {

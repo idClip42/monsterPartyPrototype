@@ -1,7 +1,7 @@
 using UnityEditor;
 using UnityEngine;
 
-public abstract class CharacterMovement : CharacterComponent
+public abstract class CharacterComponentMovement : CharacterComponent
 {
     public abstract Vector3 CurrentVelocity { get; }
 
