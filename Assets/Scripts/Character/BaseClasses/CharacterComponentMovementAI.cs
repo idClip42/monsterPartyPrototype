@@ -120,25 +120,7 @@ public abstract class CharacterComponentMovementAI : CharacterComponentMovement,
 
             this._navMeshAgent.SetDestination(this._behaviorTarget.transform.position);
             this.Character.Crouch.SetCrouching(this._behaviorTarget.Crouch.IsCrouching);
-
-            if(_behaviorTarget.State == Character.StateType.AI){
-                if(_behaviorTarget.AIMovement == null) 
-                    throw new System.Exception("Null _behaviorTarget.AIMovement");
-                _navMeshAgent.speed = _behaviorTarget.AIMovement.MaxSpeed;
-            }
-            else if(_behaviorTarget.State == Character.StateType.Player){
-                if(this._behaviorTarget.PlayerMovement == null) 
-                    throw new System.Exception("Null this.Character.PlayerMovement");
-                if(_behaviorTarget.Crouch.IsCrouching)
-                    _navMeshAgent.speed = this.Character.Movement.CrouchSpeed;
-                else if(_behaviorTarget.PlayerMovement.IsRunning)
-                    _navMeshAgent.speed = this.Character.Movement.RunSpeed;
-                else
-                    _navMeshAgent.speed = this.Character.Movement.WalkSpeed;
-            }
-            else {
-                throw new System.Exception($"Unhandled state type '{_behaviorTarget.State}'");
-            }
+            _navMeshAgent.speed = GetFollowSpeed(this._behaviorTarget, this.Character.Movement);
         }
         else {
             if(this.Character.Crouch.IsCrouching)
@@ -230,4 +212,28 @@ public abstract class CharacterComponentMovementAI : CharacterComponentMovement,
         }
     }
 #endif
+
+    private static float GetFollowSpeed(Character target, Character.MovementConfig options){
+        if(target.Crouch == null) 
+            throw new System.Exception("Null _behaviorTarget.Crouch");
+
+        if(target.State == Character.StateType.AI){
+            if(target.AIMovement == null) 
+                throw new System.Exception("Null _behaviorTarget.AIMovement");
+            return target.AIMovement.MaxSpeed;
+        }
+        else if(target.State == Character.StateType.Player){
+            if(target.PlayerMovement == null) 
+                throw new System.Exception("Null this.Character.PlayerMovement");
+            if(target.Crouch.IsCrouching)
+                return options.CrouchSpeed;
+            else if(target.PlayerMovement.IsRunning)
+                return options.RunSpeed;
+            else
+                return options.WalkSpeed;
+        }
+        else {
+            throw new System.Exception($"Unhandled state type '{target.State}'");
+        }
+    }
 }
