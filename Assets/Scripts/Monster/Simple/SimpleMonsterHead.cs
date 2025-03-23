@@ -101,6 +101,12 @@ public class SimpleMonsterHead{
         LookForCharacters(deltaTime);
     }
 
+    public void AttractAttention(Vector3 targetSpot){
+        this._targetCharacter = null;
+        this._targetCharacterLastSeenPosition = targetSpot;
+        this._targetCharacterLastSeenVelocity = Vector3.zero;
+    }
+
     private void MoveHead(float deltaTime)
     {
         if (_config.head == null)

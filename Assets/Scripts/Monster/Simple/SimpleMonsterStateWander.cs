@@ -43,7 +43,9 @@ public class SimpleMonsterStateWander : SimpleMonsterState
     public override float ProgressToNextState { get {
         return (_config.chaseDelay - _chaseDelayTimer) / _config.chaseDelay;
     }}
-    
+
+    public override bool AllowInterruption => true;
+
     public override string DebugInfo => $"Wander: {_newDestinationTimer:F2}s (Chase: {_chaseDelayTimer:F2}s)";
 
     public SimpleMonsterStateWander(Config config, NavigationManager navManager){
@@ -54,7 +56,7 @@ public class SimpleMonsterStateWander : SimpleMonsterState
             throw new System.Exception("Invalid redirect times");
     }
 
-    public override void Start(NavMeshAgent agent)
+    public override void Start(NavMeshAgent agent, Knowledge currentKnowledge)
     {
         agent.speed = _config.speed;
         agent.acceleration = _config.acceleration;

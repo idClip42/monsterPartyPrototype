@@ -13,8 +13,9 @@ public abstract class SimpleMonsterState{
     public abstract string DebugInfo { get; }
     public abstract SimpleMonster.State NextState { get; }
     public abstract float ProgressToNextState { get; }
+    public abstract bool AllowInterruption { get; }
 
-    public abstract void Start(NavMeshAgent agent);
+    public abstract void Start(NavMeshAgent agent, Knowledge currentKnowledge);
     public abstract void Stop(NavMeshAgent agent);
     public abstract SimpleMonster.State OnUpdate(float deltaTime, Knowledge currentKnowledge, NavMeshAgent agent);
 }

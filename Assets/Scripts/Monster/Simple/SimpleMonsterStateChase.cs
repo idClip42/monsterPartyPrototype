@@ -40,13 +40,15 @@ public class SimpleMonsterStateChase : SimpleMonsterState
         return (_config.searchDelay - _searchDelayTimer) / _config.searchDelay;
     }}
 
+    public override bool AllowInterruption => false;
+
     public override string DebugInfo => $"Chase: {_targetCharacter?.gameObject.name} (Search: {_searchDelayTimer:F2}s)";
 
     public SimpleMonsterStateChase(Config config){
         this._config = config;
     }
 
-    public override void Start(NavMeshAgent agent) 
+    public override void Start(NavMeshAgent agent, Knowledge currentKnowledge) 
     {
         agent.speed = _config.speed;
         agent.acceleration = _config.acceleration;

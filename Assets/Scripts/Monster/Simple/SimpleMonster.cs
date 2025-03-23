@@ -118,11 +118,24 @@ public class SimpleMonster : Entity, IDebugInfoProvider
             throw new System.Exception($"Missing wander behavior on {this.gameObject.name}");
         if (_navMeshAgent == null)
             throw new System.Exception($"Null nav mesh agent on {this.gameObject.name}");
-        _wanderBehavior.Start(_navMeshAgent);
+        if(_headBehavior == null)
+            throw new System.Exception($"Missing head behavior on {this.gameObject.name}");
+        _wanderBehavior.Start(_navMeshAgent, _headBehavior.CurrentKnowledge);
     }
 
     private void Update()
     {
+        if(_headBehavior == null)
+            throw new System.Exception($"Missing head behavior on {this.gameObject.name}");
+
+        UpdateBehavior();
+
+        var currentKnowledge = _headBehavior.CurrentKnowledge;
+        if(currentKnowledge.visibleTarget != null)
+            TryKill(currentKnowledge.visibleTarget);
+    }
+
+    private void UpdateBehavior(){
         if(_headBehavior == null)
             throw new System.Exception($"Missing head behavior on {this.gameObject.name}");
         if(_hearing == null)
@@ -136,8 +149,6 @@ public class SimpleMonster : Entity, IDebugInfoProvider
         if (_navMeshAgent == null)
             throw new System.Exception($"Null nav mesh agent on {this.gameObject.name}");
 
-        this._currentSoundInfo = _hearing.CheckForSounds();
-
         SimpleMonsterState currentBehavior = this._state switch {
             State.Wander => _wanderBehavior,
             State.Chase => _chaseBehavior,
@@ -147,29 +158,56 @@ public class SimpleMonster : Entity, IDebugInfoProvider
 
         _headBehavior.OnUpdate(Time.deltaTime, currentBehavior);
         var currentKnowledge = _headBehavior.CurrentKnowledge;
+        
         State newState = currentBehavior.OnUpdate(Time.deltaTime, currentKnowledge, _navMeshAgent);
-
-        if(newState != this._state){
-            currentBehavior.Stop(_navMeshAgent);
-            SimpleMonsterState nextBehavior = newState switch {
+        SimpleMonsterState nextBehavior = (newState != this._state) ?
+            newState switch {
                 State.Wander => _wanderBehavior,
                 State.Chase => _chaseBehavior,
                 State.Search => _searchBehavior,
-                _ => throw new System.Exception($"Unrecognzied monster state '{newState}'")
-            };
-            nextBehavior.Start(_navMeshAgent);
+                _ => throw new System.Exception($"Unrecognized monster state '{newState}'")
+            } :
+            currentBehavior;
 
-            this._state = newState;
+        this._currentSoundInfo = _hearing.CheckForSounds();
+        if(nextBehavior.AllowInterruption && this._currentSoundInfo.Any(s=>s.isAudible)){
+            // Get the closest audible noise
+            SimpleMonsterHearing.SoundInfo? targetSound = null;
+            foreach(var sound in this._currentSoundInfo){
+                if(targetSound == null)
+                    targetSound = sound;
+                if(sound.distanceToSound < targetSound.Value.distanceToSound)
+                    targetSound = sound;
+            }
+            if(targetSound == null)
+                throw new System.Exception("Target sound should not be null.");
+            if(targetSound.Value.isAudible == false)
+                throw new System.Exception("Target sound should be audible.");
+
+            // Redirect next state
+            newState = State.Search;
+            nextBehavior = _searchBehavior;
+
+            // Alert head behavior to sound
+            _headBehavior.AttractAttention(targetSound.Value.soundLocation);
         }
 
-        if(this._state == State.Chase && currentKnowledge.visibleTarget){
-            Vector3 targetPos = currentKnowledge.visibleTarget.transform.position;
+        if(newState != this._state){
+            currentBehavior.Stop(_navMeshAgent);
+            nextBehavior.Start(_navMeshAgent, currentKnowledge);
+            this._state = newState;
+        }
+    }
+
+    private void TryKill(Character target){
+        if(this._state == State.Chase){
+            Vector3 targetPos = target.transform.position;
             Vector3 myPos = transform.position;
             Vector3 posDiff = targetPos - myPos;
             float sqrDistance = posDiff.sqrMagnitude;
             float threshold = this._killRadius * this._killRadius;
             if(sqrDistance < threshold){
-                currentKnowledge.visibleTarget.Kill();
+                target.Kill();
             }
         }
     }

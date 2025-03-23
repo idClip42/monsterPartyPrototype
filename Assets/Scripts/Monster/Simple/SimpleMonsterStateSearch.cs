@@ -31,6 +31,7 @@ public class SimpleMonsterStateSearch : SimpleMonsterState
     private Config _config;
     private float _waitTime = 0f;
     private float _waitAfterSearchTimer = 0f;
+    private Vector3? _targetPosition = null;
 
     public override SimpleMonster.State NextState { get {
         return SimpleMonster.State.Wander;
@@ -40,18 +41,33 @@ public class SimpleMonsterStateSearch : SimpleMonsterState
         return (_waitTime - _waitAfterSearchTimer) / _waitTime;
     }}
 
+    public override bool AllowInterruption { get {
+        // If the delay timer is going,
+        // it means we're waiting around
+        // and can be interrupted.
+        // If it's not, we're still investigating
+        // the last character we saw.
+        return _waitAfterSearchTimer < _waitTime;
+    }}
+
     public override string DebugInfo => $"Search: {_waitAfterSearchTimer}s";
 
     public SimpleMonsterStateSearch(Config config){
         this._config = config;
     }
 
-    public override void Start(NavMeshAgent agent)
+    public override void Start(NavMeshAgent agent, Knowledge currentKnowledge)
     {
         agent.speed = _config.speed;
         agent.acceleration = _config.acceleration;
         _waitTime = Random.Range(_config.minWaitAfterSearchTime, _config.maxWaitAfterSearchTime);
         _waitAfterSearchTimer = _waitTime;
+
+        _targetPosition = currentKnowledge.lastSeenPosition;
+        if(_targetPosition == null)
+            Debug.LogWarning("Search behavior started with null target position");
+        else
+            agent.SetDestination(_targetPosition.Value);
     }
 
     public override void Stop(NavMeshAgent agent)
@@ -65,11 +81,23 @@ public class SimpleMonsterStateSearch : SimpleMonsterState
             return SimpleMonster.State.Chase;
         }
 
+        if(currentKnowledge.lastSeenPosition != null){
+            bool hasNewTargetPosition = currentKnowledge.lastSeenPosition != _targetPosition;
+            if(hasNewTargetPosition){
+                _targetPosition = currentKnowledge.lastSeenPosition;
+                agent.SetDestination(_targetPosition.Value);
+            }
+        }
+
         if(agent.remainingDistance < _config.minWaitAfterSearchTimeDist){
             _waitAfterSearchTimer -= deltaTime;
             if(_waitAfterSearchTimer <= 0){
                 return SimpleMonster.State.Wander;
             }
+        }
+        else {
+            // Resetting the timer as long as we have distance to travel
+            _waitAfterSearchTimer = _waitTime;
         }
 
         return SimpleMonster.State.Search;
