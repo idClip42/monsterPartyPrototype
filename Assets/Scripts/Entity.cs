@@ -28,14 +28,12 @@ public abstract class Entity : MonoBehaviour
 #if UNITY_EDITOR
     protected virtual void OnDrawGizmos()
     {
-        Color prevColor = Handles.color;
-        Handles.color = Color.white;
-
-        Handles.Label(
-            transform.position + Vector3.up * 1f,
-            DebugInfoString
-        );
-        Handles.color = prevColor;
+        using(new Handles.DrawingScope(Color.white)){
+            Handles.Label(
+                transform.position + Vector3.up * 1f,
+                DebugInfoString
+            );
+        }
     }
 #endif
 

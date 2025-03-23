@@ -56,18 +56,17 @@ public class SimpleCharacterNoiseLevel : CharacterNoiseLevel
 
     void OnDrawGizmosSelected()
     {
-        Color prevColor = Handles.color;
-        Handles.color = Color.cyan;
-        Handles.DrawWireDisc(
-            transform.position,
-            Vector3.up,
-            _minNoiseDistance
-        );
-        Handles.DrawWireDisc(
-            transform.position,
-            Vector3.up,
-            _maxNoiseDistance
-        );
-        Handles.color = prevColor;
+        using(new Handles.DrawingScope(Color.cyan)){
+            Handles.DrawWireDisc(
+                transform.position,
+                Vector3.up,
+                _minNoiseDistance
+            );
+            Handles.DrawWireDisc(
+                transform.position,
+                Vector3.up,
+                _maxNoiseDistance
+            );
+        }
     }
 }

@@ -52,16 +52,13 @@ public class SimpleCharacterCrouch : CharacterCrouch
 #if UNITY_EDITOR
     void OnDrawGizmosSelected()
     {
-        Color prevColor = Handles.color;
-        Handles.color = Color.green;
-
-        if(_character != null){
-            Handles.DrawLine(
-                transform.position,
-                transform.position + Vector3.up * _character.ModelHeight * _crouchHeightPercentage            );
+        using(new Handles.DrawingScope(Color.green)){
+            if(_character != null){
+                Handles.DrawLine(
+                    transform.position,
+                    transform.position + Vector3.up * _character.ModelHeight * _crouchHeightPercentage            );
+            }
         }
-        
-        Handles.color = prevColor;
     }
 #endif
 

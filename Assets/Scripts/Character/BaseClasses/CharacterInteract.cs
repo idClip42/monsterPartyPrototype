@@ -54,13 +54,12 @@ public abstract class CharacterInteract : MonoBehaviour, IDebugInfoProvider
         if(_characterBase.State != Character.StateType.Player) return;
         if(_interactibleWithinReach == null) return;
 
-        Color prevColor = Handles.color;
-        Handles.color = Color.white;
-        Handles.Label(
-            _interactibleWithinReach.InteractionWorldPosition + Vector3.up * 1.0f,
-            _interactibleWithinReach.GetInteractionName(_characterBase)
-        );
-        Handles.color = prevColor;
+        using(new Handles.DrawingScope(Color.white)){
+            Handles.Label(
+                _interactibleWithinReach.InteractionWorldPosition + Vector3.up * 1.0f,
+                _interactibleWithinReach.GetInteractionName(_characterBase)
+            );
+        }
     }
 #endif
 

@@ -8,11 +8,13 @@ public abstract class CharacterMovement : MonoBehaviour
 #if UNITY_EDITOR
     void OnDrawGizmosSelected()
     {
-        if(CurrentVelocity != Vector3.zero){
-            Handles.DrawLine(
-                transform.position,
-                transform.position + CurrentVelocity
-            );
+        using(new Handles.DrawingScope(Color.white)){
+            if(CurrentVelocity != Vector3.zero){
+                Handles.DrawLine(
+                    transform.position,
+                    transform.position + CurrentVelocity
+                );
+            }
         }
     }
     #endif

@@ -1,3 +1,4 @@
+using UnityEditor;
 using UnityEngine;
 
 #nullable enable
@@ -53,10 +54,12 @@ public class SimpleCharacter : Character
 #if UNITY_EDITOR
     void OnDrawGizmosSelected()
     {
-        Gizmos.DrawWireCube(
-            transform.position + Vector3.up * _meshBounds.extents.y, 
-            _meshBounds.size
-        );
+        using(new Handles.DrawingScope(Color.white)){
+            Gizmos.DrawWireCube(
+                transform.position + Vector3.up * _meshBounds.extents.y, 
+                _meshBounds.size
+            );
+        }
     }
 #endif
 }

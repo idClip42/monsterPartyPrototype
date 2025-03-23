@@ -221,58 +221,56 @@ public class SimpleMonster : Entity, IDebugInfoProvider
 
         base.OnDrawGizmos();
 
-        Color prevColor = Handles.color;
-        // Handles.color = Color.red;
-        Handles.color = _headConfig.eye.color;
+        using(new Handles.DrawingScope(_headConfig.eye.color)){
+            Handles.DrawWireDisc(
+                transform.position,
+                Vector3.up,
+                _killRadius
+            );
 
-        Handles.DrawWireDisc(
-            transform.position,
-            Vector3.up,
-            _killRadius
-        );
-
-        if(_headConfig.eye != null && _headBehavior != null){
-            float[] sightDebugHeights = new float[]{ 
-                transform.position.y, 
-                // _headConfig.eye.transform.position.y
-            };
-            foreach(float height in sightDebugHeights){
-                Vector3 origin = new Vector3(_headConfig.eye.transform.position.x, height, _headConfig.eye.transform.position.z);
-                Vector3 projectedForward = Vector3.ProjectOnPlane(_headConfig.eye.transform.forward, Vector3.up).normalized;
-                Vector3 leftEdgeDirection = Quaternion.Euler(0, -_headBehavior.FieldOfView/2, 0) * projectedForward;
-                Vector3 rightEdgeDirection = Quaternion.Euler(0, _headBehavior.FieldOfView/2, 0) * projectedForward;
-                Handles.DrawWireArc(
-                    origin,
-                    Vector3.up,
-                    leftEdgeDirection,
-                    _headBehavior.FieldOfView,
-                    _headBehavior.MaxSightDistance
-                );
-                Handles.DrawLine(origin, origin + leftEdgeDirection * _headBehavior.MaxSightDistance);
-                Handles.DrawLine(origin, origin + rightEdgeDirection * _headBehavior.MaxSightDistance);
-
-                // Draw some extra lines for the hell of it.
-                const int INTERVAL = 5;
-                for(int i = INTERVAL; i < _headBehavior.MaxSightDistance; i += INTERVAL){
+            if(_headConfig.eye != null && _headBehavior != null){
+                float[] sightDebugHeights = new float[]{ 
+                    transform.position.y, 
+                    // _headConfig.eye.transform.position.y
+                };
+                foreach(float height in sightDebugHeights){
+                    Vector3 origin = new Vector3(_headConfig.eye.transform.position.x, height, _headConfig.eye.transform.position.z);
+                    Vector3 projectedForward = Vector3.ProjectOnPlane(_headConfig.eye.transform.forward, Vector3.up).normalized;
+                    Vector3 leftEdgeDirection = Quaternion.Euler(0, -_headBehavior.FieldOfView/2, 0) * projectedForward;
+                    Vector3 rightEdgeDirection = Quaternion.Euler(0, _headBehavior.FieldOfView/2, 0) * projectedForward;
                     Handles.DrawWireArc(
                         origin,
                         Vector3.up,
                         leftEdgeDirection,
                         _headBehavior.FieldOfView,
-                        i
+                        _headBehavior.MaxSightDistance
                     );
+                    Handles.DrawLine(origin, origin + leftEdgeDirection * _headBehavior.MaxSightDistance);
+                    Handles.DrawLine(origin, origin + rightEdgeDirection * _headBehavior.MaxSightDistance);
+
+                    // Draw some extra lines for the hell of it.
+                    const int INTERVAL = 5;
+                    for(int i = INTERVAL; i < _headBehavior.MaxSightDistance; i += INTERVAL){
+                        Handles.DrawWireArc(
+                            origin,
+                            Vector3.up,
+                            leftEdgeDirection,
+                            _headBehavior.FieldOfView,
+                            i
+                        );
+                    }
                 }
             }
         }
 
         // Draw sound paths for sounds
         foreach(var sound in _currentSoundInfo){
-            Handles.color = sound.isAudible ? Color.yellow : Color.cyan;
-            for (int i = 1; i < sound.pathToSound.Length; i++)
-                Handles.DrawLine(sound.pathToSound[i-1], sound.pathToSound[i]);
+            Color color = sound.isAudible ? Color.yellow : Color.cyan;
+            using(new Handles.DrawingScope(color)){
+                for (int i = 1; i < sound.pathToSound.Length; i++)
+                    Handles.DrawLine(sound.pathToSound[i-1], sound.pathToSound[i]);
+            }
         }
-        
-        Handles.color = prevColor;
     }
 #endif
 }
