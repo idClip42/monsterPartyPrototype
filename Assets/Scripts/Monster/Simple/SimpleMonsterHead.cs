@@ -152,6 +152,7 @@ public class SimpleMonsterHead{
 
         Character? closestVisibleCharacter = null;
         float closestDistance = float.MaxValue;
+        Vector3 eyePos = _config.eye.transform.position;
 
         RaycastHit hitInfo;
         foreach (var targetCharacter in _characters)
@@ -162,23 +163,25 @@ public class SimpleMonsterHead{
             foreach (Transform target in targetCharacter.LookRaycastTargets)
             {
                 Vector3 targetPos = target.position;
-                Vector3 toTarget = targetPos - _config.eye.transform.position;
+                Vector3 toTarget = targetPos - eyePos;
                 float distance = toTarget.magnitude;
 
                 if(distance > MaxSightDistance)
                     continue;
 
+                // We use our general raycast mask...
                 LayerMask raycastMask = _config.generalLookRaycastMask;
-                if(this._monster.CurrentState == SimpleMonster.State.Chase && 
-                    targetCharacter == this._targetCharacter
-                ){
+                // ...unless we already have our eyes on a target...
+                bool isChasing = this._monster.CurrentState == SimpleMonster.State.Chase;
+                bool isTarget = targetCharacter == this._targetCharacter;
+                // ...in which case we use a special chase mask.
+                if(isChasing && isTarget)
                     raycastMask = _config.chaseLookRaycastMask;
-                }
 
                 // If we hit nothing, we have a clear line of sight
                 // to the target character.
                 bool lineOfSight = !Physics.Raycast(
-                    _config.eye.transform.position,
+                    eyePos,
                     toTarget / distance,
                     out hitInfo,
                     distance,
@@ -208,29 +211,17 @@ public class SimpleMonsterHead{
                             closestDistance = distance;
                         }
 
-                        Debug.DrawLine(
-                            _config.eye.transform.position,
-                            targetPos,
-                            Color.red
-                        );
+                        Debug.DrawLine( eyePos, targetPos, Color.red );
                     }
                     else
                     {
                         // Target is outside the vision cone
-                        Debug.DrawLine(
-                            _config.eye.transform.position,
-                            targetPos,
-                            Color.yellow
-                        );
+                        Debug.DrawLine( eyePos, targetPos, Color.yellow );
                     }
                 }
                 else
                 {
-                    Debug.DrawLine(
-                        _config.eye.transform.position,
-                        hitInfo.point,
-                        Color.white
-                    );
+                    Debug.DrawLine( eyePos, hitInfo.point, Color.white );
                 }
             }
         }
@@ -249,7 +240,7 @@ public class SimpleMonsterHead{
         if (this._targetCharacterLastSeenPosition != null)
         {
             Debug.DrawLine(
-                _config.eye.transform.position,
+                eyePos,
                 this._targetCharacterLastSeenPosition.Value,
                 Color.red
             );
