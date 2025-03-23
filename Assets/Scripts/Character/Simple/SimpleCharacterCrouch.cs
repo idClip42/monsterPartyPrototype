@@ -5,6 +5,7 @@ using UnityEngine;
 
 #nullable enable
 
+[RequireComponent(typeof(SimpleCharacter))]
 [RequireComponent(typeof(CharacterController))]
 public class SimpleCharacterCrouch : CharacterCrouch
 {

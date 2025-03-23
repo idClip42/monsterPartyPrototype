@@ -5,6 +5,11 @@ using System.Collections.Generic;
 
 #nullable enable
 
+[RequireComponent(typeof(CharacterMovementPlayer))]
+[RequireComponent(typeof(CharacterMovementAI))]
+[RequireComponent(typeof(CharacterCrouch))]
+[RequireComponent(typeof(CharacterInteract))]
+[RequireComponent(typeof(CharacterNoiseLevel))]
 [DisallowMultipleComponent]
 public abstract class Character : Entity, IDebugInfoProvider
 {
