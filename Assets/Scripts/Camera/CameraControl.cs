@@ -58,19 +58,7 @@ public class CameraControl : MonoBehaviour
             OrbitControl();
         }
         else if(_currentState == State.Transition){
-            if(_transitioner == null)
-                throw new Exception("Null _transitioner");
-            if(_transitionEndCallback == null)
-                throw new Exception("Null _transitionEndCallback");
-
-            bool endTransition = _transitioner.MoveCamera(Time.deltaTime);
-
-            if(endTransition){
-                _transitioner.Clear();
-                _transitionEndCallback();
-                _transitionEndCallback = null;
-                _currentState = State.Orbit;
-            }
+            TransitionUpdate();
         }
     }
 
@@ -115,6 +103,22 @@ public class CameraControl : MonoBehaviour
             // Set the camera's position to the calculated position
             this.transform.position = targetPosition;
             this.transform.forward = -direction;
+        }
+    }
+
+    private void TransitionUpdate(){
+        if(_transitioner == null)
+            throw new Exception("Null _transitioner");
+        if(_transitionEndCallback == null)
+            throw new Exception("Null _transitionEndCallback");
+
+        bool endTransition = _transitioner.MoveCamera(Time.deltaTime);
+
+        if(endTransition){
+            _transitioner.Clear();
+            _transitionEndCallback();
+            _transitionEndCallback = null;
+            _currentState = State.Orbit;
         }
     }
 
