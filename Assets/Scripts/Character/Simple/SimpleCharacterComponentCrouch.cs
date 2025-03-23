@@ -88,18 +88,22 @@ public class SimpleCharacterComponentCrouch : CharacterComponentCrouch
             // newHeight = meshHeight / _crouchHeightPercentage;
         }
 
-        // Turn off character controller while transforming
+        // Turn off character controller while transforming.
+        // (And store the initial state so we can restore it later.)
+        bool preControllerState = _characterController.enabled;
         _characterController.enabled = false;
 
-        // Squash the character
+        // Squash the character.
         transform.localScale = new Vector3(
             transform.localScale.x,
             newYScale,
             transform.localScale.z
         );
 
-        // Turn character controller back on now that transforming is done
-        _characterController.enabled = true;
+        // Restore the character controller
+        // (back to what it was)
+        // now that transforming is done.
+        _characterController.enabled = preControllerState;
     }
 
     protected override bool CanUncrouch()
