@@ -34,6 +34,11 @@ public abstract class CharacterComponentCrouch : CharacterComponent
         }
     }
 
+    public void SetCrouching(bool isCrouching){
+        if(isCrouching == this._isCrouching) return;
+        ToggleCrouch();
+    }
+
     private void ToggleCrouch(){
         if(this._isCrouching && !_canUncrouch)
             return;
