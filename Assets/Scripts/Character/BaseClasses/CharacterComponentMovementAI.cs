@@ -91,7 +91,7 @@ public abstract class CharacterComponentMovementAI : CharacterComponentMovement,
         _navMeshAgent.enabled = false;
     }
 
-    private void Update()
+    protected virtual void Update()
     {
         if(this.Character == null)
             throw new System.Exception($"Null character on {this.gameObject.name}");

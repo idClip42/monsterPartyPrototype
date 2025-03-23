@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 #nullable enable
 
@@ -7,6 +8,7 @@ using UnityEngine;
 public abstract class CharacterComponentMovementPlayer : CharacterComponentMovement
 {
     private CameraControl? _camera = null;
+    private NavMeshAgent? _navMeshAgent = null;
 
     public override string DebugHeader => "Player Movement";
 
@@ -26,6 +28,8 @@ public abstract class CharacterComponentMovementPlayer : CharacterComponentMovem
         _camera = FindFirstObjectByType<CameraControl>();
         if(_camera == null)
             throw new System.Exception($"Null camera");
+
+        _navMeshAgent = GetComponent<NavMeshAgent>();
     }
 
     private void Update()
@@ -36,6 +40,9 @@ public abstract class CharacterComponentMovementPlayer : CharacterComponentMovem
             throw new System.Exception("Null _character.Crouch");
         if(_camera == null)
             throw new System.Exception("Null _camera");
+
+        if(_navMeshAgent != null && _navMeshAgent.enabled == true)
+            throw new System.Exception("NavMeshAgent is enabled while in Player mode");
 
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
