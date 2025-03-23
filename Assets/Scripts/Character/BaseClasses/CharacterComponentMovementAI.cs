@@ -48,6 +48,7 @@ public abstract class CharacterComponentMovementAI : CharacterComponentMovement,
             _behaviorTarget.gameObject.name :
             "None";
         infoTarget["Speed"] = $"{CurrentVelocity.magnitude:F2} m/s";
+        infoTarget["Max Speed"] = $"{MaxSpeed:F2} m/s";
         infoTarget["Agent Type"] = NavMesh.GetSettingsNameFromID(CurrentAgentTypeId);
     }
 
@@ -57,6 +58,14 @@ public abstract class CharacterComponentMovementAI : CharacterComponentMovement,
         if(_navMeshAgent.enabled == false) 
             return Vector3.zero;
         return this._navMeshAgent.velocity;
+    }}
+
+    public float MaxSpeed { get {
+        if(this._navMeshAgent == null)
+            return 0;
+        if(this._navMeshAgent.enabled == false) 
+            return 0;
+        return this._navMeshAgent.speed;
     }}
 
     protected override void Awake(){
