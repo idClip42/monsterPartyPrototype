@@ -4,17 +4,14 @@ using UnityEngine;
 #nullable enable
 
 [DisallowMultipleComponent]
-public abstract class CharacterCrouch : MonoBehaviour, IDebugInfoProvider
+public abstract class CharacterCrouch : CharacterComponent
 {
-    private Character? _characterBase = null;
-
     private bool _isCrouching = false;
     public bool IsCrouching => _isCrouching;
     private bool _canUncrouch = false;
 
-    public string DebugHeader => "Crouch";
-
-    public virtual void FillInDebugInfo(Dictionary<string, string> infoTarget)
+    public override string DebugHeader => "Crouch";
+    public override void FillInDebugInfo(Dictionary<string, string> infoTarget)
     {
         infoTarget["State"] = _isCrouching ? "Crouching" : "Standing";
         if(_isCrouching)
@@ -24,20 +21,13 @@ public abstract class CharacterCrouch : MonoBehaviour, IDebugInfoProvider
     public delegate void CrouchToggleHandler(bool isCrouching);
     public CrouchToggleHandler? OnCrouchToggle;
 
-    protected virtual void Awake()
-    {
-        _characterBase = GetComponent<Character>();
-        if(_characterBase == null)
-            throw new System.Exception($"Null character base on {this.gameObject.name}");
-    }
-
     private void Update()
     {
-        if(_characterBase == null) throw new System.Exception("Null _characterBase");
+        if(this.Character == null) throw new System.Exception("Null _characterBase");
         
         _canUncrouch = CanUncrouch();
         
-        if(_characterBase.State == Character.StateType.Player){
+        if(this.Character.State == Character.StateType.Player){
             if(Input.GetButtonDown("Crouch")){
                 ToggleCrouch();
             }

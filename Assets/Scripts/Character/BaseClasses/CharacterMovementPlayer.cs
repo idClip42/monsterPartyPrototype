@@ -4,14 +4,13 @@ using UnityEngine;
 #nullable enable
 
 [DisallowMultipleComponent]
-public abstract class CharacterMovementPlayer : CharacterMovement, IDebugInfoProvider
+public abstract class CharacterMovementPlayer : CharacterMovement
 {
-    private Character? _character = null;
     private CameraControl? _camera = null;
 
-    public string DebugHeader => "Player Movement";
+    public override string DebugHeader => "Player Movement";
 
-    public void FillInDebugInfo(Dictionary<string, string> infoTarget)
+    public override void FillInDebugInfo(Dictionary<string, string> infoTarget)
     {
         if(this.enabled == false){
             infoTarget["Enabled"] = "Off";
@@ -21,10 +20,8 @@ public abstract class CharacterMovementPlayer : CharacterMovement, IDebugInfoPro
         infoTarget["Speed"] = $"{CurrentVelocity.magnitude:F2} m/s";
     }
 
-    protected virtual void Awake(){
-        _character = GetComponent<Character>();
-        if(_character == null)
-            throw new System.Exception($"Null character base on {this.gameObject.name}");
+    protected override void Awake(){
+        base.Awake();
 
         _camera = FindFirstObjectByType<CameraControl>();
         if(_camera == null)
@@ -33,9 +30,9 @@ public abstract class CharacterMovementPlayer : CharacterMovement, IDebugInfoPro
 
     private void Update()
     {
-        if(_character == null)
+        if(this.Character == null)
             throw new System.Exception("Null _characterBase");
-        if(_character.Crouch == null)
+        if(this.Character.Crouch == null)
             throw new System.Exception("Null _character.Crouch");
         if(_camera == null)
             throw new System.Exception("Null _camera");
@@ -54,12 +51,12 @@ public abstract class CharacterMovementPlayer : CharacterMovement, IDebugInfoPro
         ).normalized;
 
         float speed;
-        if(_character.Crouch.IsCrouching)
-            speed = _character.Movement.CrouchSpeed;
+        if(this.Character.Crouch.IsCrouching)
+            speed = this.Character.Movement.CrouchSpeed;
         else if(runButtonDown)
-            speed = _character.Movement.RunSpeed;
+            speed = this.Character.Movement.RunSpeed;
         else
-            speed = _character.Movement.WalkSpeed;
+            speed = this.Character.Movement.WalkSpeed;
 
         // TODO: This isn't a perfect solution.
         // TODO: Surely there's a real solution out there somewhere.

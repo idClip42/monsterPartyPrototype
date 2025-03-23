@@ -8,32 +8,31 @@ using UnityEngine.AI;
 [RequireComponent(typeof(NavMeshAgent))]
 [RequireComponent(typeof(CharacterCrouch))]
 [DisallowMultipleComponent]
-public abstract class CharacterMovementAI : CharacterMovement, IInteractible, IDebugInfoProvider
+public abstract class CharacterMovementAI : CharacterMovement, IInteractible
 {
     public enum Behavior { HoldPosition, Follow }
 
     private int CurrentAgentTypeId { get {
-        if(_character == null) return 0;
-        if(_character.Crouch == null) return 0;
+        if(this.Character == null) return 0;
+        if(this.Character.Crouch == null) return 0;
         if(_navManager == null) return 0;
-        return _character.Crouch.IsCrouching ?
+        return this.Character.Crouch.IsCrouching ?
             _navManager.CrouchingAgentTypeId : 
             _navManager.StandingAgentTypeId;
     }}
 
     private NavigationManager? _navManager = null;
     private NavMeshAgent? _navMeshAgent = null;
-    private Character? _character = null;
     private Behavior _behavior = Behavior.HoldPosition;
     private Transform? _behaviorTarget = null;
     public string CurrentBehavior => $"{_behavior} : {_behaviorTarget?.gameObject?.name}";
 
     public Vector3 InteractionWorldPosition => this.gameObject.transform.position + Vector3.up;
-    public bool IsInteractible => this._character ? this._character.Alive : false;
+    public bool IsInteractible => this.Character ? this.Character.Alive : false;
 
-    public string DebugHeader => "AI Movement";
+    public override string DebugHeader => "AI Movement";
 
-    public void FillInDebugInfo(Dictionary<string, string> infoTarget)
+    public override void FillInDebugInfo(Dictionary<string, string> infoTarget)
     {
         if(this.enabled == false){
             infoTarget["Enabled"] = "Off";
@@ -59,7 +58,9 @@ public abstract class CharacterMovementAI : CharacterMovement, IInteractible, ID
         return this._navMeshAgent.velocity;
     }}
 
-    private void Awake(){
+    protected override void Awake(){
+        base.Awake();
+
         _navManager = FindFirstObjectByType<NavigationManager>();
         if(_navManager == null)
             throw new System.Exception($"Null _navManager on {this.gameObject.name}");
@@ -67,19 +68,15 @@ public abstract class CharacterMovementAI : CharacterMovement, IInteractible, ID
         _navMeshAgent = GetComponent<NavMeshAgent>();
         if(_navMeshAgent == null)
             throw new System.Exception($"Null nav mesh agent on {this.gameObject.name}");
-
-        _character = GetComponent<Character>();
-        if(_character == null)
-            throw new System.Exception($"Null character on {this.gameObject.name}");
     }
 
     private void Start()
     {
-        if(_character == null)
+        if(this.Character == null)
             throw new System.Exception($"Null character on {this.gameObject.name}");
-        if(_character.Crouch == null)
+        if(this.Character.Crouch == null)
             throw new System.Exception($"Null crouch on {this.gameObject.name}");
-        _character.Crouch.OnCrouchToggle += OnCrouchToggle;
+        this.Character.Crouch.OnCrouchToggle += OnCrouchToggle;
     }
 
     private void OnEnable()
@@ -96,17 +93,17 @@ public abstract class CharacterMovementAI : CharacterMovement, IInteractible, ID
 
     private void Update()
     {
-        if(_character == null)
+        if(this.Character == null)
             throw new System.Exception($"Null character on {this.gameObject.name}");
         if(_navMeshAgent == null) 
             throw new System.Exception("Null _navMeshAgent");
-        if(_character.Crouch == null)
+        if(this.Character.Crouch == null)
             throw new System.Exception($"Null crouch on {this.gameObject.name}");
 
-        if(_character.Crouch.IsCrouching)
-            _navMeshAgent.speed = _character.Movement.CrouchSpeed;
+        if(this.Character.Crouch.IsCrouching)
+            _navMeshAgent.speed = this.Character.Movement.CrouchSpeed;
         else
-            _navMeshAgent.speed = _character.Movement.WalkSpeed;
+            _navMeshAgent.speed = this.Character.Movement.WalkSpeed;
 
         if(this._behavior == Behavior.Follow){
             if(_behaviorTarget == null) throw new System.Exception("Null _behaviorTarget");

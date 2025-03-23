@@ -5,24 +5,15 @@ using System.Collections.Generic;
 #nullable enable
 
 [DisallowMultipleComponent]
-public abstract class CharacterNoiseLevel : MonoBehaviour, IDebugInfoProvider
+public abstract class CharacterNoiseLevel : CharacterComponent
 {
-    private Character? _character = null;
-    public Character? Character => _character;
-
     public abstract float CurrentNoiseRadius { get; }
 
-    public string DebugHeader => "Noise";
+    public override string DebugHeader => "Noise";
 
-    public void FillInDebugInfo(Dictionary<string, string> infoTarget)
+    public override void FillInDebugInfo(Dictionary<string, string> infoTarget)
     {
         infoTarget["Noise Radius"] = $"{CurrentNoiseRadius}m";
-    }
-
-    protected virtual void Awake(){
-        _character = GetComponent<Character>();
-        if(_character == null)
-            throw new System.Exception($"Null character on {this.gameObject.name}");
     }
 
 #if UNITY_EDITOR
