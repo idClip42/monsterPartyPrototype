@@ -20,7 +20,21 @@ public abstract class CharacterComponentMovementPlayer : CharacterComponentMovem
         }
 
         infoTarget["Speed"] = $"{CurrentVelocity.magnitude:F2} m/s";
+        infoTarget["IsRunning"] = IsRunning.ToString();
     }
+
+    public bool IsRunning { get {
+        if(this.enabled == false) 
+            return false;
+
+        if(this.Character != null && this.Character.Crouch != null){
+            if(this.Character.Crouch.IsCrouching == true)
+                return false;
+        }
+
+        bool runButtonDown = Input.GetButton("Run");
+        return runButtonDown;
+    }}
 
     protected override void Awake(){
         base.Awake();
@@ -46,7 +60,6 @@ public abstract class CharacterComponentMovementPlayer : CharacterComponentMovem
 
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
-        bool runButtonDown = Input.GetButton("Run");
 
         Vector3 camForward = Vector3.ProjectOnPlane(
             _camera.transform.forward,
@@ -60,7 +73,7 @@ public abstract class CharacterComponentMovementPlayer : CharacterComponentMovem
         float speed;
         if(this.Character.Crouch.IsCrouching)
             speed = this.Character.Movement.CrouchSpeed;
-        else if(runButtonDown)
+        else if(this.IsRunning)
             speed = this.Character.Movement.RunSpeed;
         else
             speed = this.Character.Movement.WalkSpeed;
