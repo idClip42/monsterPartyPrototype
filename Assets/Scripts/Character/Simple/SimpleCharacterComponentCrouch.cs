@@ -9,7 +9,7 @@ using UnityEngine;
 [RequireComponent(typeof(CharacterController))]
 public class SimpleCharacterComponentCrouch : CharacterComponentCrouch
 {
-    private SimpleCharacter? _character = null;
+    private SimpleCharacter? _simpleCharacter = null;
     private CharacterController? _characterController = null;
 
     [SerializeField]
@@ -42,8 +42,8 @@ public class SimpleCharacterComponentCrouch : CharacterComponentCrouch
     {
         base.Awake();
         
-        _character = GetComponent<SimpleCharacter>();
-        if(_character == null)
+        _simpleCharacter = GetComponent<SimpleCharacter>();
+        if(_simpleCharacter == null)
             throw new Exception($"Null character on {this.gameObject.name}");
         
         _characterController = GetComponent<CharacterController>();
@@ -55,10 +55,10 @@ public class SimpleCharacterComponentCrouch : CharacterComponentCrouch
     void OnDrawGizmosSelected()
     {
         using(new Handles.DrawingScope(Color.green)){
-            if(_character != null){
+            if(_simpleCharacter != null){
                 Handles.DrawLine(
                     transform.position,
-                    transform.position + Vector3.up * _character.ModelHeight * _crouchHeightPercentage            );
+                    transform.position + Vector3.up * _simpleCharacter.ModelHeight * _crouchHeightPercentage            );
             }
         }
     }
@@ -69,7 +69,7 @@ public class SimpleCharacterComponentCrouch : CharacterComponentCrouch
     protected override void DisableCrouch() => ToggleCrouch(false);
 
     private void ToggleCrouch(bool isCrouching){
-        if(_character == null)
+        if(_simpleCharacter == null)
             throw new Exception($"Null character on {this.gameObject.name}");
         if(_characterController == null)
             throw new Exception($"Null character controller on {this.gameObject.name}");
