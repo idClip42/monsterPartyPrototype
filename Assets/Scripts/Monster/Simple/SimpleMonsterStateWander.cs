@@ -35,19 +35,19 @@ public class SimpleMonsterStateWander : SimpleMonsterState
     private float _chaseDelayTimer = 0f;
     private Character? _previousFrameTarget = null;
 
-    public override SimpleMonster.State NextState { get{
+    public sealed override SimpleMonster.State NextState { get{
         if(_chaseDelayTimer == _config.chaseDelay)
             return SimpleMonster.State.Wander;
         return SimpleMonster.State.Chase;
     }}
 
-    public override float ProgressToNextState { get {
+    public sealed override float ProgressToNextState { get {
         return (_config.chaseDelay - _chaseDelayTimer) / _config.chaseDelay;
     }}
 
-    public override bool AllowInterruption => true;
+    public sealed override bool AllowInterruption => true;
 
-    public override void FillInDebugInfo(Dictionary<string, string> infoTarget)
+    public sealed override void FillInDebugInfo(Dictionary<string, string> infoTarget)
     {
         infoTarget["Redirect Timer"] = $"{_newDestinationTimer:F2}s";
         infoTarget["Chase Timer"] = $"{_chaseDelayTimer:F2}s";
@@ -61,19 +61,19 @@ public class SimpleMonsterStateWander : SimpleMonsterState
             throw new System.Exception("Invalid redirect times");
     }
 
-    public override void Start(NavMeshAgent agent, Knowledge currentKnowledge)
+    public sealed override void Start(NavMeshAgent agent, Knowledge currentKnowledge)
     {
         agent.speed = _config.speed;
         agent.acceleration = _config.acceleration;
         Redirect(agent);
     }
 
-    public override void Stop(NavMeshAgent agent)
+    public sealed override void Stop(NavMeshAgent agent)
     {
         _previousFrameTarget = null;
     }
 
-    public override SimpleMonster.State OnUpdate(float deltaTime, Knowledge currentKnowledge, NavMeshAgent agent)
+    public sealed override SimpleMonster.State OnUpdate(float deltaTime, Knowledge currentKnowledge, NavMeshAgent agent)
     {
         // Countdown timer logic to choose a new destination
         _newDestinationTimer -= Time.deltaTime;

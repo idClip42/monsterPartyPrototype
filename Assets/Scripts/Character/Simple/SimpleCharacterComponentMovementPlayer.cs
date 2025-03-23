@@ -7,11 +7,11 @@ public class SimpleCharacterComponentMovementPlayer : CharacterComponentMovement
 {
     private CharacterController? _characterController = null;
 
-    public override Vector3 CurrentVelocity => _characterController ? 
+    public sealed override Vector3 CurrentVelocity => _characterController ? 
         _characterController.velocity : 
         Vector3.zero;
 
-    protected override void Awake()
+    protected sealed override void Awake()
     {
         base.Awake();
 
@@ -32,7 +32,7 @@ public class SimpleCharacterComponentMovementPlayer : CharacterComponentMovement
         _characterController.enabled = false;
     }
 
-    protected override void Move(Vector3 desiredMovementVelocity, float deltaTime)
+    protected sealed override void Move(Vector3 desiredMovementVelocity, float deltaTime)
     {
         if(_characterController == null) throw new System.Exception("Null _characterController");
         _characterController.Move(

@@ -142,4 +142,8 @@ public class CameraControl : MonoBehaviour
     {
         return Quaternion.Euler(_verticalAngle, _horizontalAngle, 0) * Vector3.forward;
     }
+
+    public sealed override bool Equals(object other) => base.Equals(other);
+    public sealed override int GetHashCode() => base.GetHashCode();
+    public sealed override string ToString() => base.ToString();
 }

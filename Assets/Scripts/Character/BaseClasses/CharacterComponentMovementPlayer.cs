@@ -10,7 +10,7 @@ public abstract class CharacterComponentMovementPlayer : CharacterComponentMovem
     private CameraControl? _camera = null;
     private NavMeshAgent? _navMeshAgent = null;
 
-    public override string DebugHeader => "Player Movement";
+    public sealed override string DebugHeader => "Player Movement";
 
     public override void FillInDebugInfo(Dictionary<string, string> infoTarget)
     {

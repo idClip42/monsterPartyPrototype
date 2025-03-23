@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
@@ -28,7 +29,14 @@ public class SimpleCharacter : Character
     public override CharacterComponentMovementAI? AIMovement => _aiMovement;
     public override CharacterComponentNoiseLevel? NoiseLevel => _noiseLevel;
 
-    protected override void Awake()
+    public sealed override void FillInDebugInfo(Dictionary<string, string> infoTarget)
+    {
+        base.FillInDebugInfo(infoTarget);
+        infoTarget["Model"] = _model ? _model.name : "None";
+        infoTarget["Model Height"] = ModelHeight.ToString();
+    }
+
+    protected sealed override void Awake()
     {
         base.Awake();
 
@@ -73,13 +81,15 @@ public class SimpleCharacter : Character
         }
     }
 
-    protected override void HandleDeath(Entity deadEntity)
+    protected sealed override void HandleDeath(Entity deadEntity)
     {
         base.HandleDeath(deadEntity);
         transform.Rotate(90, 0, 0);
     }
 
 #if UNITY_EDITOR
+    protected sealed override void OnDrawGizmos() => base.OnDrawGizmos();
+
     void OnDrawGizmosSelected()
     {
         using(new Handles.DrawingScope(Color.white)){

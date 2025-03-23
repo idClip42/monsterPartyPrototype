@@ -6,13 +6,13 @@ public class SimpleCharacterComponentMovementAI : CharacterComponentMovementAI
 {
     private CharacterController? _characterController = null;
 
-    protected override void Awake()
+    protected sealed override void Awake()
     {
         base.Awake();
         _characterController = GetComponent<CharacterController>();
     }
 
-    protected override void Update()
+    protected sealed override void Update()
     {
         base.Update();
 

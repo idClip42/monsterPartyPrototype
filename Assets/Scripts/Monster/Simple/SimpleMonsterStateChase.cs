@@ -31,19 +31,19 @@ public class SimpleMonsterStateChase : SimpleMonsterState
     private Character? _targetCharacter = null;
     private float _searchDelayTimer = 0f;
 
-    public override SimpleMonster.State NextState { get {
+    public sealed override SimpleMonster.State NextState { get {
         if(_targetCharacter == null)
             return SimpleMonster.State.Search;
         return SimpleMonster.State.Chase;
     }}
 
-    public override float ProgressToNextState { get {
+    public sealed override float ProgressToNextState { get {
         return (_config.searchDelay - _searchDelayTimer) / _config.searchDelay;
     }}
 
-    public override bool AllowInterruption => false;
+    public sealed override bool AllowInterruption => false;
 
-    public override void FillInDebugInfo(Dictionary<string, string> infoTarget)
+    public sealed override void FillInDebugInfo(Dictionary<string, string> infoTarget)
     {
         infoTarget["Target"] = _targetCharacter ? _targetCharacter.gameObject.name : "None";
         infoTarget["Timer"] = $"{_searchDelayTimer:F2}s";
@@ -53,19 +53,19 @@ public class SimpleMonsterStateChase : SimpleMonsterState
         this._config = config;
     }
 
-    public override void Start(NavMeshAgent agent, Knowledge currentKnowledge) 
+    public sealed override void Start(NavMeshAgent agent, Knowledge currentKnowledge) 
     {
         agent.speed = _config.speed;
         agent.acceleration = _config.acceleration;
         _searchDelayTimer = _config.searchDelay;
     }
 
-    public override void Stop(NavMeshAgent agent) 
+    public sealed override void Stop(NavMeshAgent agent) 
     { 
         _targetCharacter = null; 
     }
 
-    public override SimpleMonster.State OnUpdate(float deltaTime, Knowledge currentKnowledge, NavMeshAgent agent)
+    public sealed override SimpleMonster.State OnUpdate(float deltaTime, Knowledge currentKnowledge, NavMeshAgent agent)
     {
         if(currentKnowledge.visibleTarget == null){
             // If we have no line of sight to a target,

@@ -18,4 +18,8 @@ public abstract class CharacterComponent : MonoBehaviour, IDebugInfoProvider
         if(_character == null)
             throw new System.Exception($"Null character on {this.gameObject.name}");
     }
+
+    public sealed override bool Equals(object other) => base.Equals(other);
+    public sealed override int GetHashCode() => base.GetHashCode();
+    public sealed override string ToString() => base.ToString();
 }

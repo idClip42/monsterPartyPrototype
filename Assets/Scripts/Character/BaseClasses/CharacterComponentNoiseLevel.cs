@@ -9,7 +9,7 @@ public abstract class CharacterComponentNoiseLevel : CharacterComponent
 {
     public abstract float CurrentNoiseRadius { get; }
 
-    public override string DebugHeader => "Noise";
+    public sealed override string DebugHeader => "Noise";
 
     public override void FillInDebugInfo(Dictionary<string, string> infoTarget)
     {
@@ -17,7 +17,7 @@ public abstract class CharacterComponentNoiseLevel : CharacterComponent
     }
 
 #if UNITY_EDITOR
-    protected virtual private void OnDrawGizmos() {        
+    private void OnDrawGizmos() {        
         const float ARC_DEGREES = 80;
         const int INTERVAL = 5;
         using(new Handles.DrawingScope(Color.cyan)){

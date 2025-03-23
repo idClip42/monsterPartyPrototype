@@ -10,7 +10,7 @@ public abstract class CharacterComponentCrouch : CharacterComponent
     public bool IsCrouching => _isCrouching;
     private bool _canUncrouch = false;
 
-    public override string DebugHeader => "Crouch";
+    public sealed override string DebugHeader => "Crouch";
     public override void FillInDebugInfo(Dictionary<string, string> infoTarget)
     {
         infoTarget["State"] = _isCrouching ? "Crouching" : "Standing";
@@ -20,6 +20,8 @@ public abstract class CharacterComponentCrouch : CharacterComponent
 
     public delegate void CrouchToggleHandler(bool isCrouching);
     public CrouchToggleHandler? OnCrouchToggle;
+
+    protected override void Awake() => base.Awake();
 
     private void Update()
     {

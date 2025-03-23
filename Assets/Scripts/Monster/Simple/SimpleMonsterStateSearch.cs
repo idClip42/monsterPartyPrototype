@@ -34,15 +34,15 @@ public class SimpleMonsterStateSearch : SimpleMonsterState
     private float _waitAfterSearchTimer = 0f;
     private Vector3? _targetPosition = null;
 
-    public override SimpleMonster.State NextState { get {
+    public sealed override SimpleMonster.State NextState { get {
         return SimpleMonster.State.Wander;
     }}
 
-    public override float ProgressToNextState { get {
+    public sealed override float ProgressToNextState { get {
         return (_waitTime - _waitAfterSearchTimer) / _waitTime;
     }}
 
-    public override bool AllowInterruption { get {
+    public sealed override bool AllowInterruption { get {
         // If the delay timer is going,
         // it means we're waiting around
         // and can be interrupted.
@@ -51,7 +51,7 @@ public class SimpleMonsterStateSearch : SimpleMonsterState
         return _waitAfterSearchTimer < _waitTime;
     }}
 
-    public override void FillInDebugInfo(Dictionary<string, string> infoTarget)
+    public sealed override void FillInDebugInfo(Dictionary<string, string> infoTarget)
     {
         infoTarget["Timer"] = $"{_waitAfterSearchTimer}s";
     }
@@ -60,7 +60,7 @@ public class SimpleMonsterStateSearch : SimpleMonsterState
         this._config = config;
     }
 
-    public override void Start(NavMeshAgent agent, Knowledge currentKnowledge)
+    public sealed override void Start(NavMeshAgent agent, Knowledge currentKnowledge)
     {
         agent.speed = _config.speed;
         agent.acceleration = _config.acceleration;
@@ -74,12 +74,12 @@ public class SimpleMonsterStateSearch : SimpleMonsterState
             agent.SetDestination(_targetPosition.Value);
     }
 
-    public override void Stop(NavMeshAgent agent)
+    public sealed override void Stop(NavMeshAgent agent)
     {
         
     }
 
-    public override SimpleMonster.State OnUpdate(float deltaTime, Knowledge currentKnowledge, NavMeshAgent agent)
+    public sealed override SimpleMonster.State OnUpdate(float deltaTime, Knowledge currentKnowledge, NavMeshAgent agent)
     {
         if(currentKnowledge.visibleTarget != null){
             return SimpleMonster.State.Chase;

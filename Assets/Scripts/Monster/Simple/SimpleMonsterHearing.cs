@@ -95,4 +95,8 @@ public class SimpleMonsterHearing{
         // We convert the list to an array to return it.
         return _reusableChecksList.ToArray();
     }
+
+    public sealed override bool Equals(object other) => base.Equals(other);
+    public sealed override int GetHashCode() => base.GetHashCode();
+    public sealed override string ToString() => base.ToString();
 }

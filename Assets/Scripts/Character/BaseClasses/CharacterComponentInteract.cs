@@ -14,16 +14,16 @@ public abstract class CharacterComponentInteract : CharacterComponent
     [SerializeField]
     private float _interactionDistance = 1.25f;
 
-    public override string DebugHeader => "Interaction";
+    public sealed override string DebugHeader => "Interaction";
 
-    public override void FillInDebugInfo(Dictionary<string, string> infoTarget)
+    public sealed override void FillInDebugInfo(Dictionary<string, string> infoTarget)
     {
         infoTarget["Within Reach"] = _interactibleWithinReach != null ?
             _interactibleWithinReach.gameObject.name :
             "None";
     }
 
-    protected override void Awake()
+    protected sealed override void Awake()
     {
         base.Awake();
         

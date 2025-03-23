@@ -157,4 +157,8 @@ public class CameraControlTransition
         // If we have moved to the end of the path, return the last corner
         return path.corners[path.corners.Length - 1];
     }
+
+    public sealed override bool Equals(object other) => base.Equals(other);
+    public sealed override int GetHashCode() => base.GetHashCode();
+    public sealed override string ToString() => base.ToString();
 }

@@ -30,7 +30,7 @@ public class SimpleCharacterComponentCrouch : CharacterComponentCrouch
 
     private RaycastHit uncrouchHitInfo;
 
-    public override void FillInDebugInfo(Dictionary<string, string> infoTarget)
+    public sealed override void FillInDebugInfo(Dictionary<string, string> infoTarget)
     {
         base.FillInDebugInfo(infoTarget);
         if(uncrouchHitInfo.collider != null)
@@ -64,9 +64,9 @@ public class SimpleCharacterComponentCrouch : CharacterComponentCrouch
     }
 #endif
 
-    protected override void EnableCrouch() => ToggleCrouch(true);
+    protected sealed override void EnableCrouch() => ToggleCrouch(true);
 
-    protected override void DisableCrouch() => ToggleCrouch(false);
+    protected sealed override void DisableCrouch() => ToggleCrouch(false);
 
     private void ToggleCrouch(bool isCrouching){
         if(_simpleCharacter == null)
@@ -106,7 +106,7 @@ public class SimpleCharacterComponentCrouch : CharacterComponentCrouch
         _characterController.enabled = preControllerState;
     }
 
-    protected override bool CanUncrouch()
+    protected sealed override bool CanUncrouch()
     {
         if(_characterController == null)
             throw new Exception($"Null character controller on {this.gameObject.name}");

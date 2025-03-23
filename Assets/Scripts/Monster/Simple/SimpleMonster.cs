@@ -62,7 +62,7 @@ public class SimpleMonster : Entity, IDebugInfoProvider
             currentBehavior.FillInDebugInfo(infoTarget);
     }
 
-    protected override void Awake()
+    protected sealed override void Awake()
     {
         base.Awake();
 
@@ -205,7 +205,7 @@ public class SimpleMonster : Entity, IDebugInfoProvider
     }
 
 #if UNITY_EDITOR
-    protected override void OnDrawGizmos() {
+    protected sealed override void OnDrawGizmos() {
         if(_headConfig == null)
             throw new System.Exception($"Missing head config on {this.gameObject.name}");
         if(_headConfig.eye == null)

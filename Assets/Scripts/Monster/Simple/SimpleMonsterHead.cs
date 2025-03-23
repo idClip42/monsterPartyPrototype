@@ -272,4 +272,8 @@ public class SimpleMonsterHead{
             }
         }
     }
+
+    public sealed override bool Equals(object other) => base.Equals(other);
+    public sealed override int GetHashCode() => base.GetHashCode();
+    public sealed override string ToString() => base.ToString();
 }

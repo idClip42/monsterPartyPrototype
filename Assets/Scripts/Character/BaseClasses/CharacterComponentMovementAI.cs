@@ -29,9 +29,9 @@ public abstract class CharacterComponentMovementAI : CharacterComponentMovement,
     public Vector3 InteractionWorldPosition => this.gameObject.transform.position + Vector3.up;
     public bool IsInteractible => this.Character ? this.Character.Alive : false;
 
-    public override string DebugHeader => "AI Movement";
+    public sealed override string DebugHeader => "AI Movement";
 
-    public override void FillInDebugInfo(Dictionary<string, string> infoTarget)
+    public sealed override void FillInDebugInfo(Dictionary<string, string> infoTarget)
     {
         if(this.enabled == false){
             infoTarget["Enabled"] = "Off";
@@ -52,7 +52,7 @@ public abstract class CharacterComponentMovementAI : CharacterComponentMovement,
         infoTarget["Agent Type"] = NavMesh.GetSettingsNameFromID(CurrentAgentTypeId);
     }
 
-    public override Vector3 CurrentVelocity { get{
+    public sealed override Vector3 CurrentVelocity { get{
         if(this._navMeshAgent == null)
             return Vector3.zero;
         if(_navMeshAgent.enabled == false) 
