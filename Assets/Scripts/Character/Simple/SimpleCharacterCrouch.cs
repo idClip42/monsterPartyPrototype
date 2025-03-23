@@ -68,6 +68,8 @@ public class SimpleCharacterCrouch : CharacterCrouch
     private void ToggleCrouch(bool isCrouching){
         if(_character == null)
             throw new Exception($"Null character on {this.gameObject.name}");
+        if(_characterController == null)
+            throw new Exception($"Null character controller on {this.gameObject.name}");
         
         // float meshHeight = _character.ModelHeight;
         float startYScale = transform.localScale.y;
@@ -83,14 +85,18 @@ public class SimpleCharacterCrouch : CharacterCrouch
             // newHeight = meshHeight / _crouchHeightPercentage;
         }
 
+        // Turn off character controller while transforming
+        _characterController.enabled = false;
+
+        // Squash the character
         transform.localScale = new Vector3(
             transform.localScale.x,
             newYScale,
             transform.localScale.z
         );
 
-        // TODO: Character shifts up 1/4 of their height on crouch
-        // TODO: Character shifts down 1/4 of their height on uncrouch
+        // Turn character controller back on now that transforming is done
+        _characterController.enabled = true;
     }
 
     protected override bool CanUncrouch()
