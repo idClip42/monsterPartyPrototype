@@ -132,61 +132,34 @@ public class SimpleMonster : Entity, IDebugInfoProvider
             throw new System.Exception($"Missing head behavior on {this.gameObject.name}");
         if(_hearing == null)
             throw new System.Exception($"Missing hearing on {this.gameObject.name}");
-        if(_wanderBehavior == null)
-            throw new System.Exception($"Missing wander behavior on {this.gameObject.name}");
-        if(_chaseBehavior == null)
-            throw new System.Exception($"Missing chase behavior on {this.gameObject.name}");
         if(_searchBehavior == null)
             throw new System.Exception($"Missing search behavior on {this.gameObject.name}");
         if (_navMeshAgent == null)
             throw new System.Exception($"Null nav mesh agent on {this.gameObject.name}");
 
-        SimpleMonsterState currentBehavior = this._state switch {
-            State.Wander => _wanderBehavior,
-            State.Chase => _chaseBehavior,
-            State.Search => _searchBehavior,
-            _ => throw new System.Exception($"Unrecognzied monster state '{this._state}'")
-        };
-
+        SimpleMonsterState currentBehavior = StateToBehavior(this._state);
         _headBehavior.OnUpdate(Time.deltaTime, currentBehavior);
-        var currentKnowledge = _headBehavior.CurrentKnowledge;
-        
-        State newState = currentBehavior.OnUpdate(Time.deltaTime, currentKnowledge, _navMeshAgent);
-        SimpleMonsterState nextBehavior = (newState != this._state) ?
-            newState switch {
-                State.Wander => _wanderBehavior,
-                State.Chase => _chaseBehavior,
-                State.Search => _searchBehavior,
-                _ => throw new System.Exception($"Unrecognized monster state '{newState}'")
-            } :
-            currentBehavior;
+        State newState = currentBehavior.OnUpdate(Time.deltaTime, _headBehavior.CurrentKnowledge, _navMeshAgent);
+        SimpleMonsterState nextBehavior = StateToBehavior(newState);
 
         this._currentSoundInfo = _hearing.CheckForSounds();
         if(nextBehavior.AllowInterruption && this._currentSoundInfo.Any(s=>s.isAudible)){
-            // Get the closest audible noise
-            SimpleMonsterHearing.SoundInfo? targetSound = null;
-            foreach(var sound in this._currentSoundInfo){
-                if(targetSound == null)
-                    targetSound = sound;
-                if(sound.distanceToSound < targetSound.Value.distanceToSound)
-                    targetSound = sound;
-            }
-            if(targetSound == null)
-                throw new System.Exception("Target sound should not be null.");
-            if(targetSound.Value.isAudible == false)
+            // Get the closest audible noise.
+            SimpleMonsterHearing.SoundInfo targetSound = 
+                SimpleMonsterHearing.SoundInfo.GetNearest(this._currentSoundInfo);
+            // Double check what we got is audible.
+            if(targetSound.isAudible == false)
                 throw new System.Exception("Target sound should be audible.");
-
-            // Redirect next state
+            // Redirect next state.
             newState = State.Search;
             nextBehavior = _searchBehavior;
-
-            // Alert head behavior to sound
-            _headBehavior.AttractAttention(targetSound.Value.soundLocation);
+            // Alert head behavior to sound.
+            _headBehavior.AttractAttention(targetSound.soundLocation);
         }
 
         if(newState != this._state){
             currentBehavior.Stop(_navMeshAgent);
-            nextBehavior.Start(_navMeshAgent, currentKnowledge);
+            nextBehavior.Start(_navMeshAgent, _headBehavior.CurrentKnowledge);
             this._state = newState;
         }
     }
@@ -202,6 +175,22 @@ public class SimpleMonster : Entity, IDebugInfoProvider
                 target.Kill();
             }
         }
+    }
+
+    private SimpleMonsterState StateToBehavior(State state){
+        if(_wanderBehavior == null)
+            throw new System.Exception($"Missing wander behavior on {this.gameObject.name}");
+        if(_chaseBehavior == null)
+            throw new System.Exception($"Missing chase behavior on {this.gameObject.name}");
+        if(_searchBehavior == null)
+            throw new System.Exception($"Missing search behavior on {this.gameObject.name}");
+
+        return state switch {
+            State.Wander => _wanderBehavior,
+            State.Chase => _chaseBehavior,
+            State.Search => _searchBehavior,
+            _ => throw new System.Exception($"Unrecognized monster state '{state}'")
+        };
     }
 
 #if UNITY_EDITOR
