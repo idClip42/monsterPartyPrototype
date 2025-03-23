@@ -1,3 +1,4 @@
+using UnityEditor;
 using UnityEngine;
 
 public abstract class CharacterMovement : MonoBehaviour
@@ -8,10 +9,9 @@ public abstract class CharacterMovement : MonoBehaviour
     void OnDrawGizmosSelected()
     {
         if(CurrentVelocity != Vector3.zero){
-            Debug.DrawLine(
+            Handles.DrawLine(
                 transform.position,
-                transform.position + CurrentVelocity,
-                Color.white
+                transform.position + CurrentVelocity
             );
         }
     }

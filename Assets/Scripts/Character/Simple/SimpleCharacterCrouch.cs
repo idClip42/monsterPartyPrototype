@@ -1,4 +1,5 @@
 using System;
+using UnityEditor;
 using UnityEngine;
 
 #nullable enable
@@ -51,13 +52,16 @@ public class SimpleCharacterCrouch : CharacterCrouch
 #if UNITY_EDITOR
     void OnDrawGizmosSelected()
     {
+        Color prevColor = Handles.color;
+        Handles.color = Color.green;
+
         if(_character != null){
-            Debug.DrawLine(
+            Handles.DrawLine(
                 transform.position,
-                transform.position + Vector3.up * _character.ModelHeight * _crouchHeightPercentage,
-                Color.green
-            );
+                transform.position + Vector3.up * _character.ModelHeight * _crouchHeightPercentage            );
         }
+        
+        Handles.color = prevColor;
     }
 #endif
 
