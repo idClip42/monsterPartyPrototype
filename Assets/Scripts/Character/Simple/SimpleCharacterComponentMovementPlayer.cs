@@ -3,7 +3,7 @@ using UnityEngine;
 #nullable enable
 
 [RequireComponent(typeof(CharacterController))]
-public class SimpleCharacterMovementPlayer : CharacterComponentMovementPlayer
+public class SimpleCharacterComponentMovementPlayer : CharacterComponentMovementPlayer
 {
     private CharacterController? _characterController = null;
 

@@ -3,11 +3,11 @@ using UnityEngine;
 
 #nullable enable
 
-[RequireComponent(typeof(SimpleCharacterMovementPlayer))]
-[RequireComponent(typeof(SimpleCharacterMovementAI))]
-[RequireComponent(typeof(SimpleCharacterCrouch))]
-[RequireComponent(typeof(SimpleCharacterInteract))]
-[RequireComponent(typeof(SimpleCharacterNoiseLevel))]
+[RequireComponent(typeof(SimpleCharacterComponentMovementPlayer))]
+[RequireComponent(typeof(SimpleCharacterComponentMovementAI))]
+[RequireComponent(typeof(SimpleCharacterComponentCrouch))]
+[RequireComponent(typeof(SimpleCharacterComponentInteract))]
+[RequireComponent(typeof(SimpleCharacterComponentNoiseLevel))]
 public class SimpleCharacter : Character
 {
     [SerializeField]
@@ -16,11 +16,11 @@ public class SimpleCharacter : Character
     private Bounds _meshBounds;
     public float ModelHeight => _meshBounds.size.y;
 
-    private SimpleCharacterCrouch? _crouch = null;
-    private SimpleCharacterInteract? _interact = null;
-    private SimpleCharacterMovementPlayer? _playerMovement = null;
-    private SimpleCharacterMovementAI? _aiMovement = null;
-    private SimpleCharacterNoiseLevel? _noiseLevel = null;
+    private SimpleCharacterComponentCrouch? _crouch = null;
+    private SimpleCharacterComponentInteract? _interact = null;
+    private SimpleCharacterComponentMovementPlayer? _playerMovement = null;
+    private SimpleCharacterComponentMovementAI? _aiMovement = null;
+    private SimpleCharacterComponentNoiseLevel? _noiseLevel = null;
 
     public override CharacterComponentCrouch? Crouch => _crouch;
     public override CharacterComponentInteract? Interact => _interact;
@@ -35,19 +35,19 @@ public class SimpleCharacter : Character
         if(_model == null)
             throw new System.Exception($"Missing model on {gameObject.name}");
 
-        _crouch = GetComponent<SimpleCharacterCrouch>();
+        _crouch = GetComponent<SimpleCharacterComponentCrouch>();
         if(_crouch == null)
             throw new System.Exception($"Missing SimpleCharacterCrouch on {this.gameObject.name}");
-        _interact = GetComponent<SimpleCharacterInteract>();
+        _interact = GetComponent<SimpleCharacterComponentInteract>();
         if(_interact == null)
             throw new System.Exception($"Missing SimpleCharacterInteract on {this.gameObject.name}");
-        _playerMovement = GetComponent<SimpleCharacterMovementPlayer>();
+        _playerMovement = GetComponent<SimpleCharacterComponentMovementPlayer>();
         if(_playerMovement == null)
             throw new System.Exception($"Missing SimpleCharacterMovementPlayer on {this.gameObject.name}");
-        _aiMovement = GetComponent<SimpleCharacterMovementAI>();
+        _aiMovement = GetComponent<SimpleCharacterComponentMovementAI>();
         if(_aiMovement == null)
             throw new System.Exception($"Missing SimpleCharacterMovementAI on {this.gameObject.name}");
-        _noiseLevel = GetComponent<SimpleCharacterNoiseLevel>();
+        _noiseLevel = GetComponent<SimpleCharacterComponentNoiseLevel>();
         if(_noiseLevel == null)
             throw new System.Exception($"Missing SimpleCharacterNoiseLevel on {this.gameObject.name}");
 
