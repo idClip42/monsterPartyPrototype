@@ -82,18 +82,8 @@ public class SimpleMonsterHead{
         this._config.eye.range = this._config.maxSightDistance;
         this._config.eye.spotAngle = this._config.fieldOfView;
        
-        Color currentColor = this._monster.CurrentState switch{
-            SimpleMonster.State.Wander => this._config.wanderLightColor,
-            SimpleMonster.State.Chase => this._config.chaseLightColor,
-            SimpleMonster.State.Search => this._config.searchLightColor,
-            _ => throw new System.Exception($"Unrecognized state '{this._monster.CurrentState}'")
-        };
-        Color nextColor = currentStateInfo.NextState switch{
-            SimpleMonster.State.Wander => this._config.wanderLightColor,
-            SimpleMonster.State.Chase => this._config.chaseLightColor,
-            SimpleMonster.State.Search => this._config.searchLightColor,
-            _ => throw new System.Exception($"Unrecognized state '{this._monster.CurrentState}'")
-        };
+        Color currentColor = ColorFromState(this._monster.CurrentState);
+        Color nextColor = ColorFromState(currentStateInfo.NextState);
         Color transitionColor = Color.Lerp(currentColor, nextColor, currentStateInfo.ProgressToNextState);
         this._config.eye.color = transitionColor;
 
@@ -271,6 +261,15 @@ public class SimpleMonsterHead{
                 );
             }
         }
+    }
+
+    private Color ColorFromState(SimpleMonster.State state){
+        return state switch{
+            SimpleMonster.State.Wander => this._config.wanderLightColor,
+            SimpleMonster.State.Chase => this._config.chaseLightColor,
+            SimpleMonster.State.Search => this._config.searchLightColor,
+            _ => throw new System.Exception($"Unrecognized state '{state}'")
+        };
     }
 
     public sealed override bool Equals(object other) => base.Equals(other);
