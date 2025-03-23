@@ -13,9 +13,10 @@ public abstract class CharacterMovementAI : CharacterMovement, IInteractible, ID
     public enum Behavior { HoldPosition, Follow }
 
     private int CurrentAgentTypeId { get {
-        if(_crouch == null) return 0;
+        if(_character == null) return 0;
+        if(_character.Crouch == null) return 0;
         if(_navManager == null) return 0;
-        return _crouch.IsCrouching ?
+        return _character.Crouch.IsCrouching ?
             _navManager.CrouchingAgentTypeId : 
             _navManager.StandingAgentTypeId;
     }}
@@ -23,7 +24,6 @@ public abstract class CharacterMovementAI : CharacterMovement, IInteractible, ID
     private NavigationManager? _navManager = null;
     private NavMeshAgent? _navMeshAgent = null;
     private Character? _character = null;
-    private CharacterCrouch? _crouch = null;
     private Behavior _behavior = Behavior.HoldPosition;
     private Transform? _behaviorTarget = null;
     public string CurrentBehavior => $"{_behavior} : {_behaviorTarget?.gameObject?.name}";
@@ -71,11 +71,15 @@ public abstract class CharacterMovementAI : CharacterMovement, IInteractible, ID
         _character = GetComponent<Character>();
         if(_character == null)
             throw new System.Exception($"Null character on {this.gameObject.name}");
+    }
 
-        _crouch = GetComponent<CharacterCrouch>();
-        if(_crouch == null)
+    private void Start()
+    {
+        if(_character == null)
+            throw new System.Exception($"Null character on {this.gameObject.name}");
+        if(_character.Crouch == null)
             throw new System.Exception($"Null crouch on {this.gameObject.name}");
-        _crouch.OnCrouchToggle += OnCrouchToggle;
+        _character.Crouch.OnCrouchToggle += OnCrouchToggle;
     }
 
     private void OnEnable()
@@ -96,10 +100,10 @@ public abstract class CharacterMovementAI : CharacterMovement, IInteractible, ID
             throw new System.Exception($"Null character on {this.gameObject.name}");
         if(_navMeshAgent == null) 
             throw new System.Exception("Null _navMeshAgent");
-        if(_crouch == null) 
-            throw new System.Exception("Null _crouch");
+        if(_character.Crouch == null)
+            throw new System.Exception($"Null crouch on {this.gameObject.name}");
 
-        if(_crouch.IsCrouching)
+        if(_character.Crouch.IsCrouching)
             _navMeshAgent.speed = _character.Movement.CrouchSpeed;
         else
             _navMeshAgent.speed = _character.Movement.WalkSpeed;
@@ -112,7 +116,6 @@ public abstract class CharacterMovementAI : CharacterMovement, IInteractible, ID
 
     private void OnCrouchToggle(bool isCrouching){
         if(_navMeshAgent == null) throw new System.Exception("Null _navMeshAgent");
-        if(_crouch == null) throw new System.Exception("Null _crouch");
         this._navMeshAgent.agentTypeID = CurrentAgentTypeId;
     }
 

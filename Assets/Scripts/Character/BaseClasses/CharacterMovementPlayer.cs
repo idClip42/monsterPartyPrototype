@@ -7,7 +7,6 @@ using UnityEngine;
 public abstract class CharacterMovementPlayer : CharacterMovement, IDebugInfoProvider
 {
     private Character? _character = null;
-    private CharacterCrouch? _crouch = null;
     private CameraControl? _camera = null;
 
     public string DebugHeader => "Player Movement";
@@ -27,10 +26,6 @@ public abstract class CharacterMovementPlayer : CharacterMovement, IDebugInfoPro
         if(_character == null)
             throw new System.Exception($"Null character base on {this.gameObject.name}");
 
-        _crouch = GetComponent<CharacterCrouch>();
-        if(_crouch == null)
-            throw new System.Exception($"Null crouch on {this.gameObject.name}");
-
         _camera = FindFirstObjectByType<CameraControl>();
         if(_camera == null)
             throw new System.Exception($"Null camera");
@@ -40,8 +35,8 @@ public abstract class CharacterMovementPlayer : CharacterMovement, IDebugInfoPro
     {
         if(_character == null)
             throw new System.Exception("Null _characterBase");
-        if(_crouch == null)
-            throw new System.Exception("Null _crouch");
+        if(_character.Crouch == null)
+            throw new System.Exception("Null _character.Crouch");
         if(_camera == null)
             throw new System.Exception("Null _camera");
 
@@ -59,7 +54,7 @@ public abstract class CharacterMovementPlayer : CharacterMovement, IDebugInfoPro
         ).normalized;
 
         float speed;
-        if(_crouch.IsCrouching)
+        if(_character.Crouch.IsCrouching)
             speed = _character.Movement.CrouchSpeed;
         else if(runButtonDown)
             speed = _character.Movement.RunSpeed;
