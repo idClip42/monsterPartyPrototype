@@ -52,19 +52,12 @@ public class SimpleMonsterHead{
     private Config _config;
     private Character[] _characters = { };
     private float _headSwingTimer = 0;
-
-    private Character? _visibleTarget = null;
-    private Vector3? _lastSeenPosition = null;
-    private Vector3? _lastSeenVelocity = null;
+    private SimpleMonsterState.Knowledge _currentKnowledge;
 
     public float MaxSightDistance => _config.maxSightDistance;
     public float FieldOfView => _config.eye ? _config.eye.spotAngle : 0;
 
-    public SimpleMonsterState.Knowledge CurrentKnowledge => new SimpleMonsterState.Knowledge(){
-        visibleTarget = _visibleTarget,
-        lastSeenPosition = _lastSeenPosition,
-        lastSeenVelocity = _lastSeenVelocity
-    };
+    public SimpleMonsterState.Knowledge CurrentKnowledge => _currentKnowledge;
 
     public SimpleMonsterHead(SimpleMonster monster, Config config, Character[] characters){
         this._monster = monster;
@@ -92,9 +85,9 @@ public class SimpleMonsterHead{
     }
 
     public void AttractAttention(Vector3 targetSpot){
-        this._visibleTarget = null;
-        this._lastSeenPosition = targetSpot;
-        this._lastSeenVelocity = Vector3.zero;
+        this._currentKnowledge.visibleTarget = null;
+        this._currentKnowledge.lastSeenPosition = targetSpot;
+        this._currentKnowledge.lastSeenVelocity = Vector3.zero;
     }
 
     private void MoveHead(float deltaTime)
@@ -107,7 +100,7 @@ public class SimpleMonsterHead{
             throw new System.Exception("Missing head.");
 
         Vector3? lookTarget = GetLookTarget();
-        if (lookTarget != null && this._visibleTarget != null)
+        if (lookTarget != null && this._currentKnowledge.visibleTarget != null)
         {
             // Move head to look at target
             Vector3 atTarget = (lookTarget - this._config.head.position).Value.normalized;
@@ -128,22 +121,22 @@ public class SimpleMonsterHead{
         switch (_config.headFollowBehavior)
         {
             case HeadFollowBehavior.LastKnownPos:
-                return _lastSeenPosition;
+                return _currentKnowledge.lastSeenPosition;
             case HeadFollowBehavior.CurrentPos:
-                return _visibleTarget?.transform.position;
+                return _currentKnowledge.visibleTarget?.transform.position;
             case HeadFollowBehavior.LastKnownPlusMovementDirection:
                 // If there's no position,
                 // we can do nothing
-                if(_lastSeenPosition == null)
+                if(_currentKnowledge.lastSeenPosition == null)
                     return null;
                 // If there's no velocity,
                 // we can at least return position
-                if(_lastSeenVelocity == null)
-                    return _lastSeenPosition.Value;
+                if(_currentKnowledge.lastSeenVelocity == null)
+                    return _currentKnowledge.lastSeenPosition.Value;
                 // If we have both,
                 // we can "lead" the player position
-                return _lastSeenPosition.Value + 
-                    _lastSeenVelocity.Value;
+                return _currentKnowledge.lastSeenPosition.Value + 
+                    _currentKnowledge.lastSeenVelocity.Value;
             default:
                 throw new System.Exception($"Unrecognized behavior: {_config.headFollowBehavior}");
         }
@@ -177,7 +170,7 @@ public class SimpleMonsterHead{
                 LayerMask raycastMask = _config.generalLookRaycastMask;
                 // ...unless we already have our eyes on a target...
                 bool isChasing = this._monster.CurrentState == SimpleMonster.State.Chase;
-                bool isTarget = targetCharacter == this._visibleTarget;
+                bool isTarget = targetCharacter == this._currentKnowledge.visibleTarget;
                 // ...in which case we use a special chase mask.
                 if(isChasing && isTarget)
                     raycastMask = _config.chaseLookRaycastMask;
@@ -232,27 +225,27 @@ public class SimpleMonsterHead{
 
         if (closestVisibleCharacter != null)
         {
-            this._visibleTarget = closestVisibleCharacter;
-            this._lastSeenPosition = closestVisibleCharacter.transform.position;
-            this._lastSeenVelocity = closestVisibleCharacter.CurrentVelocity;
+            this._currentKnowledge.visibleTarget = closestVisibleCharacter;
+            this._currentKnowledge.lastSeenPosition = closestVisibleCharacter.transform.position;
+            this._currentKnowledge.lastSeenVelocity = closestVisibleCharacter.CurrentVelocity;
         }
         else
         {
-            this._visibleTarget = null;
+            this._currentKnowledge.visibleTarget = null;
         }
 
-        if (this._lastSeenPosition != null)
+        if (this._currentKnowledge.lastSeenPosition != null)
         {
             Debug.DrawLine(
                 eyePos,
-                this._lastSeenPosition.Value,
+                this._currentKnowledge.lastSeenPosition.Value,
                 Color.red
             );
 
-            if(this._lastSeenVelocity != null){
+            if(this._currentKnowledge.lastSeenVelocity != null){
                 Debug.DrawLine(
-                    this._lastSeenPosition.Value,
-                    this._lastSeenPosition.Value + this._lastSeenVelocity.Value,
+                    this._currentKnowledge.lastSeenPosition.Value,
+                    this._currentKnowledge.lastSeenPosition.Value + this._currentKnowledge.lastSeenVelocity.Value,
                     Color.red
                 );
             }

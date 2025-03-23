@@ -112,9 +112,8 @@ public class SimpleMonster : Entity, IDebugInfoProvider
 
         UpdateBehavior();
 
-        var currentKnowledge = _headBehavior.CurrentKnowledge;
-        if(currentKnowledge.visibleTarget != null)
-            TryKill(currentKnowledge.visibleTarget);
+        if(_headBehavior.CurrentKnowledge.visibleTarget != null)
+            TryKill(_headBehavior.CurrentKnowledge.visibleTarget);
     }
 
     private void UpdateBehavior(){
