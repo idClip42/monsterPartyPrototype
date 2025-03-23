@@ -103,31 +103,49 @@ public abstract class CharacterComponentMovementAI : CharacterComponentMovement,
 
     protected virtual void Update()
     {
-        if(this.Character == null)
-            throw new System.Exception($"Null character on {this.gameObject.name}");
-        if(_navMeshAgent == null) 
-            throw new System.Exception("Null _navMeshAgent");
-        if(this.Character.Crouch == null)
-            throw new System.Exception($"Null crouch on {this.gameObject.name}");
-
         if(this._behavior == Behavior.Follow){
-            if(_behaviorTarget == null) 
-                throw new System.Exception("Null _behaviorTarget");
-            if(_behaviorTarget.Crouch == null) 
-                throw new System.Exception("Null _behaviorTarget.Crouch");
-            if(_navMeshAgent.enabled == false)
-                throw new System.Exception("Nav mesh agent not enabled");
-
-            this._navMeshAgent.SetDestination(this._behaviorTarget.transform.position);
-            this.Character.Crouch.SetCrouching(this._behaviorTarget.Crouch.IsCrouching);
-            _navMeshAgent.speed = GetFollowSpeed(this._behaviorTarget, this.Character.Movement);
+            UpdateFollow();
+        }
+        else if(this._behavior == Behavior.HoldPosition) {
+            UpdateHoldPosition();
         }
         else {
-            if(this.Character.Crouch.IsCrouching)
-                _navMeshAgent.speed = this.Character.Movement.CrouchSpeed;
-            else
-                _navMeshAgent.speed = this.Character.Movement.WalkSpeed;
+            throw new System.Exception($"Unhandled behavior: {this._behavior}");
         }
+    }
+
+    private void UpdateFollow(){
+        if(this.Character == null)
+            throw new System.Exception($"Null character on {this.gameObject.name}");
+        if(this.Character.Crouch == null)
+            throw new System.Exception($"Null crouch on {this.gameObject.name}");
+        if(_navMeshAgent == null) 
+            throw new System.Exception("Null _navMeshAgent");
+        if(_behaviorTarget == null) 
+            throw new System.Exception("Null _behaviorTarget");
+        if(_behaviorTarget.Crouch == null) 
+            throw new System.Exception("Null _behaviorTarget.Crouch");
+
+        if(_navMeshAgent.enabled == false)
+            throw new System.Exception("Nav mesh agent not enabled");
+
+        this._navMeshAgent.SetDestination(this._behaviorTarget.transform.position);
+        this.Character.Crouch.SetCrouching(this._behaviorTarget.Crouch.IsCrouching);
+        _navMeshAgent.speed = GetFollowSpeed(this._behaviorTarget, this.Character.Movement);
+    }
+
+    private void UpdateHoldPosition(){
+        if(this.Character == null)
+            throw new System.Exception($"Null character on {this.gameObject.name}");
+        if(this.Character.Crouch == null)
+            throw new System.Exception($"Null crouch on {this.gameObject.name}");
+        if(_navMeshAgent == null) 
+            throw new System.Exception("Null _navMeshAgent");
+
+        if(this.Character.Crouch.IsCrouching)
+            _navMeshAgent.speed = this.Character.Movement.CrouchSpeed;
+        else
+            _navMeshAgent.speed = this.Character.Movement.WalkSpeed;
     }
 
     private void OnCrouchToggle(bool isCrouching){
