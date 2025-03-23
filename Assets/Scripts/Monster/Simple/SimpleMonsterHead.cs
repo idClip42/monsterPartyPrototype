@@ -102,31 +102,7 @@ public class SimpleMonsterHead{
         if (_config.head == null)
             throw new System.Exception("Missing head.");
 
-        Vector3? lookTarget;
-        switch (_config.headFollowBehavior)
-        {
-            case HeadFollowBehavior.LastKnownPos:
-                if(this._targetCharacterLastSeenPosition == null)
-                    lookTarget = null;
-                else
-                    lookTarget = this._targetCharacterLastSeenPosition;
-                break;
-            case HeadFollowBehavior.CurrentPos:
-                if(this._targetCharacter == null)
-                    lookTarget = null;
-                else
-                    lookTarget = this._targetCharacter.transform.position;
-                break;
-            case HeadFollowBehavior.LastKnownPlusMovementDirection:
-                if(this._targetCharacterLastSeenPosition == null || this._targetCharacterLastSeenVelocity == null)
-                    lookTarget = null;
-                else
-                    lookTarget = this._targetCharacterLastSeenPosition.Value + this._targetCharacterLastSeenVelocity.Value;
-                break;
-            default:
-                throw new System.Exception($"Unrecognized behavior: {_config.headFollowBehavior}");
-        }
-
+        Vector3? lookTarget = GetLookTarget();
         if (lookTarget != null && this._targetCharacter != null)
         {
             // Move head to look at target
@@ -141,6 +117,31 @@ public class SimpleMonsterHead{
             float sinCurve = Mathf.Sin(_headSwingTimer * Mathf.PI * 2f / _config.headSwingPeriod);
             float angle = sinCurve * _config.headSwingMaxAngle;
             this._config.head.localRotation = Quaternion.Euler(0, angle, 0);
+        }
+    }
+
+    private Vector3? GetLookTarget(){
+        switch (_config.headFollowBehavior)
+        {
+            case HeadFollowBehavior.LastKnownPos:
+                return _targetCharacterLastSeenPosition;
+            case HeadFollowBehavior.CurrentPos:
+                return _targetCharacter?.transform.position;
+            case HeadFollowBehavior.LastKnownPlusMovementDirection:
+                // If there's no position,
+                // we can do nothing
+                if(_targetCharacterLastSeenPosition == null)
+                    return null;
+                // If there's no velocity,
+                // we can at least return position
+                if(_targetCharacterLastSeenVelocity == null)
+                    return _targetCharacterLastSeenPosition.Value;
+                // If we have both,
+                // we can "lead" the player position
+                return _targetCharacterLastSeenPosition.Value + 
+                    _targetCharacterLastSeenVelocity.Value;
+            default:
+                throw new System.Exception($"Unrecognized behavior: {_config.headFollowBehavior}");
         }
     }
 
