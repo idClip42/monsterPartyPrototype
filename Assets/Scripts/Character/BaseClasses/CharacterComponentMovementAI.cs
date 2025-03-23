@@ -136,7 +136,7 @@ public abstract class CharacterComponentMovementAI : CharacterComponentMovement,
             case Behavior.HoldPosition:
                 return "Follow";
             case Behavior.Follow:
-                if(_behaviorTarget == interactor.transform){
+                if(_behaviorTarget == interactor){
                     return "Stop";
                 }
                 else {
@@ -155,7 +155,7 @@ public abstract class CharacterComponentMovementAI : CharacterComponentMovement,
                 SetBehavior(Behavior.Follow, interactor);
                 break;
             case Behavior.Follow:
-                if(_behaviorTarget == interactor.transform){
+                if(_behaviorTarget == interactor){
                     SetBehavior(Behavior.HoldPosition, null);
                 }
                 else {
