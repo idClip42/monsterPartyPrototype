@@ -22,7 +22,7 @@ public abstract class CharacterComponentMovementAI : CharacterComponentMovement,
     private NavigationManager? _navManager = null;
     private NavMeshAgent? _navMeshAgent = null;
     private Behavior _behavior = Behavior.HoldPosition;
-    private Transform? _behaviorTarget = null;
+    private Character? _behaviorTarget = null;
     public string CurrentBehavior => $"{_behavior} : {_behaviorTarget?.gameObject?.name}";
 
     public Vector3 InteractionWorldPosition => this.gameObject.transform.position + Vector3.up;
@@ -98,15 +98,18 @@ public abstract class CharacterComponentMovementAI : CharacterComponentMovement,
         if(this.Character.Crouch == null)
             throw new System.Exception($"Null crouch on {this.gameObject.name}");
 
+        if(this._behavior == Behavior.Follow){
+            if(_behaviorTarget == null) throw new System.Exception("Null _behaviorTarget");
+            if(_behaviorTarget.Crouch == null) throw new System.Exception("Null _behaviorTarget.Crouch");
+
+            this._navMeshAgent.SetDestination(this._behaviorTarget.transform.position);
+            this.Character.Crouch.SetCrouching(this._behaviorTarget.Crouch.IsCrouching);
+        }
+
         if(this.Character.Crouch.IsCrouching)
             _navMeshAgent.speed = this.Character.Movement.CrouchSpeed;
         else
-            _navMeshAgent.speed = this.Character.Movement.WalkSpeed;
-
-        if(this._behavior == Behavior.Follow){
-            if(_behaviorTarget == null) throw new System.Exception("Null _behaviorTarget");
-            this._navMeshAgent.SetDestination(this._behaviorTarget.transform.position);
-        }
+            _navMeshAgent.speed = this.Character.Movement.RunSpeed;
     }
 
     private void OnCrouchToggle(bool isCrouching){
@@ -114,7 +117,7 @@ public abstract class CharacterComponentMovementAI : CharacterComponentMovement,
         this._navMeshAgent.agentTypeID = CurrentAgentTypeId;
     }
 
-    private void SetBehavior(Behavior behavior, Transform? target){
+    private void SetBehavior(Behavior behavior, Character? target){
         if(_navMeshAgent == null) throw new System.Exception("Null _navMeshAgent");
 
         if(behavior == Behavior.Follow && target == null)
@@ -149,14 +152,14 @@ public abstract class CharacterComponentMovementAI : CharacterComponentMovement,
         switch (_behavior)
         {
             case Behavior.HoldPosition:
-                SetBehavior(Behavior.Follow, interactor.transform);
+                SetBehavior(Behavior.Follow, interactor);
                 break;
             case Behavior.Follow:
                 if(_behaviorTarget == interactor.transform){
                     SetBehavior(Behavior.HoldPosition, null);
                 }
                 else {
-                    SetBehavior(Behavior.Follow, interactor.transform);
+                    SetBehavior(Behavior.Follow, interactor);
                 }
                 break;
             default:
