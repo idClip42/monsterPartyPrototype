@@ -53,17 +53,17 @@ public class SimpleMonsterHead{
     private Character[] _characters = { };
     private float _headSwingTimer = 0;
 
-    private Character? _targetCharacter = null;
-    private Vector3? _targetCharacterLastSeenPosition = null;
-    private Vector3? _targetCharacterLastSeenVelocity = null;
+    private Character? _visibleTarget = null;
+    private Vector3? _lastSeenPosition = null;
+    private Vector3? _lastSeenVelocity = null;
 
     public float MaxSightDistance => _config.maxSightDistance;
     public float FieldOfView => _config.eye ? _config.eye.spotAngle : 0;
 
     public SimpleMonsterState.Knowledge CurrentKnowledge => new SimpleMonsterState.Knowledge(){
-        visibleTarget = _targetCharacter,
-        lastSeenPosition = _targetCharacterLastSeenPosition,
-        lastSeenVelocity = _targetCharacterLastSeenVelocity
+        visibleTarget = _visibleTarget,
+        lastSeenPosition = _lastSeenPosition,
+        lastSeenVelocity = _lastSeenVelocity
     };
 
     public SimpleMonsterHead(SimpleMonster monster, Config config, Character[] characters){
@@ -92,18 +92,22 @@ public class SimpleMonsterHead{
     }
 
     public void AttractAttention(Vector3 targetSpot){
-        this._targetCharacter = null;
-        this._targetCharacterLastSeenPosition = targetSpot;
-        this._targetCharacterLastSeenVelocity = Vector3.zero;
+        this._visibleTarget = null;
+        this._lastSeenPosition = targetSpot;
+        this._lastSeenVelocity = Vector3.zero;
     }
 
     private void MoveHead(float deltaTime)
     {
+        SimpleMonsterState.Knowledge newThing = new();
+        newThing.visibleTarget = null;
+
+
         if (_config.head == null)
             throw new System.Exception("Missing head.");
 
         Vector3? lookTarget = GetLookTarget();
-        if (lookTarget != null && this._targetCharacter != null)
+        if (lookTarget != null && this._visibleTarget != null)
         {
             // Move head to look at target
             Vector3 atTarget = (lookTarget - this._config.head.position).Value.normalized;
@@ -124,22 +128,22 @@ public class SimpleMonsterHead{
         switch (_config.headFollowBehavior)
         {
             case HeadFollowBehavior.LastKnownPos:
-                return _targetCharacterLastSeenPosition;
+                return _lastSeenPosition;
             case HeadFollowBehavior.CurrentPos:
-                return _targetCharacter?.transform.position;
+                return _visibleTarget?.transform.position;
             case HeadFollowBehavior.LastKnownPlusMovementDirection:
                 // If there's no position,
                 // we can do nothing
-                if(_targetCharacterLastSeenPosition == null)
+                if(_lastSeenPosition == null)
                     return null;
                 // If there's no velocity,
                 // we can at least return position
-                if(_targetCharacterLastSeenVelocity == null)
-                    return _targetCharacterLastSeenPosition.Value;
+                if(_lastSeenVelocity == null)
+                    return _lastSeenPosition.Value;
                 // If we have both,
                 // we can "lead" the player position
-                return _targetCharacterLastSeenPosition.Value + 
-                    _targetCharacterLastSeenVelocity.Value;
+                return _lastSeenPosition.Value + 
+                    _lastSeenVelocity.Value;
             default:
                 throw new System.Exception($"Unrecognized behavior: {_config.headFollowBehavior}");
         }
@@ -173,7 +177,7 @@ public class SimpleMonsterHead{
                 LayerMask raycastMask = _config.generalLookRaycastMask;
                 // ...unless we already have our eyes on a target...
                 bool isChasing = this._monster.CurrentState == SimpleMonster.State.Chase;
-                bool isTarget = targetCharacter == this._targetCharacter;
+                bool isTarget = targetCharacter == this._visibleTarget;
                 // ...in which case we use a special chase mask.
                 if(isChasing && isTarget)
                     raycastMask = _config.chaseLookRaycastMask;
@@ -228,27 +232,27 @@ public class SimpleMonsterHead{
 
         if (closestVisibleCharacter != null)
         {
-            this._targetCharacter = closestVisibleCharacter;
-            this._targetCharacterLastSeenPosition = closestVisibleCharacter.transform.position;
-            this._targetCharacterLastSeenVelocity = closestVisibleCharacter.CurrentVelocity;
+            this._visibleTarget = closestVisibleCharacter;
+            this._lastSeenPosition = closestVisibleCharacter.transform.position;
+            this._lastSeenVelocity = closestVisibleCharacter.CurrentVelocity;
         }
         else
         {
-            this._targetCharacter = null;
+            this._visibleTarget = null;
         }
 
-        if (this._targetCharacterLastSeenPosition != null)
+        if (this._lastSeenPosition != null)
         {
             Debug.DrawLine(
                 eyePos,
-                this._targetCharacterLastSeenPosition.Value,
+                this._lastSeenPosition.Value,
                 Color.red
             );
 
-            if(this._targetCharacterLastSeenVelocity != null){
+            if(this._lastSeenVelocity != null){
                 Debug.DrawLine(
-                    this._targetCharacterLastSeenPosition.Value,
-                    this._targetCharacterLastSeenPosition.Value + this._targetCharacterLastSeenVelocity.Value,
+                    this._lastSeenPosition.Value,
+                    this._lastSeenPosition.Value + this._lastSeenVelocity.Value,
                     Color.red
                 );
             }
