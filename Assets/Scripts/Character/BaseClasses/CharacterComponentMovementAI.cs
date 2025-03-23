@@ -53,6 +53,8 @@ public abstract class CharacterComponentMovementAI : CharacterComponentMovement,
     public override Vector3 CurrentVelocity { get{
         if(this._navMeshAgent == null)
             return Vector3.zero;
+        if(_navMeshAgent.enabled == false) 
+            return Vector3.zero;
         return this._navMeshAgent.velocity;
     }}
 
@@ -103,6 +105,8 @@ public abstract class CharacterComponentMovementAI : CharacterComponentMovement,
                 throw new System.Exception("Null _behaviorTarget");
             if(_behaviorTarget.Crouch == null) 
                 throw new System.Exception("Null _behaviorTarget.Crouch");
+            if(_navMeshAgent.enabled == false)
+                throw new System.Exception("Nav mesh agent not enabled");
 
             this._navMeshAgent.SetDestination(this._behaviorTarget.transform.position);
             this.Character.Crouch.SetCrouching(this._behaviorTarget.Crouch.IsCrouching);
@@ -123,6 +127,8 @@ public abstract class CharacterComponentMovementAI : CharacterComponentMovement,
     private void SetBehavior(Behavior behavior, Character? target){
         if(_navMeshAgent == null) 
             throw new System.Exception("Null _navMeshAgent");
+        if(_navMeshAgent.enabled == false) 
+            throw new System.Exception("Nav mesh agent not enabled");
 
         if(behavior == Behavior.Follow && target == null)
             throw new System.Exception("Attempted to set Follow behavior without setting a target.");
