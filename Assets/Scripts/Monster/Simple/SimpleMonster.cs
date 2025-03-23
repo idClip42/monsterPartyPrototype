@@ -68,21 +68,12 @@ public class SimpleMonster : Entity, IDebugInfoProvider
 
         if(_headConfig == null)
             throw new System.Exception($"Missing head config on {this.gameObject.name}");
-        if (_headConfig.head == null)
-            throw new System.Exception("Missing head.");
-        if (_headConfig.eye == null)
-            throw new System.Exception("Missing eye.");
-
-        var charactersArray = FindObjectsByType<Character>(FindObjectsSortMode.None);
-        if(charactersArray.Length == 0){
-            Debug.LogWarning($"{this.gameObject.name} found no Characters in the scene.");
-        }
-
-        _headBehavior = new SimpleMonsterHead(
-            this,
-            _headConfig, 
-            charactersArray
-        );
+        if(_wanderConfig == null)
+            throw new System.Exception($"Missing wander config on {this.gameObject.name}");
+        if(_chaseConfig == null)
+            throw new System.Exception($"Missing chase config on {this.gameObject.name}");
+        if(_searchConfig == null)
+            throw new System.Exception($"Missing search config on {this.gameObject.name}");
 
         _navManager = FindFirstObjectByType<NavigationManager>();
         if (_navManager == null)
@@ -91,16 +82,15 @@ public class SimpleMonster : Entity, IDebugInfoProvider
         if (_navMeshAgent == null)
             throw new System.Exception($"Null nav mesh agent on {this.gameObject.name}");
 
-        if(_wanderConfig == null)
-            throw new System.Exception($"Missing wander config on {this.gameObject.name}");
-        if(_chaseConfig == null)
-            throw new System.Exception($"Missing chase config on {this.gameObject.name}");
-        if(_searchConfig == null)
-            throw new System.Exception($"Missing search config on {this.gameObject.name}");
-
         _wanderBehavior = new SimpleMonsterStateWander(_wanderConfig, _navManager);
         _chaseBehavior = new SimpleMonsterStateChase(_chaseConfig);
         _searchBehavior = new SimpleMonsterStateSearch(_searchConfig);
+
+        var charactersArray = FindObjectsByType<Character>(FindObjectsSortMode.None);
+        if(charactersArray.Length == 0){
+            Debug.LogWarning($"{this.gameObject.name} found no Characters in the scene.");
+        }
+        _headBehavior = new SimpleMonsterHead(this, _headConfig, charactersArray);
         _hearing = new SimpleMonsterHearing(this, charactersArray, _navManager);
     }
 
@@ -137,11 +127,16 @@ public class SimpleMonster : Entity, IDebugInfoProvider
         if (_navMeshAgent == null)
             throw new System.Exception($"Null nav mesh agent on {this.gameObject.name}");
 
+        // Handle current behavior and
+        // get prospective behavior change.
         SimpleMonsterState currentBehavior = StateToBehavior(this._state);
         _headBehavior.OnUpdate(Time.deltaTime, currentBehavior);
         State newState = currentBehavior.OnUpdate(Time.deltaTime, _headBehavior.CurrentKnowledge, _navMeshAgent);
         SimpleMonsterState nextBehavior = StateToBehavior(newState);
 
+        // Check if we want to redirect
+        // our behavior change based on
+        // hearing something.
         this._currentSoundInfo = _hearing.CheckForSounds();
         if(nextBehavior.AllowInterruption && this._currentSoundInfo.Any(s=>s.isAudible)){
             // Get the closest audible noise.
@@ -157,6 +152,9 @@ public class SimpleMonster : Entity, IDebugInfoProvider
             _headBehavior.AttractAttention(targetSound.soundLocation);
         }
 
+        // If we want to change behavior,
+        // stop the old one and start the
+        // new one.
         if(newState != this._state){
             currentBehavior.Stop(_navMeshAgent);
             nextBehavior.Start(_navMeshAgent, _headBehavior.CurrentKnowledge);
