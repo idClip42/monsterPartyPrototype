@@ -16,12 +16,40 @@ public class SimpleCharacter : Character
     private Bounds _meshBounds;
     public float ModelHeight => _meshBounds.size.y;
 
+    private SimpleCharacterCrouch? _crouch = null;
+    private SimpleCharacterInteract? _interact = null;
+    private SimpleCharacterMovementPlayer? _playerMovement = null;
+    private SimpleCharacterMovementAI? _aiMovement = null;
+    private SimpleCharacterNoiseLevel? _noiseLevel = null;
+
+    public override CharacterCrouch? Crouch => _crouch;
+    public override CharacterInteract? Interact => _interact;
+    public override CharacterMovementPlayer? PlayerMovement => _playerMovement;
+    public override CharacterMovementAI? AIMovement => _aiMovement;
+    public override CharacterNoiseLevel? NoiseLevel => _noiseLevel;
+
     protected override void Awake()
     {
         base.Awake();
 
         if(_model == null)
             throw new System.Exception($"Missing model on {gameObject.name}");
+
+        _crouch = GetComponent<SimpleCharacterCrouch>();
+        if(_crouch == null)
+            throw new System.Exception($"Missing SimpleCharacterCrouch on {this.gameObject.name}");
+        _interact = GetComponent<SimpleCharacterInteract>();
+        if(_interact == null)
+            throw new System.Exception($"Missing SimpleCharacterInteract on {this.gameObject.name}");
+        _playerMovement = GetComponent<SimpleCharacterMovementPlayer>();
+        if(_playerMovement == null)
+            throw new System.Exception($"Missing SimpleCharacterMovementPlayer on {this.gameObject.name}");
+        _aiMovement = GetComponent<SimpleCharacterMovementAI>();
+        if(_aiMovement == null)
+            throw new System.Exception($"Missing SimpleCharacterMovementAI on {this.gameObject.name}");
+        _noiseLevel = GetComponent<SimpleCharacterNoiseLevel>();
+        if(_noiseLevel == null)
+            throw new System.Exception($"Missing SimpleCharacterNoiseLevel on {this.gameObject.name}");
 
         Renderer[] renderers = GetComponentsInChildren<Renderer>(false);
         _meshBounds.center = transform.position;

@@ -32,9 +32,13 @@ public abstract class Character : Entity, IDebugInfoProvider
     [SerializeField]
     private MovementConfig? _movementConfig;
 
-    private CharacterMovementPlayer? _playerMovement = null;
-    private CharacterMovementAI? _aiMovement = null;
     private Transform[] _lookRaycastTargets = {};
+
+    public abstract CharacterCrouch? Crouch { get; }
+    public abstract CharacterInteract? Interact { get; }
+    public abstract CharacterMovementPlayer? PlayerMovement { get; }
+    public abstract CharacterMovementAI? AIMovement { get; }
+    public abstract CharacterNoiseLevel? NoiseLevel { get; }
 
     public MovementConfig Movement { get{
         if(_movementConfig == null)
@@ -52,11 +56,11 @@ public abstract class Character : Entity, IDebugInfoProvider
     }
 
     public Vector3 CurrentVelocity { get{
-        if(_playerMovement != null && _playerMovement.enabled){
-            return _playerMovement.CurrentVelocity;
+        if(PlayerMovement != null && PlayerMovement.enabled){
+            return PlayerMovement.CurrentVelocity;
         }
-        else if(_aiMovement != null && _aiMovement.enabled){
-            return _aiMovement.CurrentVelocity;
+        else if(AIMovement != null && AIMovement.enabled){
+            return AIMovement.CurrentVelocity;
         }
         else {
             return Vector3.zero;
@@ -69,20 +73,20 @@ public abstract class Character : Entity, IDebugInfoProvider
             return _state;
         }
         set {
-            if(_playerMovement == null) throw new Exception("Null _playerMovement");
-            if(_aiMovement == null) throw new Exception("Null _aiMovement");
+            if(PlayerMovement == null) throw new Exception("Null _playerMovement");
+            if(AIMovement == null) throw new Exception("Null _aiMovement");
 
             _state = value;
             if(this.Alive == false) return;
             switch (_state)
             {
                 case StateType.Player:
-                    _playerMovement.enabled = true;
-                    _aiMovement.enabled = false;
+                    PlayerMovement.enabled = true;
+                    AIMovement.enabled = false;
                     break;
                 case StateType.AI:
-                    _playerMovement.enabled = false;
-                    _aiMovement.enabled = true;
+                    PlayerMovement.enabled = false;
+                    AIMovement.enabled = true;
                     break;
                 default:
                     throw new Exception($"Unknown state enum for {this.gameObject.name}: {_state}");
@@ -94,15 +98,8 @@ public abstract class Character : Entity, IDebugInfoProvider
     {
         base.Awake();
 
-        _playerMovement = GetComponent<CharacterMovementPlayer>();
-        if(_playerMovement == null)
-            throw new Exception($"Missing CharacterMovementPlayer on {this.gameObject.name}");
-            
-        _aiMovement = GetComponent<CharacterMovementAI>();
-        if(_aiMovement == null)
-            throw new Exception($"Missing CharacterMovementAI on {this.gameObject.name}");
-
-        _lookRaycastTargets = GetComponentsInChildren<CharacterLookRaycastTarget>(false).Select(item => item.gameObject.transform).ToArray();
+        _lookRaycastTargets = GetComponentsInChildren<CharacterLookRaycastTarget>(false)
+            .Select(item => item.gameObject.transform).ToArray();
 
         this.OnDeath += HandleDeath;
     }
@@ -114,12 +111,12 @@ public abstract class Character : Entity, IDebugInfoProvider
     protected virtual void HandleDeath(Entity deadEntity){        
         if(deadEntity != this)
             throw new Exception("This function should only be called for own death.");
-        if(_playerMovement == null) 
+        if(PlayerMovement == null) 
             throw new Exception("Null _playerMovement");
-        if(_aiMovement == null) 
+        if(AIMovement == null) 
             throw new Exception("Null _aiMovement");
 
-        _playerMovement.enabled = false;
-        _aiMovement.enabled = false;
+        PlayerMovement.enabled = false;
+        AIMovement.enabled = false;
     }
 }
