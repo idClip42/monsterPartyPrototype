@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -176,4 +177,28 @@ public abstract class CharacterComponentMovementAI : CharacterComponentMovement,
                 throw new System.Exception($"Unhandled behavior: {_behavior}");
         }
     }
+
+#if UNITY_EDITOR
+    private void OnDrawGizmos() {
+        const float RADIUS = 0.5f;
+
+        if(_behavior == Behavior.Follow){
+            if(_behaviorTarget == null)
+                throw new System.Exception("Missing behavior target!");
+
+            Vector3 myPos = transform.position;
+            Vector3 theirPos = _behaviorTarget.transform.position;
+            Vector3 distance = theirPos - myPos;
+            Vector3 direction = distance.normalized;
+            Vector3 right = Vector3.Cross(direction, Vector3.up).normalized;
+
+            using(new Handles.DrawingScope(Color.white)){
+                Handles.DrawWireDisc(myPos, Vector3.up, RADIUS);
+                Handles.DrawWireDisc(theirPos, Vector3.up, RADIUS);
+                Handles.DrawLine(myPos + right * RADIUS, theirPos + right * RADIUS);
+                Handles.DrawLine(myPos - right * RADIUS, theirPos - right * RADIUS);
+            }
+        }
+    }
+#endif
 }
