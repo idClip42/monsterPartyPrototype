@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.AI;
@@ -30,12 +31,27 @@ public abstract class CharacterMovementAI : CharacterMovement, IInteractible, ID
     public Vector3 InteractionWorldPosition => this.gameObject.transform.position + Vector3.up;
     public bool IsInteractible => this._character ? this._character.Alive : false;
 
-    public string DebugName => "AI Movement";
-    public string DebugInfo { get {
-        if(this.enabled == false) return "Off";
-        if(_navMeshAgent == null) throw new System.Exception("Null _navMeshAgent");
-        return $"{_behavior}, {_behaviorTarget?.gameObject?.name}, {CurrentVelocity.magnitude:F2} m/s, Agent Type: '{NavMesh.GetSettingsNameFromID(CurrentAgentTypeId)}'";
-    }}
+    public string DebugHeader => "AI Movement";
+
+    public void FillInDebugInfo(Dictionary<string, string> infoTarget)
+    {
+        if(this.enabled == false){
+            infoTarget["Enabled"] = "Off";
+            return;
+        }
+
+        if(_navMeshAgent == null){
+            infoTarget["Agent"] = "Unconnected";
+            return;
+        }
+
+        infoTarget["Behavior"] = _behavior.ToString();
+        infoTarget["Target"] = _behaviorTarget ?
+            _behaviorTarget.gameObject.name :
+            "None";
+        infoTarget["Speed"] = $"{CurrentVelocity.magnitude:F2} m/s";
+        infoTarget["Agent Type"] = NavMesh.GetSettingsNameFromID(CurrentAgentTypeId);
+    }
 
     public override Vector3 CurrentVelocity { get{
         if(this._navMeshAgent == null)

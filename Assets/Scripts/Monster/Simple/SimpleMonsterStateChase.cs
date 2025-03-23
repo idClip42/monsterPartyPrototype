@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -42,7 +43,11 @@ public class SimpleMonsterStateChase : SimpleMonsterState
 
     public override bool AllowInterruption => false;
 
-    public override string DebugInfo => $"Chase: {_targetCharacter?.gameObject.name} (Search: {_searchDelayTimer:F2}s)";
+    public override void FillInDebugInfo(Dictionary<string, string> infoTarget)
+    {
+        infoTarget["Target"] = _targetCharacter ? _targetCharacter.gameObject.name : "None";
+        infoTarget["Timer"] = $"{_searchDelayTimer:F2}s";
+    }
 
     public SimpleMonsterStateChase(Config config){
         this._config = config;

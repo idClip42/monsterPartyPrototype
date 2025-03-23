@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 #nullable enable
@@ -11,10 +12,14 @@ public abstract class CharacterCrouch : MonoBehaviour, IDebugInfoProvider
     public bool IsCrouching => _isCrouching;
     private bool _canUncrouch = false;
 
-    public string DebugName => "Crouch";
-    public virtual string DebugInfo => _isCrouching ? 
-        $"Crouching ({(_canUncrouch ? "Can Stand" : "Can't Stand")})" : 
-        "Standing";
+    public string DebugHeader => "Crouch";
+
+    public virtual void FillInDebugInfo(Dictionary<string, string> infoTarget)
+    {
+        infoTarget["State"] = _isCrouching ? "Crouching" : "Standing";
+        if(_isCrouching)
+            infoTarget["Can Stand"] = _canUncrouch.ToString();
+    }
 
     public delegate void CrouchToggleHandler(bool isCrouching);
     public CrouchToggleHandler? OnCrouchToggle;

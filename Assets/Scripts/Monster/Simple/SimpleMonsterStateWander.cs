@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -46,7 +47,11 @@ public class SimpleMonsterStateWander : SimpleMonsterState
 
     public override bool AllowInterruption => true;
 
-    public override string DebugInfo => $"Wander: {_newDestinationTimer:F2}s (Chase: {_chaseDelayTimer:F2}s)";
+    public override void FillInDebugInfo(Dictionary<string, string> infoTarget)
+    {
+        infoTarget["Redirect Timer"] = $"{_newDestinationTimer:F2}s";
+        infoTarget["Chase Timer"] = $"{_chaseDelayTimer:F2}s";
+    }
 
     public SimpleMonsterStateWander(Config config, NavigationManager navManager){
         this._config = config;

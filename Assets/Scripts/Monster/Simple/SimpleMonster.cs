@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
@@ -40,34 +41,25 @@ public class SimpleMonster : Entity, IDebugInfoProvider
     private SimpleMonsterHearing? _hearing = null;
 
     public State CurrentState => this._state;
-    public string DebugName => "Simple Monster";
+    public string DebugHeader => "Simple Monster";
 
-    public string DebugInfo
+    public void FillInDebugInfo(Dictionary<string, string> infoTarget)
     {
-        get
-        {
-            string speedInfo = this._navMeshAgent ?
-                $"{this._navMeshAgent.velocity.magnitude:F2} m/s." :
-                "0 m/s.";
-            string soundInfo = $"{_currentSoundInfo.Length} sounds, {_currentSoundInfo.Count(s=>s.isAudible)} audible.";
-            switch (this._state)
-            {
-                case State.Wander:
-                    if(_wanderBehavior == null)
-                        return "Missing wander behavior";
-                    return $"{speedInfo} {soundInfo} {_wanderBehavior.DebugInfo}";
-                case State.Chase:
-                    if(_chaseBehavior == null)
-                        return "Missing chase behavior";
-                    return $"{speedInfo} {soundInfo} {_chaseBehavior.DebugInfo}";
-                case State.Search:
-                    if(_searchBehavior == null)
-                        return "Missing search behavior";
-                    return $"{speedInfo} {soundInfo} {_searchBehavior.DebugInfo}";
-                default:
-                    throw new System.Exception($"Unrecognized monster state: {this._state}");
-            }
+        if(_navMeshAgent != null){
+            infoTarget["Speed"] = $"{this._navMeshAgent.velocity.magnitude:F2} m/s";
         }
+        infoTarget["Nearby Sounds"] = _currentSoundInfo.Length.ToString();
+        infoTarget["Audible Sounds"] = _currentSoundInfo.Count(s=>s.isAudible).ToString();
+        infoTarget["State"] = this._state.ToString();
+
+        SimpleMonsterState? currentBehavior = this._state switch{
+            State.Wander => _wanderBehavior,
+            State.Chase => _chaseBehavior,
+            State.Search => _searchBehavior,
+            _ => throw new System.Exception($"Unrecognized monster state: {this._state}")
+        };
+        if(currentBehavior != null)
+            currentBehavior.FillInDebugInfo(infoTarget);
     }
 
     protected override void Awake()

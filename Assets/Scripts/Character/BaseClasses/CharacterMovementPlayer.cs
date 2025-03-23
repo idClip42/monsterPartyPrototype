@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 #nullable enable
@@ -9,11 +10,17 @@ public abstract class CharacterMovementPlayer : CharacterMovement, IDebugInfoPro
     private CharacterCrouch? _crouch = null;
     private CameraControl? _camera = null;
 
-    public string DebugName => "Player Movement";
-    public string DebugInfo { get {
-        if(this.enabled == false) return "Off";
-        return $"{this.CurrentVelocity.magnitude:F2} m/s";
-    }}
+    public string DebugHeader => "Player Movement";
+
+    public void FillInDebugInfo(Dictionary<string, string> infoTarget)
+    {
+        if(this.enabled == false){
+            infoTarget["Enabled"] = "Off";
+            return;
+        }
+
+        infoTarget["Speed"] = $"{CurrentVelocity.magnitude:F2} m/s";
+    }
 
     protected virtual void Awake(){
         _character = GetComponent<Character>();

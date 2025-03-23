@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -10,7 +11,7 @@ public abstract class SimpleMonsterState{
         public Vector3? lastSeenVelocity;
     }
 
-    public abstract string DebugInfo { get; }
+    public abstract void FillInDebugInfo(Dictionary<string, string> infoTarget);
     public abstract SimpleMonster.State NextState { get; }
     public abstract float ProgressToNextState { get; }
     public abstract bool AllowInterruption { get; }

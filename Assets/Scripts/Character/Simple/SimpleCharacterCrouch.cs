@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
@@ -28,13 +29,13 @@ public class SimpleCharacterCrouch : CharacterCrouch
 
     private RaycastHit uncrouchHitInfo;
 
-    public override string DebugInfo { get {
-        string result = base.DebugInfo;
+    public override void FillInDebugInfo(Dictionary<string, string> infoTarget)
+    {
+        base.FillInDebugInfo(infoTarget);
         if(uncrouchHitInfo.collider != null)
-            result += $" ({uncrouchHitInfo.collider.gameObject.name})";
-        result += $" (Height: {CurrentHeight}m)";
-        return result;
-    }} 
+            infoTarget["Collider Above"] = uncrouchHitInfo.collider.gameObject.name;
+        infoTarget["Height"] = $"{CurrentHeight}m";
+    }
 
     protected override void Awake()
     {

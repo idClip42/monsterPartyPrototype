@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEditor;
 using System.Linq;
+using System.Collections.Generic;
 
 #nullable enable
 
@@ -14,11 +15,14 @@ public abstract class CharacterInteract : MonoBehaviour, IDebugInfoProvider
     [SerializeField]
     private float _interactionDistance = 1.25f;
 
-    public string DebugName => "Interaction";
-    public string DebugInfo { get {
-        if(_interactibleWithinReach == null) return "None";
-        return _interactibleWithinReach.gameObject.name;
-    }}
+    public string DebugHeader => "Interaction";
+
+    public void FillInDebugInfo(Dictionary<string, string> infoTarget)
+    {
+        infoTarget["Within Reach"] = _interactibleWithinReach != null ?
+            _interactibleWithinReach.gameObject.name :
+            "None";
+    }
 
     private void Awake()
     {

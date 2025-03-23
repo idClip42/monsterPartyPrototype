@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -50,7 +51,10 @@ public class SimpleMonsterStateSearch : SimpleMonsterState
         return _waitAfterSearchTimer < _waitTime;
     }}
 
-    public override string DebugInfo => $"Search: {_waitAfterSearchTimer}s";
+    public override void FillInDebugInfo(Dictionary<string, string> infoTarget)
+    {
+        infoTarget["Timer"] = $"{_waitAfterSearchTimer}s";
+    }
 
     public SimpleMonsterStateSearch(Config config){
         this._config = config;

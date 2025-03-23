@@ -43,10 +43,13 @@ public abstract class Character : Entity, IDebugInfoProvider
     }}
     public IReadOnlyCollection<Transform> LookRaycastTargets => _lookRaycastTargets;
 
-    public string DebugName => "Character";
-    public string DebugInfo { get {
-        return $"{this._state}, {_lookRaycastTargets.Length} Raycast Targets";
-    }}
+    public string DebugHeader => "Character";
+
+    public void FillInDebugInfo(Dictionary<string, string> infoTarget)
+    {
+        infoTarget["State"] = this._state.ToString();
+        infoTarget["Raycast Targets"] = _lookRaycastTargets.Length.ToString();
+    }
 
     public Vector3 CurrentVelocity { get{
         if(_playerMovement != null && _playerMovement.enabled){

@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEditor;
+using System.Collections.Generic;
 
 #nullable enable
 
@@ -11,8 +12,12 @@ public abstract class CharacterNoiseLevel : MonoBehaviour, IDebugInfoProvider
 
     public abstract float CurrentNoiseRadius { get; }
 
-    public string DebugName => "Noise";
-    public string DebugInfo => $"{CurrentNoiseRadius}m";
+    public string DebugHeader => "Noise";
+
+    public void FillInDebugInfo(Dictionary<string, string> infoTarget)
+    {
+        infoTarget["Noise Radius"] = $"{CurrentNoiseRadius}m";
+    }
 
     protected virtual void Awake(){
         _character = GetComponent<Character>();
