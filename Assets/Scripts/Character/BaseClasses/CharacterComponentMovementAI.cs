@@ -120,12 +120,32 @@ public abstract class CharacterComponentMovementAI : CharacterComponentMovement,
 
             this._navMeshAgent.SetDestination(this._behaviorTarget.transform.position);
             this.Character.Crouch.SetCrouching(this._behaviorTarget.Crouch.IsCrouching);
-        }
 
-        if(this.Character.Crouch.IsCrouching)
-            _navMeshAgent.speed = this.Character.Movement.CrouchSpeed;
-        else
-            _navMeshAgent.speed = this.Character.Movement.RunSpeed;
+            if(_behaviorTarget.State == Character.StateType.AI){
+                if(_behaviorTarget.AIMovement == null) 
+                    throw new System.Exception("Null _behaviorTarget.AIMovement");
+                _navMeshAgent.speed = _behaviorTarget.AIMovement.MaxSpeed;
+            }
+            else if(_behaviorTarget.State == Character.StateType.Player){
+                if(this._behaviorTarget.PlayerMovement == null) 
+                    throw new System.Exception("Null this.Character.PlayerMovement");
+                if(_behaviorTarget.Crouch.IsCrouching)
+                    _navMeshAgent.speed = this.Character.Movement.CrouchSpeed;
+                else if(_behaviorTarget.PlayerMovement.IsRunning)
+                    _navMeshAgent.speed = this.Character.Movement.RunSpeed;
+                else
+                    _navMeshAgent.speed = this.Character.Movement.WalkSpeed;
+            }
+            else {
+                throw new System.Exception($"Unhandled state type '{_behaviorTarget.State}'");
+            }
+        }
+        else {
+            if(this.Character.Crouch.IsCrouching)
+                _navMeshAgent.speed = this.Character.Movement.CrouchSpeed;
+            else
+                _navMeshAgent.speed = this.Character.Movement.WalkSpeed;
+        }
     }
 
     private void OnCrouchToggle(bool isCrouching){
