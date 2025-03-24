@@ -95,7 +95,6 @@ public class SimpleMonsterHead{
         SimpleMonsterState.Knowledge newThing = new();
         newThing.visibleTarget = null;
 
-
         if (_config.head == null)
             throw new System.Exception("Missing head.");
 
