@@ -1,0 +1,37 @@
+root = true
+
+[*]
+charset = utf-8
+indent_style = space
+indent_size = 4
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+# Naming conventions
+csharp_naming_rule.local_functions.style = camel_case
+csharp_naming_rule.local_variables.style = camel_case
+csharp_naming_rule.constants.style = all_upper
+csharp_naming_rule.private_fields.style = camel_case
+csharp_naming_rule.public_fields.style = camel_case
+csharp_naming_rule.private_methods.style = camel_case
+csharp_naming_rule.public_methods.style = pascal_case
+csharp_naming_rule.private_properties.style = pascal_case
+csharp_naming_rule.public_properties.style = pascal_case
+csharp_naming_rule.protected_members.style = pascal_case
+csharp_naming_rule.interfaces.prefix = I
+csharp_naming_rule.async_methods.suffix = Async
+
+# Formatting rules
+csharp_space_around_operators = true
+csharp_space_before_method_parenthesis = false
+csharp_new_line_before_open_brace = false
+csharp_preserve_single_line_statements = true
+
+# Safety and usability rules
+csharp_style_nullable_enable = true
+csharp_style_explicit_access_modifiers = always
+csharp_style_require_this_for_instance_members = true
+
+# Using directives
+csharp_using_directives_sort_system_first = true
+csharp_using_directives_remove_unused = true
