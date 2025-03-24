@@ -29,7 +29,7 @@ public class SimpleMonsterHearing{
     }
 
     private SimpleMonster _monster;
-    private CharacterComponentNoiseLevel[] _characters = { };
+    private Character[] _characters = { };
 
     private List<SoundInfo> _reusableChecksList = new List<SoundInfo>();
     private NavMeshPath _reusableNavmeshPath = new NavMeshPath();
@@ -38,12 +38,10 @@ public class SimpleMonsterHearing{
     public SimpleMonsterHearing(SimpleMonster monster, Character[] characters, NavigationManager navManager){
         this._monster = monster;
 
-        this._characters = characters.Select(
-            c=>c.gameObject.GetComponent<CharacterComponentNoiseLevel>()
-        ).ToArray();
+        this._characters = characters;
         if(this._characters.Length == 0)
             Debug.LogWarning("SimpleMonsterHearing has no characters.");
-        if(this._characters.Any(c=>c==null))
+        if(this._characters.Any(c=>c.NoiseLevel==null))
             throw new System.Exception("At least one of our characters is missing a noise component");
 
         this._navManager = navManager;
@@ -58,8 +56,9 @@ public class SimpleMonsterHearing{
         Vector3 myPos = this._monster.transform.position;
         foreach(var character in this._characters){
             // Dead men tell no tales.
-            if(character.Character == null) throw new System.Exception("Sound character is null.");
-            if(character.Character.Alive == false) continue;
+            if(character == null) throw new System.Exception("Character is null.");
+            if(character.Alive == false) continue;
+            if(character.NoiseLevel == null) throw new System.Exception("Character noise level is null.");
 
             Vector3 charPos = character.transform.position;
 
@@ -68,7 +67,7 @@ public class SimpleMonsterHearing{
             // because if that's the case then our more
             // complex distance check will definitely fail.
             float sqrDist = (charPos - myPos).sqrMagnitude;
-            float noiseDist = character.CurrentNoiseRadius;
+            float noiseDist = character.NoiseLevel.CurrentNoiseRadius;
             if(sqrDist > (noiseDist * noiseDist)) continue;
 
             // We calculate a walking path to the target.
