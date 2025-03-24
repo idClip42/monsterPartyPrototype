@@ -17,7 +17,8 @@ public abstract class Entity : MonoBehaviour
     private bool _alive = true;
     public bool Alive => this._alive;
 
-    public string DebugInfoString { get{
+    public string GetDebugInfoString()
+    {
         string result = $"{this.gameObject.name} ({(this.Alive ? "Alive" : "Dead")})";
 
         foreach(var comp in _debugInfoComponents){
@@ -30,7 +31,7 @@ public abstract class Entity : MonoBehaviour
         }
         
         return result;
-    }} 
+    }
 
     protected virtual void Awake() {
         _debugInfoComponents = GetComponents<IDebugInfoProvider>();
@@ -44,7 +45,7 @@ public abstract class Entity : MonoBehaviour
         using(new Handles.DrawingScope(Color.white)){
             Handles.Label(
                 transform.position + Vector3.up * 1.5f,
-                DebugInfoString
+                GetDebugInfoString()
             );
         }
     }

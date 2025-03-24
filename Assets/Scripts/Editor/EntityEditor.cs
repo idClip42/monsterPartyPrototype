@@ -16,6 +16,6 @@ public class EntityEditor : Editor
 
         // Display DebugValues in a read-only text area
         EditorGUILayout.LabelField("Debug Info", EditorStyles.boldLabel);
-        EditorGUILayout.LabelField(entity.DebugInfoString, EditorStyles.wordWrappedMiniLabel);
+        EditorGUILayout.LabelField(entity.GetDebugInfoString(), EditorStyles.wordWrappedMiniLabel);
     }
 }

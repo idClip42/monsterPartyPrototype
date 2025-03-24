@@ -73,32 +73,30 @@ public abstract class Character : Entity, IDebugInfoProvider
     }}
 
     private StateType _state = StateType.AI;
-    public StateType State {
-        get {
-            return _state;
-        }
-        set {
-            if(PlayerMovement == null) 
-                throw new Exception("Null PlayerMovement");
-            if(AIMovement == null) 
-                throw new Exception("Null AIMovement");
+    public StateType State => _state;
 
-            _state = value;
-            if(this.Alive == false) return;
+    public void SetState(StateType newState)
+    {
+        if(PlayerMovement == null) 
+            throw new Exception("Null PlayerMovement");
+        if(AIMovement == null) 
+            throw new Exception("Null AIMovement");
 
-            switch (_state)
-            {
-                case StateType.Player:
-                    PlayerMovement.enabled = true;
-                    AIMovement.enabled = false;
-                    break;
-                case StateType.AI:
-                    PlayerMovement.enabled = false;
-                    AIMovement.enabled = true;
-                    break;
-                default:
-                    throw new Exception($"Unknown state enum for {this.gameObject.name}: {_state}");
-            }
+        _state = newState;
+        if(this.Alive == false) return;
+
+        switch (_state)
+        {
+            case StateType.Player:
+                PlayerMovement.enabled = true;
+                AIMovement.enabled = false;
+                break;
+            case StateType.AI:
+                PlayerMovement.enabled = false;
+                AIMovement.enabled = true;
+                break;
+            default:
+                throw new Exception($"Unknown state enum for {this.gameObject.name}: {_state}");
         }
     }
 

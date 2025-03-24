@@ -49,18 +49,18 @@ public class CharacterManager : MonoBehaviour
         if(_selectedCharacter == newSelection) return;
         if(newSelection.Alive == false) return;
 
-        foreach(var c in _characters) c.State = Character.StateType.AI;
+        foreach(var c in _characters) c.SetState(Character.StateType.AI);
         _selectedCharacter = null;
 
         if(immediate){
-            newSelection.State = Character.StateType.Player;
+            newSelection.SetState(Character.StateType.Player);
             _selectedCharacter = newSelection;
         }
         else {
             _cameraControl.SendCameraToNewCharacter(
                 newSelection,
                 ()=>{
-                    newSelection.State = Character.StateType.Player;
+                    newSelection.SetState(Character.StateType.Player);
                     _selectedCharacter = newSelection;
                 }
             );
