@@ -9,8 +9,6 @@ public class NavigationManagerEditor : Editor {
     {
         base.OnInspectorGUI();
 
-        DrawDefaultInspector();
-
         // Get reference to the target script
         NavigationManager manager = (NavigationManager)target;
 
