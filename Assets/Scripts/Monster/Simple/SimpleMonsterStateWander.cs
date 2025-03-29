@@ -27,6 +27,10 @@ public class SimpleMonsterStateWander : SimpleMonsterState
         [SerializeField]
         [Range(0, 3)]
         public float chaseDelay = 1;
+
+        [SerializeField]
+        [Range(0, 10)]
+        public float destinationMinWallDist = 5;
     }
     
     private NavigationManager _navManager;
@@ -113,7 +117,7 @@ public class SimpleMonsterStateWander : SimpleMonsterState
             this._config.maxRedirectTime
         );
         agent.SetDestination(
-            this._navManager.GetRandomDestination(false, true)
+            this._navManager.GetRandomDestination(false, true, _config.destinationMinWallDist)
         );
     }
 }

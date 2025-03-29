@@ -113,12 +113,13 @@ public class NavigationManager : MonoBehaviour
         _navPoints = tempNavPoints.ToArray();
     }
 
-    public Vector3 GetRandomDestination(bool excludeStanding, bool excludeCrouching){
+    public Vector3 GetRandomDestination(bool excludeStanding, bool excludeCrouching, float minDistFromWall){
         if(_navPoints == null) 
             throw new System.Exception("No nav points array!");
         var filteredPoints = _navPoints.Where(pt => {
             if(excludeStanding && pt.standable) return false;
             if(excludeCrouching && pt.crouchable) return false;
+            if(pt.closestWallDistance < minDistFromWall) return false;
             return true;
         });
         if(filteredPoints.Count() == 0)
