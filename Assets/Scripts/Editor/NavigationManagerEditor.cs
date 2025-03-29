@@ -16,6 +16,7 @@ public class NavigationManagerEditor : Editor {
 
         EditorGUILayout.LabelField($"Standing Nav Points: {manager.StandingNavPointsCount}", EditorStyles.boldLabel);
         EditorGUILayout.LabelField($"Crouching Nav Points: {manager.CrouchingNavPointsCount}", EditorStyles.boldLabel);
+        EditorGUILayout.LabelField($"Only Crouching Nav Points: {manager.OnlyCrouchingNavPointsCount}", EditorStyles.boldLabel);
 
         if(GUILayout.Button("Refresh")){
             manager.Refresh();

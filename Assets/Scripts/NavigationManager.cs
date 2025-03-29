@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Unity.AI.Navigation;
 using UnityEditor;
 using UnityEngine;
@@ -18,6 +19,7 @@ public class NavigationManager : MonoBehaviour
 
     private Vector3[]? _standingNavPoints = null;
     private Vector3[]? _crouchingNavPoints = null;
+    private Vector3[]? _onlyCrouchingNavPoints = null;
 
     public int StandingAgentTypeId { get {
         if(_standingNavMesh == null)
@@ -33,6 +35,7 @@ public class NavigationManager : MonoBehaviour
 
     public int StandingNavPointsCount => _standingNavPoints != null ? _standingNavPoints.Length : -1;
     public int CrouchingNavPointsCount => _crouchingNavPoints != null ? _crouchingNavPoints.Length : -1;
+    public int OnlyCrouchingNavPointsCount => _onlyCrouchingNavPoints != null ? _onlyCrouchingNavPoints.Length : -1;
 
     private void Awake()
     {
@@ -47,6 +50,7 @@ public class NavigationManager : MonoBehaviour
 
         _standingNavPoints = GetPossiblePointsOnNavMesh(_standingNavMesh);
         _crouchingNavPoints = GetPossiblePointsOnNavMesh(_crouchingNavMesh);
+        _onlyCrouchingNavPoints = _crouchingNavPoints.Where(pt => !_standingNavPoints.Contains(pt)).ToArray();
     }
 
     public Vector3 GetRandomDestinationStanding(){
@@ -59,6 +63,12 @@ public class NavigationManager : MonoBehaviour
         if(_crouchingNavPoints == null) throw new System.Exception("No crouching nav points array!");
         if(_crouchingNavPoints.Length == 0) throw new System.Exception("No crouching nav points!");
         return _crouchingNavPoints[Random.Range(0, _crouchingNavPoints.Length)];
+    }
+
+    public Vector3 GetRandomDestinationOnlyCrouching(){
+        if(_onlyCrouchingNavPoints == null) throw new System.Exception("No crouching nav points array!");
+        if(_onlyCrouchingNavPoints.Length == 0) throw new System.Exception("No crouching nav points!");
+        return _onlyCrouchingNavPoints[Random.Range(0, _onlyCrouchingNavPoints.Length)];
     }
 
     private Vector3[] GetPossiblePointsOnNavMesh(NavMeshSurface navMeshSurface){
@@ -90,11 +100,12 @@ public class NavigationManager : MonoBehaviour
 #if UNITY_EDITOR
     private void OnDrawGizmosSelected()
     {
-        if(_standingNavPoints == null || _crouchingNavPoints == null)
+        if(_standingNavPoints == null || _crouchingNavPoints == null || _onlyCrouchingNavPoints == null)
             Refresh();
 
         if(_standingNavPoints == null) throw new System.Exception("No standing nav points array!");
         if(_crouchingNavPoints == null) throw new System.Exception("No crouching nav points array!");
+        if(_onlyCrouchingNavPoints == null) throw new System.Exception("No only crouching nav points array!");
 
         using(new Handles.DrawingScope(Color.green)){
             foreach(var pt in _standingNavPoints){
@@ -102,7 +113,7 @@ public class NavigationManager : MonoBehaviour
             }
         }
         using(new Handles.DrawingScope(Color.magenta)){
-            foreach(var pt in _crouchingNavPoints){
+            foreach(var pt in _onlyCrouchingNavPoints){
                 Handles.DrawWireDisc(pt, Vector3.up, 0.25f);
             }
         }
