@@ -2240,6 +2240,11 @@ MonoBehaviour:
   _interval: 3
   _standingNavMesh: {fileID: 423518812}
   _crouchingNavMesh: {fileID: 423518813}
+  _distanceFromWallRaycastMask:
+    serializedVersion: 2
+    m_Bits: 64
+  _gizmosSpotMaxDist: 5
+  _gizmosSpotRange: 2
 --- !u!1 &445558885
 GameObject:
   m_ObjectHideFlags: 0

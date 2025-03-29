@@ -11,14 +11,38 @@ using UnityEngine.AI;
 public class NavigationManager : MonoBehaviour
 {
     private struct NavSpot {
+        private const float RAYCAST_MAX_DIST = 30;
+        private static Vector3[] _raycastDirs = new Vector3[]{
+            Vector3.forward,
+            Vector3.left,
+            Vector3.right,
+            Vector3.back
+        };
+
         public readonly Vector3 position;
         public readonly bool standable;
         public readonly bool crouchable;
+        public readonly float closestWallDistance;
 
-        public NavSpot(Vector3 position, bool standable, bool crouchable){
+        public NavSpot(Vector3 position, bool standable, bool crouchable, LayerMask raycastMask){
             this.position = position;
             this.standable = standable;
             this.crouchable = crouchable;
+
+            this.closestWallDistance = float.MaxValue;
+            RaycastHit hitInfo; 
+            foreach(var dir in _raycastDirs){
+                if(Physics.Raycast(
+                    this.position,
+                    dir,
+                    out hitInfo,
+                    RAYCAST_MAX_DIST,
+                    raycastMask
+                )){
+                    if(hitInfo.distance < this.closestWallDistance)
+                        this.closestWallDistance = hitInfo.distance;
+                }
+            }
         }
     }
 
@@ -27,8 +51,20 @@ public class NavigationManager : MonoBehaviour
 
     [SerializeField]
     private NavMeshSurface? _standingNavMesh;
+
     [SerializeField]
     private NavMeshSurface? _crouchingNavMesh;
+
+    [SerializeField]
+    private LayerMask _distanceFromWallRaycastMask = Physics.AllLayers;
+
+    [SerializeField]
+    [Range(1, 10)]
+    private float _gizmosSpotMaxDist = 6;
+
+    [SerializeField]
+    [Range(0.1f, 5)]
+    private float _gizmosSpotRange = 3;
 
     private NavSpot[]? _navPoints = null;
 
@@ -64,13 +100,14 @@ public class NavigationManager : MonoBehaviour
             pt => new NavSpot(
                 pt, 
                 true, 
-                crouchingNavPoints.Contains(pt)
+                crouchingNavPoints.Contains(pt),
+                _distanceFromWallRaycastMask
             )
         ).ToList();
         tempNavPoints.AddRange(
             crouchingNavPoints
                 .Where(pt => !standingNavPoints.Contains(pt))
-                .Select(pt => new NavSpot( pt, false, true ))
+                .Select(pt => new NavSpot( pt, false, true, _distanceFromWallRaycastMask))
         );
 
         _navPoints = tempNavPoints.ToArray();
@@ -125,9 +162,11 @@ public class NavigationManager : MonoBehaviour
 
         foreach(var pt in _navPoints){
             Color color = pt.standable ? Color.green : Color.magenta;
-            float radius = pt.standable ? 0.5f : 0.3f;
-            // TODO: Color strength or line thickness based on distance from walls?
+            float lerpVal = Mathf.InverseLerp(_gizmosSpotMaxDist - _gizmosSpotRange, _gizmosSpotMaxDist, pt.closestWallDistance);
+            color = Color.Lerp(Color.black, color, lerpVal);
+
             using(new Handles.DrawingScope(color)){
+                float radius = pt.standable ? 0.5f : 0.3f;
                 Handles.DrawWireDisc(pt.position, Vector3.up, radius);
             }
         }
