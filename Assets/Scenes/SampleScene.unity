@@ -3261,6 +3261,7 @@ MonoBehaviour:
     minRedirectTime: 20
     maxRedirectTime: 60
     chaseDelay: 1
+    destinationMinWallDist: 5
   _chaseConfig:
     speed: 4
     acceleration: 8
