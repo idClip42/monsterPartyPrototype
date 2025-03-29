@@ -62,6 +62,8 @@ public class Door : MonoBehaviour, IInteractible
     private void SetDoorState(DoorState newState){
         if(_axis == null)
             throw new System.Exception("Missing axis.");
+        if(_baseRotation == null)
+            throw new System.Exception("Missing base rotation.");
         if(_occlusionPortal == null)
             throw new System.Exception("Missing occlusion portal.");
 
@@ -94,11 +96,18 @@ public class Door : MonoBehaviour, IInteractible
             return;
         }
 
+        Quaternion rotation;
+        if(Application.IsPlaying(this))
+            rotation = _baseRotation;
+        else 
+            rotation = _axis.rotation;
+        Vector3 rotationDirection = rotation * Vector3.back; // ??? Why is "back" the correct one?
+
         using(new Handles.DrawingScope()){
             Handles.DrawWireArc(
                 _axis.position,
                 Vector3.up,
-                -_axis.forward,
+                rotationDirection,
                 180,
                 1
             );
