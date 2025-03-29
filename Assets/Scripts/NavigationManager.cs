@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Unity.AI.Navigation;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -15,8 +16,8 @@ public class NavigationManager : MonoBehaviour
     [SerializeField]
     private NavMeshSurface? _crouchingNavMesh;
 
-    private Vector3[] _standingNavPoints = {};
-    private Vector3[] _crouchingNavPoints = {};
+    private Vector3[]? _standingNavPoints = null;
+    private Vector3[]? _crouchingNavPoints = null;
 
     public int StandingAgentTypeId { get {
         if(_standingNavMesh == null)
@@ -30,8 +31,15 @@ public class NavigationManager : MonoBehaviour
         return _crouchingNavMesh.agentTypeID;
     }} 
 
+    public int StandingNavPointsCount => _standingNavPoints != null ? _standingNavPoints.Length : -1;
+    public int CrouchingNavPointsCount => _crouchingNavPoints != null ? _crouchingNavPoints.Length : -1;
+
     private void Awake()
     {
+        Refresh();
+    }
+
+    public void Refresh(){
         if(_standingNavMesh == null)
             throw new System.Exception("Null _standingNavMesh");
         if(_crouchingNavMesh == null)
@@ -42,11 +50,13 @@ public class NavigationManager : MonoBehaviour
     }
 
     public Vector3 GetRandomDestinationStanding(){
+        if(_standingNavPoints == null) throw new System.Exception("No standing nav points array!");
         if(_standingNavPoints.Length == 0) throw new System.Exception("No standing nav points!");
         return _standingNavPoints[Random.Range(0, _standingNavPoints.Length)];
     }
 
     public Vector3 GetRandomDestinationCrouching(){
+        if(_crouchingNavPoints == null) throw new System.Exception("No crouching nav points array!");
         if(_crouchingNavPoints.Length == 0) throw new System.Exception("No crouching nav points!");
         return _crouchingNavPoints[Random.Range(0, _crouchingNavPoints.Length)];
     }
@@ -76,4 +86,30 @@ public class NavigationManager : MonoBehaviour
         }
         return tempList.ToArray();
     }
+
+#if UNITY_EDITOR
+    private void OnDrawGizmosSelected()
+    {
+        if(_standingNavPoints == null || _crouchingNavPoints == null)
+            Refresh();
+
+        if(_standingNavPoints == null) throw new System.Exception("No standing nav points array!");
+        if(_crouchingNavPoints == null) throw new System.Exception("No crouching nav points array!");
+
+        using(new Handles.DrawingScope(Color.green)){
+            foreach(var pt in _standingNavPoints){
+                Handles.DrawWireDisc(pt, Vector3.up, 0.5f);
+            }
+        }
+        using(new Handles.DrawingScope(Color.magenta)){
+            foreach(var pt in _crouchingNavPoints){
+                Handles.DrawWireDisc(pt, Vector3.up, 0.25f);
+            }
+        }
+    }
+#endif
+
+    public sealed override bool Equals(object other) => base.Equals(other);
+    public sealed override int GetHashCode() => base.GetHashCode();
+    public sealed override string ToString() => base.ToString();
 }
