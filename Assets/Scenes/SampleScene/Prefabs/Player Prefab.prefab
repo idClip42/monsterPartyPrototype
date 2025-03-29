@@ -199,6 +199,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interactionDistance: 1.25
+  _gizmoMaxDistance: 5
 --- !u!114 &4305325665679883973
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -14,6 +14,12 @@ public abstract class CharacterComponentInteract : CharacterComponent
     [SerializeField]
     private float _interactionDistance = 1.25f;
 
+    [SerializeField]
+    [Range(1, 20)]
+    private float _gizmoMaxDistance = 5;
+
+    public Vector3 ReferencePosition => this.transform.position + Vector3.up * 1.0f;
+
     public sealed override string DebugHeader => "Interaction";
 
     public sealed override void FillInDebugInfo(Dictionary<string, string> infoTarget)
@@ -53,19 +59,34 @@ public abstract class CharacterComponentInteract : CharacterComponent
         if(!enabled) return;
         if(this.Character == null) return;
         if(this.Character.State != Character.StateType.Player) return;
-        if(_interactibleWithinReach == null) return;
+
+        if(_interactibleWithinReach != null){
+            using(new Handles.DrawingScope(Color.white)){
+                Handles.Label(
+                    _interactibleWithinReach.InteractionWorldPosition + Vector3.up * 1.0f,
+                    _interactibleWithinReach.GetInteractionName(this.Character)
+                );
+            }
+        }
 
         using(new Handles.DrawingScope(Color.white)){
-            Handles.Label(
-                _interactibleWithinReach.InteractionWorldPosition + Vector3.up * 1.0f,
-                _interactibleWithinReach.GetInteractionName(this.Character)
-            );
+            float gizmoMaxDistanceSqr = _gizmoMaxDistance * _gizmoMaxDistance;
+            foreach (var interactible in _interactibles){
+                if(interactible == null) throw new System.Exception("null interactible");
+                Vector3 diff = interactible.InteractionWorldPosition - ReferencePosition;
+                float distSqr = diff.sqrMagnitude;
+                if(distSqr > gizmoMaxDistanceSqr) continue;
+                Handles.DrawWireDisc(
+                    interactible.InteractionWorldPosition,
+                    Vector3.up,
+                    _interactionDistance
+                );
+            }
         }
     }
 #endif
 
     private IInteractible? GetInteractibleWithinReach(){
-        Vector3 refPos = this.transform.position + Vector3.up * 1.0f;
         IInteractible? closest = null;
         float closestDistSq = float.MaxValue;
 
@@ -74,7 +95,7 @@ public abstract class CharacterComponentInteract : CharacterComponent
             if(interactible == null) continue;
             if(interactible.gameObject == this.gameObject) continue;
             if(interactible.IsInteractible == false) continue;
-            Vector3 posDiff = interactible.InteractionWorldPosition - refPos;
+            Vector3 posDiff = interactible.InteractionWorldPosition - ReferencePosition;
             float distSq = posDiff.sqrMagnitude;
             if (distSq < closestDistSq)
             {
