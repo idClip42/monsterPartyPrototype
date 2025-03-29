@@ -42,9 +42,19 @@ public class Door : MonoBehaviour, IInteractible
 
     public void DoInteraction(Character interactor)
     {
+        if(_axis == null)
+            throw new System.Exception("Missing axis.");
+
         if(_state == DoorState.Closed) {
-            // TODO: Add nuance
-            SetDoorState(DoorState.OpenForward);
+            Vector3 doorToChar = interactor.transform.position - this.transform.position;
+            Vector3 doorForward = _axis.forward;
+            float dotProduct = Vector3.Dot(doorToChar, doorForward);
+            if(dotProduct > 0){
+                SetDoorState(DoorState.OpenBackward);
+            }
+            else {
+                SetDoorState(DoorState.OpenForward);
+            }
         }
         else {
             SetDoorState(DoorState.Closed);
