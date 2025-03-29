@@ -22,7 +22,8 @@ public class NavigationManager : MonoBehaviour
         }
     }
 
-    private const float INTERVAL = 3;
+    [SerializeField]
+    private float _interval = 3;
 
     [SerializeField]
     private NavMeshSurface? _standingNavMesh;
@@ -92,14 +93,14 @@ public class NavigationManager : MonoBehaviour
         List<Vector3> tempList = new List<Vector3>();
         NavMeshHit hit;
         Bounds bounds = navMeshSurface.navMeshData.sourceBounds;
-        for(float x = bounds.min.x; x <= bounds.max.x; x += INTERVAL){
-            for(float y = bounds.min.y; y <= bounds.max.y; y += INTERVAL){
-                for(float z = bounds.min.z; z <= bounds.max.z; z += INTERVAL){
+        for(float x = bounds.min.x; x <= bounds.max.x; x += _interval){
+            for(float y = bounds.min.y; y <= bounds.max.y; y += _interval){
+                for(float z = bounds.min.z; z <= bounds.max.z; z += _interval){
                     Vector3 testPosition = new Vector3(x,y,z);
                     bool foundOne = NavMesh.SamplePosition(
                         testPosition,
                         out hit,
-                        INTERVAL / 2,
+                        _interval / 2,
                         new NavMeshQueryFilter(){
                             agentTypeID=navMeshSurface.agentTypeID,
                             areaMask=NavMesh.AllAreas
