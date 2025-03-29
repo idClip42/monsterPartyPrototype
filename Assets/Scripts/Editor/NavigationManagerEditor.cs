@@ -14,9 +14,7 @@ public class NavigationManagerEditor : Editor {
         // Get reference to the target script
         NavigationManager manager = (NavigationManager)target;
 
-        EditorGUILayout.LabelField($"Standing Nav Points: {manager.StandingNavPointsCount}", EditorStyles.boldLabel);
-        EditorGUILayout.LabelField($"Crouching Nav Points: {manager.CrouchingNavPointsCount}", EditorStyles.boldLabel);
-        EditorGUILayout.LabelField($"Only Crouching Nav Points: {manager.OnlyCrouchingNavPointsCount}", EditorStyles.boldLabel);
+        EditorGUILayout.LabelField($"Nav Points: {manager.NavPointsCount}", EditorStyles.boldLabel);
 
         if(GUILayout.Button("Refresh")){
             manager.Refresh();

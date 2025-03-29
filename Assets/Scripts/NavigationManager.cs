@@ -10,6 +10,18 @@ using UnityEngine.AI;
 [DisallowMultipleComponent]
 public class NavigationManager : MonoBehaviour
 {
+    private struct NavSpot {
+        public readonly Vector3 position;
+        public readonly bool standable;
+        public readonly bool crouchable;
+
+        public NavSpot(Vector3 position, bool standable, bool crouchable){
+            this.position = position;
+            this.standable = standable;
+            this.crouchable = crouchable;
+        }
+    }
+
     private const float INTERVAL = 3;
 
     [SerializeField]
@@ -17,9 +29,7 @@ public class NavigationManager : MonoBehaviour
     [SerializeField]
     private NavMeshSurface? _crouchingNavMesh;
 
-    private Vector3[]? _standingNavPoints = null;
-    private Vector3[]? _crouchingNavPoints = null;
-    private Vector3[]? _onlyCrouchingNavPoints = null;
+    private NavSpot[]? _navPoints = null;
 
     public int StandingAgentTypeId { get {
         if(_standingNavMesh == null)
@@ -33,9 +43,7 @@ public class NavigationManager : MonoBehaviour
         return _crouchingNavMesh.agentTypeID;
     }} 
 
-    public int StandingNavPointsCount => _standingNavPoints != null ? _standingNavPoints.Length : -1;
-    public int CrouchingNavPointsCount => _crouchingNavPoints != null ? _crouchingNavPoints.Length : -1;
-    public int OnlyCrouchingNavPointsCount => _onlyCrouchingNavPoints != null ? _onlyCrouchingNavPoints.Length : -1;
+    public int NavPointsCount => _navPoints != null ? _navPoints.Length : -1;
 
     private void Awake()
     {
@@ -48,27 +56,36 @@ public class NavigationManager : MonoBehaviour
         if(_crouchingNavMesh == null)
             throw new System.Exception("Null _crouchingNavMesh");
 
-        _standingNavPoints = GetPossiblePointsOnNavMesh(_standingNavMesh);
-        _crouchingNavPoints = GetPossiblePointsOnNavMesh(_crouchingNavMesh);
-        _onlyCrouchingNavPoints = _crouchingNavPoints.Where(pt => !_standingNavPoints.Contains(pt)).ToArray();
+        var standingNavPoints = GetPossiblePointsOnNavMesh(_standingNavMesh);
+        var crouchingNavPoints = GetPossiblePointsOnNavMesh(_crouchingNavMesh);
+
+        var tempNavPoints = standingNavPoints.Select(
+            pt => new NavSpot(
+                pt, 
+                true, 
+                crouchingNavPoints.Contains(pt)
+            )
+        ).ToList();
+        tempNavPoints.AddRange(
+            crouchingNavPoints
+                .Where(pt => !standingNavPoints.Contains(pt))
+                .Select(pt => new NavSpot( pt, false, true ))
+        );
+
+        _navPoints = tempNavPoints.ToArray();
     }
 
-    public Vector3 GetRandomDestinationStanding(){
-        if(_standingNavPoints == null) throw new System.Exception("No standing nav points array!");
-        if(_standingNavPoints.Length == 0) throw new System.Exception("No standing nav points!");
-        return _standingNavPoints[Random.Range(0, _standingNavPoints.Length)];
-    }
-
-    public Vector3 GetRandomDestinationCrouching(){
-        if(_crouchingNavPoints == null) throw new System.Exception("No crouching nav points array!");
-        if(_crouchingNavPoints.Length == 0) throw new System.Exception("No crouching nav points!");
-        return _crouchingNavPoints[Random.Range(0, _crouchingNavPoints.Length)];
-    }
-
-    public Vector3 GetRandomDestinationOnlyCrouching(){
-        if(_onlyCrouchingNavPoints == null) throw new System.Exception("No crouching nav points array!");
-        if(_onlyCrouchingNavPoints.Length == 0) throw new System.Exception("No crouching nav points!");
-        return _onlyCrouchingNavPoints[Random.Range(0, _onlyCrouchingNavPoints.Length)];
+    public Vector3 GetRandomDestination(bool excludeStanding, bool excludeCrouching){
+        if(_navPoints == null) 
+            throw new System.Exception("No nav points array!");
+        var filteredPoints = _navPoints.Where(pt => {
+            if(excludeStanding && pt.standable) return false;
+            if(excludeCrouching && pt.crouchable) return false;
+            return true;
+        });
+        if(filteredPoints.Count() == 0)
+            throw new System.Exception("Filter returned no nav points!");
+        return filteredPoints.ToArray()[Random.Range(0, filteredPoints.Count())].position;
     }
 
     private Vector3[] GetPossiblePointsOnNavMesh(NavMeshSurface navMeshSurface){
@@ -100,21 +117,17 @@ public class NavigationManager : MonoBehaviour
 #if UNITY_EDITOR
     private void OnDrawGizmosSelected()
     {
-        if(_standingNavPoints == null || _crouchingNavPoints == null || _onlyCrouchingNavPoints == null)
+        if(_navPoints == null)
             Refresh();
+        if(_navPoints == null) 
+            throw new System.Exception("No nav points array!");
 
-        if(_standingNavPoints == null) throw new System.Exception("No standing nav points array!");
-        if(_crouchingNavPoints == null) throw new System.Exception("No crouching nav points array!");
-        if(_onlyCrouchingNavPoints == null) throw new System.Exception("No only crouching nav points array!");
-
-        using(new Handles.DrawingScope(Color.green)){
-            foreach(var pt in _standingNavPoints){
-                Handles.DrawWireDisc(pt, Vector3.up, 0.5f);
-            }
-        }
-        using(new Handles.DrawingScope(Color.magenta)){
-            foreach(var pt in _onlyCrouchingNavPoints){
-                Handles.DrawWireDisc(pt, Vector3.up, 0.25f);
+        foreach(var pt in _navPoints){
+            Color color = pt.standable ? Color.green : Color.magenta;
+            float radius = pt.standable ? 0.5f : 0.3f;
+            // TODO: Color strength or line thickness based on distance from walls?
+            using(new Handles.DrawingScope(color)){
+                Handles.DrawWireDisc(pt.position, Vector3.up, radius);
             }
         }
     }

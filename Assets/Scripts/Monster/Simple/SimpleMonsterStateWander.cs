@@ -113,7 +113,7 @@ public class SimpleMonsterStateWander : SimpleMonsterState
             this._config.maxRedirectTime
         );
         agent.SetDestination(
-            this._navManager.GetRandomDestinationStanding()
+            this._navManager.GetRandomDestination(false, true)
         );
     }
 }
