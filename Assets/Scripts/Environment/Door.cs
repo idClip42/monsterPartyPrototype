@@ -42,22 +42,11 @@ public class Door : MonoBehaviour, IInteractible
 
     public void DoInteraction(Character interactor)
     {
-        if(_axis == null)
-            throw new System.Exception("Missing axis.");
-
         if(_state == DoorState.Closed) {
-            Vector3 doorToChar = interactor.transform.position - this.transform.position;
-            Vector3 doorForward = _axis.forward;
-            float dotProduct = Vector3.Dot(doorToChar, doorForward);
-            if(dotProduct > 0){
-                SetDoorState(DoorState.OpenBackward);
-            }
-            else {
-                SetDoorState(DoorState.OpenForward);
-            }
+            OpenDoor(interactor.transform);
         }
         else {
-            SetDoorState(DoorState.Closed);
+            CloseDoor();
         }
     }
 
@@ -67,6 +56,25 @@ public class Door : MonoBehaviour, IInteractible
             return "Open";
         else
             return "Close";
+    }
+
+    public void OpenDoor(Transform opener){
+        if(_axis == null)
+            throw new System.Exception("Missing axis.");
+
+        Vector3 doorToChar = opener.position - this.transform.position;
+        Vector3 doorForward = _axis.forward;
+        float dotProduct = Vector3.Dot(doorToChar, doorForward);
+        if(dotProduct > 0){
+            SetDoorState(DoorState.OpenBackward);
+        }
+        else {
+            SetDoorState(DoorState.OpenForward);
+        }
+    }
+
+    public void CloseDoor(){
+        SetDoorState(DoorState.Closed);
     }
 
     private void SetDoorState(DoorState newState){
