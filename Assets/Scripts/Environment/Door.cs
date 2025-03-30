@@ -19,6 +19,11 @@ public class Door : MonoBehaviour, IInteractible
     [SerializeField]
     private DoorState _startState = DoorState.Closed;
 
+    [SerializeField]
+    private AudioSource? _doorOpenSoundEffect = null;
+    [SerializeField]
+    private AudioSource? _doorCloseSoundEffect = null;
+
     public bool IsInteractible => true;
 
     public Vector3 InteractionWorldPosition => _interactor ? _interactor.position : transform.position;
@@ -77,10 +82,20 @@ public class Door : MonoBehaviour, IInteractible
         else {
             SetDoorState(DoorState.OpenForward);
         }
+
+        if(_doorOpenSoundEffect)
+            _doorOpenSoundEffect.Play();
+        else
+            Debug.LogWarning("Missing door open sound effect");
     }
 
     public void CloseDoor(){
         SetDoorState(DoorState.Closed);
+
+        if(_doorCloseSoundEffect)
+            _doorCloseSoundEffect.Play();
+        else
+            Debug.LogWarning("Missing door close sound effect");
     }
 
     private void SetDoorState(DoorState newState){
