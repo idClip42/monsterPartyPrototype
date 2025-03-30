@@ -7,7 +7,6 @@ using UnityEngine.AI;
 # nullable enable
 
 [RequireComponent(typeof(NavMeshAgent))]
-[RequireComponent(typeof(AudioSource))]
 [DisallowMultipleComponent]
 public class SimpleMonster : Entity, IDebugInfoProvider
 {

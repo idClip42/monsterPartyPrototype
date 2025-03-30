@@ -52,8 +52,10 @@ public class SimpleMonsterBarks {
     }
 
     private void PlayClip(AudioClip clip){
-        if(_config.audioSource == null)
-            throw new System.Exception("Missing audio source");
+        if(_config.audioSource == null){
+            Debug.LogWarning("Missing audio source");
+            return;
+        }
         _config.audioSource.Stop();
         _config.audioSource.clip = clip;
         _config.audioSource.Play();
