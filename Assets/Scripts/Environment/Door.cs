@@ -26,6 +26,12 @@ public class Door : MonoBehaviour, IInteractible
     private Quaternion _baseRotation;
     private DoorState _state = DoorState.Closed;
 
+    public bool IsOpen { get {
+        if(this._state == DoorState.Closed)
+            return false;
+        return true;
+    }}
+
     void Awake()
     {
         if(_axis == null)
@@ -105,6 +111,7 @@ public class Door : MonoBehaviour, IInteractible
         _state = newState;
     }
 
+#if UNITY_EDITOR
     private void OnDrawGizmos()
     {
         if(_axis == null || _interactor == null){
@@ -144,6 +151,7 @@ public class Door : MonoBehaviour, IInteractible
             }
         }
     }
+#endif
 
     public sealed override bool Equals(object other) => base.Equals(other);
     public sealed override int GetHashCode() => base.GetHashCode();

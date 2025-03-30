@@ -3452,13 +3452,14 @@ GameObject:
   - component: {fileID: 672855600}
   - component: {fileID: 672855601}
   - component: {fileID: 672855602}
+  - component: {fileID: 672855603}
   m_Layer: 0
   m_Name: Monster
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &672855600
 Transform:
   m_ObjectHideFlags: 0
@@ -3545,6 +3546,19 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &672855603
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 672855599}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0fb2a6d354bd74110922a16703e82df3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _range: 1
 --- !u!4 &707766953 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4061042768075426526, guid: e0111be87e0a04186a641984885c3486, type: 3}
