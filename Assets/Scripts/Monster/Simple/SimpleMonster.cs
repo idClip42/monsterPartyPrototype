@@ -31,6 +31,9 @@ public class SimpleMonster : Entity, IDebugInfoProvider
     [Range(0.5f, 3)]
     private float _killRadius = 1;
 
+    [SerializeField]
+    private AudioSource? _killSoundEffect = null;
+
     private NavigationManager? _navManager = null;
     private NavMeshAgent? _navMeshAgent = null;
 
@@ -196,6 +199,10 @@ public class SimpleMonster : Entity, IDebugInfoProvider
             float threshold = this._killRadius * this._killRadius;
             if(sqrDistance < threshold){
                 target.Kill();
+                if(_killSoundEffect != null)
+                    _killSoundEffect.Play();
+                else
+                    Debug.LogWarning("Null kill sound effect");
             }
         }
     }

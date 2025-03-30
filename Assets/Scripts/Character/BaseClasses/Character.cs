@@ -37,6 +37,9 @@ public abstract class Character : Entity, IDebugInfoProvider
     [SerializeField]
     private MovementConfig? _movementConfig;
 
+    [SerializeField]
+    private AudioSource? _deathScream = null;
+
     private Transform[] _lookRaycastTargets = {};
 
     public abstract CharacterComponentCrouch? Crouch { get; }
@@ -124,5 +127,10 @@ public abstract class Character : Entity, IDebugInfoProvider
 
         PlayerMovement.enabled = false;
         AIMovement.enabled = false;
+
+        if(_deathScream != null)
+            _deathScream.Play();
+        else
+            Debug.LogWarning("Missing death scream");
     }
 }
