@@ -53,7 +53,7 @@ public class SimpleMonsterStateSearch : SimpleMonsterState
 
     public sealed override void FillInDebugInfo(Dictionary<string, string> infoTarget)
     {
-        infoTarget["Timer"] = $"{_waitAfterSearchTimer}s";
+        infoTarget["Timer"] = $"{_waitAfterSearchTimer:F2}s";
     }
 
     public SimpleMonsterStateSearch(Config config){

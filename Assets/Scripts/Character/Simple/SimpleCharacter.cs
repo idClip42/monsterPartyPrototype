@@ -33,7 +33,7 @@ public class SimpleCharacter : Character
     {
         base.FillInDebugInfo(infoTarget);
         infoTarget["Model"] = _model ? _model.name : "None";
-        infoTarget["Model Height"] = ModelHeight.ToString();
+        infoTarget["Model Height"] = ModelHeight.ToString("F2");
     }
 
     protected sealed override void Awake()

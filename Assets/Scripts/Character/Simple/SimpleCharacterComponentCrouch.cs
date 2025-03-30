@@ -35,7 +35,7 @@ public class SimpleCharacterComponentCrouch : CharacterComponentCrouch
         base.FillInDebugInfo(infoTarget);
         if(uncrouchHitInfo.collider != null)
             infoTarget["Collider Above"] = uncrouchHitInfo.collider.gameObject.name;
-        infoTarget["Height"] = $"{CurrentHeight}m";
+        infoTarget["Height"] = $"{CurrentHeight:F2}m";
     }
 
     protected override void Awake()

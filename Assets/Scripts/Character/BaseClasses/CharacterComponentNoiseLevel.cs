@@ -13,7 +13,7 @@ public abstract class CharacterComponentNoiseLevel : CharacterComponent
 
     public override void FillInDebugInfo(Dictionary<string, string> infoTarget)
     {
-        infoTarget["Noise Radius"] = $"{CurrentNoiseRadius}m";
+        infoTarget["Noise Radius"] = $"{CurrentNoiseRadius:F2}m";
     }
 
 #if UNITY_EDITOR
