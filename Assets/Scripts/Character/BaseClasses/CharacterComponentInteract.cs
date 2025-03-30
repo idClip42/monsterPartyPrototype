@@ -73,6 +73,8 @@ public abstract class CharacterComponentInteract : CharacterComponent
             float gizmoMaxDistanceSqr = _gizmoMaxDistance * _gizmoMaxDistance;
             foreach (var interactible in _interactibles){
                 if(interactible == null) throw new System.Exception("null interactible");
+                if(interactible.gameObject == this.gameObject) continue;
+                if(interactible.IsInteractible == false) continue;
                 Vector3 diff = interactible.InteractionWorldPosition - ReferencePosition;
                 float distSqr = diff.sqrMagnitude;
                 if(distSqr > gizmoMaxDistanceSqr) continue;
