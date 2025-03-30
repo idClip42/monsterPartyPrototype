@@ -7,6 +7,7 @@ using UnityEngine.AI;
 # nullable enable
 
 [RequireComponent(typeof(NavMeshAgent))]
+[RequireComponent(typeof(AudioSource))]
 [DisallowMultipleComponent]
 public class SimpleMonster : Entity, IDebugInfoProvider
 {
@@ -25,6 +26,9 @@ public class SimpleMonster : Entity, IDebugInfoProvider
     private SimpleMonsterStateSearch.Config? _searchConfig;
 
     [SerializeField]
+    private SimpleMonsterBarks.Config? _barksConfig;
+
+    [SerializeField]
     [Range(0.5f, 3)]
     private float _killRadius = 1;
 
@@ -39,6 +43,7 @@ public class SimpleMonster : Entity, IDebugInfoProvider
     private SimpleMonsterStateChase? _chaseBehavior = null;
     private SimpleMonsterStateSearch? _searchBehavior = null;
     private SimpleMonsterHearing? _hearing = null;
+    private SimpleMonsterBarks? _barks = null;
 
     public State CurrentState => this._state;
     public string DebugHeader => "Simple Monster";
@@ -74,6 +79,8 @@ public class SimpleMonster : Entity, IDebugInfoProvider
             throw new System.Exception($"Missing chase config on {this.gameObject.name}");
         if(_searchConfig == null)
             throw new System.Exception($"Missing search config on {this.gameObject.name}");
+        if(_barksConfig == null)
+            throw new System.Exception($"Missing barks config on {this.gameObject.name}");
 
         _navManager = FindFirstObjectByType<NavigationManager>();
         if (_navManager == null)
@@ -92,6 +99,8 @@ public class SimpleMonster : Entity, IDebugInfoProvider
         }
         _headBehavior = new SimpleMonsterHead(this, _headConfig, charactersArray);
         _hearing = new SimpleMonsterHearing(this, charactersArray, _navManager);
+
+        _barks = new SimpleMonsterBarks(_barksConfig);
     }
 
     private void Start()
@@ -121,6 +130,8 @@ public class SimpleMonster : Entity, IDebugInfoProvider
             throw new System.Exception($"Missing head behavior on {this.gameObject.name}");
         if(_hearing == null)
             throw new System.Exception($"Missing hearing on {this.gameObject.name}");
+        if(_barks == null)
+            throw new System.Exception($"Missing barks on {this.gameObject.name}");
         if(_searchBehavior == null)
             throw new System.Exception($"Missing search behavior on {this.gameObject.name}");
         if (_navMeshAgent == null)
@@ -137,6 +148,7 @@ public class SimpleMonster : Entity, IDebugInfoProvider
         // our behavior change based on
         // hearing something.
         this._currentSoundInfo = _hearing.CheckForSounds();
+        bool heardSomething = false;
         if(nextBehavior.AllowInterruption && this._currentSoundInfo.Any(s=>s.isAudible)){
             // Get the closest audible noise.
             SimpleMonsterHearing.SoundInfo targetSound = 
@@ -149,6 +161,7 @@ public class SimpleMonster : Entity, IDebugInfoProvider
             nextBehavior = _searchBehavior;
             // Alert head behavior to sound.
             _headBehavior.AttractAttention(targetSound.soundLocation);
+            heardSomething = true;
         }
 
         // If we want to change behavior,
@@ -157,6 +170,20 @@ public class SimpleMonster : Entity, IDebugInfoProvider
         if(newState != this._state){
             currentBehavior.Stop(_navMeshAgent);
             nextBehavior.Start(_navMeshAgent, _headBehavior.CurrentKnowledge);
+
+            if(heardSomething){
+                _barks.PlayOnHearTarget();
+            }
+            else if(newState == State.Chase){
+                _barks.PlayOnSeeTarget();
+            }
+            else if(newState == State.Search && this._state == State.Chase){
+                _barks.PlayOnLoseTarget();
+            }
+            else if(newState == State.Wander){
+                _barks.PlayOnReturnToWander();
+            }
+
             this._state = newState;
         }
     }
