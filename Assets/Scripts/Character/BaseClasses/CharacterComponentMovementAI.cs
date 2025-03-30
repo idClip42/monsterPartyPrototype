@@ -89,13 +89,13 @@ public abstract class CharacterComponentMovementAI : CharacterComponentMovement,
         this.Character.Crouch.OnCrouchToggle += OnCrouchToggle;
     }
 
-    private void OnEnable()
+    protected virtual void OnEnable()
     {
         if(_navMeshAgent == null) return;
         _navMeshAgent.enabled = true;
     }
 
-    private void OnDisable()
+    protected virtual void OnDisable()
     {
         if(_navMeshAgent == null) return;
         _navMeshAgent.enabled = false;
