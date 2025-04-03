@@ -25,6 +25,9 @@ public class SimpleMonster : Entity, IDebugInfoProvider
     private SimpleMonsterStateSearch.Config? _searchConfig;
 
     [SerializeField]
+    private SimpleMonsterHearing.Config? _hearingConfig;
+
+    [SerializeField]
     private SimpleMonsterBarks.Config? _barksConfig;
 
     [SerializeField]
@@ -83,6 +86,8 @@ public class SimpleMonster : Entity, IDebugInfoProvider
             throw new System.Exception($"Missing search config on {this.gameObject.name}");
         if(_barksConfig == null)
             throw new System.Exception($"Missing barks config on {this.gameObject.name}");
+        if(_hearingConfig == null)
+            throw new System.Exception($"Missing hearing config on {this.gameObject.name}");
 
         _navManager = FindFirstObjectByType<NavigationManager>();
         if (_navManager == null)
@@ -100,7 +105,7 @@ public class SimpleMonster : Entity, IDebugInfoProvider
             Debug.LogWarning($"{this.gameObject.name} found no Characters in the scene.");
         }
         _headBehavior = new SimpleMonsterHead(this, _headConfig, charactersArray);
-        _hearing = new SimpleMonsterHearing(this, charactersArray, _navManager);
+        _hearing = new SimpleMonsterHearing(this, charactersArray, _navManager, _hearingConfig);
 
         _barks = new SimpleMonsterBarks(_barksConfig);
     }
@@ -280,6 +285,17 @@ public class SimpleMonster : Entity, IDebugInfoProvider
             using(new Handles.DrawingScope(color)){
                 for (int i = 1; i < sound.pathToSound.Length; i++)
                     Handles.DrawLine(sound.pathToSound[i-1], sound.pathToSound[i]);
+                foreach(var blocker in sound.blockers){
+                    Handles.DrawWireDisc(
+                        blocker.transform.position,
+                        blocker.transform.forward,
+                        1
+                    );
+                    Handles.Label(
+                        blocker.transform.position,
+                        $"+{blocker.DistancePenalty}m"
+                    );
+                }
             }
         }
     }
