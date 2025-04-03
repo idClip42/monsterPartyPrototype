@@ -24,7 +24,13 @@ public class SimpleCharacterComponentNoiseLevel : CharacterComponentNoiseLevel
 
     private float _currentNoiseRadius;
 
-    public sealed override float CurrentNoiseRadius => _currentNoiseRadius;
+    public sealed override float CurrentNoiseRadius { get{
+        if (this.Character == null)
+            return 0;
+        if(this.Character.Alive == false) 
+            return 0;
+        return _currentNoiseRadius;
+    }}
 
     protected sealed override void Awake()
     {
