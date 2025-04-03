@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -76,42 +75,13 @@ public class SimpleMonsterHearing{
                 Debug.LogWarning($"Sound logic unable to find path from {this._monster.gameObject.name} to {noiseSource.gameObject.name}");
                 continue;
             }
-            
-            // From here, we get our waypoints
-            // and we figure out the distance.
-            // TODO: Maybe we move this logic into a SoundInfo() constructor
-            // TODO: Maybe we move a lot of stuff into that constructor
-            Vector3[] waypoints = _reusableNavmeshPath.corners;
-            List<SoundNavBlocker> blockers = new List<SoundNavBlocker>();
-            RaycastHit hitInfo;
-            float distance = 0;
-            for (int i = 1; i < waypoints.Length; i++){
-                Vector3 start = waypoints[i - 1];
-                Vector3 end = waypoints[i];
-                Vector3 diff = end - start;
-                float rawDistance = diff.magnitude;
 
-                float penalty = 0;
-                if(Physics.Raycast(start, diff, out hitInfo, rawDistance, _config.soundBlockerRaycastMask)){
-                    GameObject go = hitInfo.collider.gameObject;
-                    SoundNavBlocker? blocker = go.GetComponentInParent<SoundNavBlocker>(false);
-                    if(blocker != null){
-                        blockers.Add(blocker);
-                        penalty = blocker.DistancePenalty;
-                    }
-                }
-
-                distance += rawDistance + penalty;
-            }
-
-            // And then we return our final result.
-            _reusableChecksList.Add(new SoundInfo(){
-                isAudible = distance < noiseDist,
-                soundLocation = charPos,
-                pathToSound = waypoints,
-                distanceToSound = distance,
-                blockers = blockers.ToArray()
-            });
+            // And then we calculate our final result
+            _reusableChecksList.Add(new SoundInfo(
+                noiseSource,
+                _reusableNavmeshPath,
+                _config.soundBlockerRaycastMask
+            ));
         }
 
         // We convert the list to an array to return it.
