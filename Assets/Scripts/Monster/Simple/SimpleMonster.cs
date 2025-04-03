@@ -41,7 +41,7 @@ public class SimpleMonster : Entity, IDebugInfoProvider
     private NavMeshAgent? _navMeshAgent = null;
 
     private State _state = State.Wander;
-    private SimpleMonsterHearing.SoundInfo[] _currentSoundInfo = {};
+    private SoundInfo[] _currentSoundInfo = {};
 
     private SimpleMonsterHead? _headBehavior = null;
     private SimpleMonsterStateWander? _wanderBehavior = null;
@@ -158,8 +158,8 @@ public class SimpleMonster : Entity, IDebugInfoProvider
         bool heardSomething = false;
         if(nextBehavior.AllowInterruption && this._currentSoundInfo.Any(s=>s.isAudible)){
             // Get the closest audible noise.
-            SimpleMonsterHearing.SoundInfo targetSound = 
-                SimpleMonsterHearing.SoundInfo.GetNearest(this._currentSoundInfo);
+            SoundInfo targetSound = 
+                SoundInfo.GetNearest(this._currentSoundInfo);
             // Double check what we got is audible.
             if(targetSound.isAudible == false)
                 throw new System.Exception("Target sound should be audible.");
