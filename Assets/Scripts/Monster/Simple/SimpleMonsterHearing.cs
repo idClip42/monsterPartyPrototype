@@ -13,21 +13,19 @@ public class SimpleMonsterHearing{
     }
 
     private SimpleMonster _monster;
-    private Character[] _characters = { };
+    private INoiseSource[] _noiseSources = { };
 
     private List<SoundInfo> _reusableChecksList = new List<SoundInfo>();
     private NavMeshPath _reusableNavmeshPath = new NavMeshPath();
     private NavigationManager _navManager;
     private Config _config;
 
-    public SimpleMonsterHearing(SimpleMonster monster, Character[] characters, NavigationManager navManager, Config config){
+    public SimpleMonsterHearing(SimpleMonster monster, INoiseSource[] noiseSources, NavigationManager navManager, Config config){
         this._monster = monster;
 
-        this._characters = characters;
-        if(this._characters.Length == 0)
-            Debug.LogWarning("SimpleMonsterHearing has no characters.");
-        if(this._characters.Any(c=>c.NoiseLevel==null))
-            throw new System.Exception("At least one of our characters is missing a noise component");
+        this._noiseSources = noiseSources;
+        if(this._noiseSources.Length == 0)
+            Debug.LogWarning("SimpleMonsterHearing has no noise sources.");
 
         this._navManager = navManager;
         this._config = config;
@@ -40,20 +38,23 @@ public class SimpleMonsterHearing{
         _reusableChecksList.Clear();
 
         Vector3 myPos = this._monster.transform.position;
-        foreach(var character in this._characters){
-            // Dead men tell no tales.
-            if(character == null) throw new System.Exception("Character is null.");
-            if(character.Alive == false) continue;
-            if(character.NoiseLevel == null) throw new System.Exception("Character noise level is null.");
+        foreach(var noiseSource in this._noiseSources){
+            if(noiseSource == null)
+                throw new System.Exception("Noise source is null.");
 
-            Vector3 charPos = character.transform.position;
+            if(noiseSource.CurrentNoiseRadius <= 0){
+                // No point in doing anything for 0-level noise-makers
+                continue;
+            }
+
+            Vector3 charPos = noiseSource.gameObject.transform.position;
 
             // We first filter out anything whose linear
             // distance is greater than the max distance,
             // because if that's the case then our more
             // complex distance check will definitely fail.
             float sqrDist = (charPos - myPos).sqrMagnitude;
-            float noiseDist = character.NoiseLevel.CurrentNoiseRadius;
+            float noiseDist = noiseSource.CurrentNoiseRadius;
             if(sqrDist > (noiseDist * noiseDist)) continue;
 
             // We calculate a walking path to the target.
@@ -72,7 +73,7 @@ public class SimpleMonsterHearing{
             // (If there's no path, the whole thing is moot,
             // but this should never happen. Probably.)
             if(!hasPath) {
-                Debug.LogWarning($"Sound logic unable to find path from {this._monster.gameObject.name} to {character.gameObject.name}");
+                Debug.LogWarning($"Sound logic unable to find path from {this._monster.gameObject.name} to {noiseSource.gameObject.name}");
                 continue;
             }
             

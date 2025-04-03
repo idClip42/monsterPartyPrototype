@@ -5,7 +5,7 @@ using System.Collections.Generic;
 #nullable enable
 
 [DisallowMultipleComponent]
-public abstract class CharacterComponentNoiseLevel : CharacterComponent
+public abstract class CharacterComponentNoiseLevel : CharacterComponent, INoiseSource
 {
     public abstract float CurrentNoiseRadius { get; }
 

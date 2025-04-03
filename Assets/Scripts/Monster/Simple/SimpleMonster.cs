@@ -105,7 +105,11 @@ public class SimpleMonster : Entity, IDebugInfoProvider
             Debug.LogWarning($"{this.gameObject.name} found no Characters in the scene.");
         }
         _headBehavior = new SimpleMonsterHead(this, _headConfig, charactersArray);
-        _hearing = new SimpleMonsterHearing(this, charactersArray, _navManager, _hearingConfig);
+
+        INoiseSource[] noiseSources = FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None)
+            .OfType<INoiseSource>()
+            .ToArray();
+        _hearing = new SimpleMonsterHearing(this, noiseSources, _navManager, _hearingConfig);
 
         _barks = new SimpleMonsterBarks(_barksConfig);
     }
