@@ -8,7 +8,7 @@ using System.Collections.Generic;
 [DisallowMultipleComponent]
 public abstract class CharacterComponentInteract : CharacterComponent
 {
-    private IInteractible?[] _interactibles = {};
+    private IInteractible[] _interactibles = {};
     private IInteractible? _interactibleWithinReach = null;
 
     [SerializeField]
@@ -34,8 +34,7 @@ public abstract class CharacterComponentInteract : CharacterComponent
         base.Awake();
         
         _interactibles = FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None)
-            .Where(item => item != null && item is IInteractible)
-            .Select(item => item as IInteractible)
+            .OfType<IInteractible>()
             .ToArray();
     }
 
