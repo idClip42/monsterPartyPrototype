@@ -1217,7 +1217,7 @@ ReflectionProbe:
   m_Mode: 0
   m_RefreshMode: 0
   m_TimeSlicingMode: 0
-  m_Resolution: 32
+  m_Resolution: 16
   m_UpdateFrequency: 0
   m_BoxSize: {x: 7.4464016, y: 5, z: 7.211733}
   m_BoxOffset: {x: 0.19612598, y: 0, z: -0.14543295}
@@ -2686,7 +2686,7 @@ ReflectionProbe:
   m_Mode: 0
   m_RefreshMode: 0
   m_TimeSlicingMode: 0
-  m_Resolution: 32
+  m_Resolution: 16
   m_UpdateFrequency: 0
   m_BoxSize: {x: 7.501233, y: 5, z: 7.049669}
   m_BoxOffset: {x: -0.049937725, y: 0, z: -0.22646499}
@@ -3201,7 +3201,7 @@ ReflectionProbe:
   m_Mode: 0
   m_RefreshMode: 0
   m_TimeSlicingMode: 0
-  m_Resolution: 32
+  m_Resolution: 16
   m_UpdateFrequency: 0
   m_BoxSize: {x: 6.3012524, y: 5, z: 7.6773915}
   m_BoxOffset: {x: 0.35282612, y: 0, z: 0.08739638}
@@ -5902,7 +5902,7 @@ ReflectionProbe:
   m_Mode: 0
   m_RefreshMode: 0
   m_TimeSlicingMode: 0
-  m_Resolution: 32
+  m_Resolution: 16
   m_UpdateFrequency: 0
   m_BoxSize: {x: 7.465666, y: 5, z: 7.7538705}
   m_BoxOffset: {x: 0.2057581, y: 0, z: 0.12563586}
@@ -6247,7 +6247,7 @@ ReflectionProbe:
   m_Mode: 0
   m_RefreshMode: 0
   m_TimeSlicingMode: 0
-  m_Resolution: 32
+  m_Resolution: 16
   m_UpdateFrequency: 0
   m_BoxSize: {x: 7.442969, y: 5, z: 7.2726407}
   m_BoxOffset: {x: 0.19440961, y: 0, z: -0.11497903}
@@ -7057,7 +7057,7 @@ ReflectionProbe:
   m_Mode: 0
   m_RefreshMode: 0
   m_TimeSlicingMode: 0
-  m_Resolution: 32
+  m_Resolution: 16
   m_UpdateFrequency: 0
   m_BoxSize: {x: 7.4330535, y: 5, z: 7.745915}
   m_BoxOffset: {x: 0.18945193, y: 0, z: 0.12165809}
@@ -10812,7 +10812,7 @@ ReflectionProbe:
   m_Mode: 0
   m_RefreshMode: 0
   m_TimeSlicingMode: 0
-  m_Resolution: 32
+  m_Resolution: 16
   m_UpdateFrequency: 0
   m_BoxSize: {x: 7.5144854, y: 5, z: 6.992825}
   m_BoxOffset: {x: -0.27790785, y: 0, z: -0.25488687}
@@ -11205,7 +11205,7 @@ ReflectionProbe:
   m_Mode: 0
   m_RefreshMode: 0
   m_TimeSlicingMode: 0
-  m_Resolution: 32
+  m_Resolution: 16
   m_UpdateFrequency: 0
   m_BoxSize: {x: 7.34272, y: 5, z: 6.9436564}
   m_BoxOffset: {x: 0.1442852, y: 0, z: -0.27947116}
