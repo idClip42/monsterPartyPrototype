@@ -6,7 +6,7 @@ using UnityEngine;
 public class KickOnCollision : MonoBehaviour
 {
     [Tooltip("Force to apply to the object when kicked.")]
-    public float kickForce = 10f;
+    public float kickForce = 2f;
 
     [Tooltip("Angle above the horizontal (in degrees) to kick the object.")]
     public float kickAngle = 30f;
@@ -38,11 +38,18 @@ public class KickOnCollision : MonoBehaviour
             direction.Normalize();
 
             // Rotate the direction upwards by the kickAngle
-            Quaternion tilt = Quaternion.AngleAxis(kickAngle, Vector3.Cross(Vector3.up, direction));
+            Quaternion tilt = Quaternion.AngleAxis(-kickAngle, Vector3.Cross(Vector3.up, direction));
             Vector3 kickDirection = tilt * direction;
 
             // Apply the force
             rb.AddForce(kickDirection * kickForce, ForceMode.Impulse);
+
+            Debug.DrawLine(
+                rb.transform.position,
+                rb.transform.position + kickDirection * kickForce,
+                Color.yellow,
+                0.5f
+            );
         }
     }
 }
