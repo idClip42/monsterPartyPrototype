@@ -770,7 +770,7 @@ GameObject:
   - component: {fileID: 3216189209624316852}
   - component: {fileID: 6774872639953896176}
   m_Layer: 6
-  m_Name: Reflection Probe
+  m_Name: Reflection Probe (Room)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -804,10 +804,10 @@ ReflectionProbe:
   m_Mode: 0
   m_RefreshMode: 0
   m_TimeSlicingMode: 0
-  m_Resolution: 64
+  m_Resolution: 32
   m_UpdateFrequency: 0
-  m_BoxSize: {x: 20, y: 5, z: 20}
-  m_BoxOffset: {x: 0, y: 0, z: 0}
+  m_BoxSize: {x: 18.650074, y: 5, z: 18.51609}
+  m_BoxOffset: {x: 0.024998188, y: 0, z: 0.033000946}
   m_NearClip: 0.3
   m_FarClip: 1000
   m_ShadowDistance: 100
