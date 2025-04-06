@@ -114,10 +114,6 @@ public abstract class Character : Entity, IDebugInfoProvider
         this.OnDeath += HandleDeath;
     }
 
-    public void Kill(){
-        this.Die();
-    }
-
     protected virtual void HandleDeath(Entity deadEntity){        
         if(deadEntity != this)
             throw new Exception("This function should only be called for own death.");

@@ -12,13 +12,5 @@ public class CharacterEditor : EntityEditor
 
         // Get reference to the target script
         Character character = (Character)target;
-
-        // Button to call Die() method
-        GUI.enabled = character.Alive && Application.isPlaying;
-        if (GUILayout.Button("Kill"))
-        {
-            character.Kill();
-        }
-        GUI.enabled = true;
     }
 }

@@ -17,5 +17,13 @@ public class EntityEditor : Editor
         // Display DebugValues in a read-only text area
         EditorGUILayout.LabelField("Debug Info", EditorStyles.boldLabel);
         EditorGUILayout.LabelField(entity.GetDebugInfoString(), EditorStyles.wordWrappedMiniLabel);
+
+        // Button to call Die() method
+        GUI.enabled = entity.Alive && Application.isPlaying;
+        if (GUILayout.Button("Kill"))
+        {
+            entity.Kill();
+        }
+        GUI.enabled = true;
     }
 }

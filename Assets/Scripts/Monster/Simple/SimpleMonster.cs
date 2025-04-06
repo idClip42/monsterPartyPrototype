@@ -239,10 +239,6 @@ public class SimpleMonster : Entity, IDebugInfoProvider
         };
     }
 
-    public void Kill(){
-        this.Die();
-    }
-
     protected virtual void HandleDeath(Entity deadEntity){
         if(_barks == null)
             throw new System.Exception($"Missing barks on {this.gameObject.name}");
