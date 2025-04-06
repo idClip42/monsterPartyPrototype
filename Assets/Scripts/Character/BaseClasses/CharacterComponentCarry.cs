@@ -10,6 +10,8 @@ public abstract class CharacterComponentCarry : CharacterComponent
 
     protected abstract Transform CarryParent { get; }
 
+    public ICarryable? HeldObject => _heldObject;
+
     public override string DebugHeader => "Carry";
 
     public override void FillInDebugInfo(Dictionary<string, string> infoTarget)
