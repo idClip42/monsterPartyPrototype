@@ -24,21 +24,32 @@ public abstract class CharacterComponentCarry : CharacterComponent
         base.Awake();
     }
 
-    public void OnInteractWithCarryable(ICarryable target){
-        if(target.IsCarryable == false) return;
+    public void OnInteractWithCarryable(ICarryable target)
+    {
+        if (!target.IsCarryable) return;
 
         _heldObject = target;
 
-        _heldObject.gameObject.transform.SetParent(CarryParent);
-        // Handle rotation
-        Quaternion relativeHandleRotation = Quaternion.Inverse(_heldObject.gameObject.transform.rotation) * _heldObject.CarryHandle.rotation;
+        // 1. Temporarily unparent to avoid local rotation/position interference
+        Transform briefcaseTransform = _heldObject.gameObject.transform;
+        briefcaseTransform.SetParent(null); 
+
+        // 2. Calculate relative rotation of the handle to the briefcase
+        Quaternion relativeHandleRotation = Quaternion.Inverse(briefcaseTransform.rotation) * _heldObject.CarryHandle.rotation;
+
+        // 3. Determine how to rotate the briefcase so its handle matches the hand's rotation
         Quaternion desiredBriefcaseRotation = CarryParent.rotation * Quaternion.Inverse(relativeHandleRotation);
-        _heldObject.gameObject.transform.rotation = desiredBriefcaseRotation;
-        // Hanlde position
-        _heldObject.gameObject.transform.position = CarryParent.position;
-        Vector3 handleOffset = _heldObject.CarryHandle.position - _heldObject.gameObject.transform.position;
-        _heldObject.gameObject.transform.position -= handleOffset; 
-        
+        briefcaseTransform.rotation = desiredBriefcaseRotation;
+
+        // 4. Position the briefcase so the handle aligns with the CarryParent
+        Vector3 handleOffset = _heldObject.CarryHandle.position - briefcaseTransform.position;
+        briefcaseTransform.position = CarryParent.position - handleOffset;
+
+        // 5. Re-parent it now that transform is in place
+        briefcaseTransform.SetParent(CarryParent, worldPositionStays: true);
+
+        // 6. Trigger any logic tied to pickup
         target.OnPickUp(this);
     }
+
 }
