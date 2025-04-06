@@ -29,27 +29,28 @@ public class KickOnCollision : MonoBehaviour
 
         Rigidbody rb = hit.collider.attachedRigidbody;
 
-        if (rb != null && !rb.isKinematic)
-        {
-            Vector3 direction = hit.collider.transform.position - transform.position;
+        if(rb == null) return;
+        if(rb.isKinematic) return;
+        if(rb.GetComponent<ICarryable>() != null) return;
 
-            // Project on the ground plane (XZ)
-            direction.y = 0f;
-            direction.Normalize();
+        Vector3 direction = hit.collider.transform.position - transform.position;
 
-            // Rotate the direction upwards by the kickAngle
-            Quaternion tilt = Quaternion.AngleAxis(-kickAngle, Vector3.Cross(Vector3.up, direction));
-            Vector3 kickDirection = tilt * direction;
+        // Project on the ground plane (XZ)
+        direction.y = 0f;
+        direction.Normalize();
 
-            // Apply the force
-            rb.AddForce(kickDirection * kickForce, ForceMode.Impulse);
+        // Rotate the direction upwards by the kickAngle
+        Quaternion tilt = Quaternion.AngleAxis(-kickAngle, Vector3.Cross(Vector3.up, direction));
+        Vector3 kickDirection = tilt * direction;
 
-            Debug.DrawLine(
-                rb.transform.position,
-                rb.transform.position + kickDirection * kickForce,
-                Color.yellow,
-                0.5f
-            );
-        }
+        // Apply the force
+        rb.AddForce(kickDirection * kickForce, ForceMode.Impulse);
+
+        Debug.DrawLine(
+            rb.transform.position,
+            rb.transform.position + kickDirection * kickForce,
+            Color.yellow,
+            0.5f
+        );
     }
 }
