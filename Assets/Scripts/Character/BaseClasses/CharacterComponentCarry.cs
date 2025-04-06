@@ -26,16 +26,18 @@ public abstract class CharacterComponentCarry : CharacterComponent
 
     public void OnInteractWithCarryable(ICarryable target){
         if(target.IsCarryable == false) return;
-        
+
         _heldObject = target;
 
-        Vector3 handleOffset = target.CarryHandle.position - target.gameObject.transform.position;
-
-        target.gameObject.transform.SetParent(CarryParent);
-        target.gameObject.transform.position = CarryParent.position;
-        target.gameObject.transform.position -= handleOffset; 
-
-        // TODO: Rotation;
+        _heldObject.gameObject.transform.SetParent(CarryParent);
+        // Handle rotation
+        Quaternion relativeHandleRotation = Quaternion.Inverse(_heldObject.gameObject.transform.rotation) * _heldObject.CarryHandle.rotation;
+        Quaternion desiredBriefcaseRotation = CarryParent.rotation * Quaternion.Inverse(relativeHandleRotation);
+        _heldObject.gameObject.transform.rotation = desiredBriefcaseRotation;
+        // Hanlde position
+        _heldObject.gameObject.transform.position = CarryParent.position;
+        Vector3 handleOffset = _heldObject.CarryHandle.position - _heldObject.gameObject.transform.position;
+        _heldObject.gameObject.transform.position -= handleOffset; 
         
         target.OnPickUp(this);
     }
