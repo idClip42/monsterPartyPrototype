@@ -47,6 +47,7 @@ public abstract class Character : Entity, IDebugInfoProvider
     public abstract CharacterComponentMovementPlayer? PlayerMovement { get; }
     public abstract CharacterComponentMovementAI? AIMovement { get; }
     public abstract CharacterComponentNoiseLevel? NoiseLevel { get; }
+    public abstract CharacterComponentCarry? Carry { get; }
 
     public MovementConfig Movement { get{
         if(_movementConfig == null)

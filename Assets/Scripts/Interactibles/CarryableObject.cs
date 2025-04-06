@@ -1,0 +1,74 @@
+using UnityEngine;
+
+#nullable enable
+
+[RequireComponent(typeof(Rigidbody))]
+[DisallowMultipleComponent]
+public class CarryableObject : MonoBehaviour, IInteractible, ICarryable
+{
+    private Rigidbody? _rb = null;
+    private bool _isHeld = false;
+    private bool _defaultKinematicState = false;
+    private CharacterComponentCarry? _holder = null;
+
+    [SerializeField]
+    private Transform? _carryHandle;
+
+    public Transform CarryHandle { get {
+        if(_carryHandle == null)
+            throw new System.Exception($"Missing carry handle on {gameObject.name}");
+        return _carryHandle;
+    }}
+
+    public bool IsInteractible => _isHeld == false;
+    public bool IsCarryable => _isHeld == false;
+
+    public string GetInteractionName(Character interactor) => "Pick up";
+
+    public Vector3 InteractionWorldPosition => transform.position;
+
+    private void Awake()
+    {
+        _rb = GetComponent<Rigidbody>();
+        if(_rb == null)
+            throw new System.Exception($"Missing rigidbody on {gameObject.name}.");
+
+        if(_carryHandle == null)
+            throw new System.Exception($"Missing carry handle on {gameObject.name}.");
+
+        _defaultKinematicState = _rb.isKinematic;
+    }
+
+    public void DoInteraction(Character interactor) {
+        if(interactor.Carry == null)
+            throw new System.Exception($"Missing Carry component on {interactor.gameObject.name}.");
+        interactor.Carry.OnInteractWithCarryable(this);
+    }
+
+    public void OnPickUp(CharacterComponentCarry pickerUpper){
+        if(IsCarryable == false)
+            throw new System.Exception("Tried to pick up something that isn't carryable.");
+        if(_isHeld == true)
+            throw new System.Exception("Tried to pick up something that is already held.");
+        if(_rb == null)
+            throw new System.Exception($"Missing rigidbody on {gameObject.name}.");
+        _isHeld = true;
+        _holder = pickerUpper;
+        _rb.isKinematic = true;
+    }
+
+    public void OnDrop(CharacterComponentCarry pickerUpper){
+        if(_isHeld == false)
+            throw new System.Exception("Tried to drop something that isn't held.");
+        if(_rb == null)
+            throw new System.Exception($"Missing rigidbody on {gameObject.name}.");
+        _isHeld = false;
+        _holder = null;
+        _rb.isKinematic = false;
+    }
+
+    public sealed override bool Equals(object other) => base.Equals(other);
+    public sealed override int GetHashCode() => base.GetHashCode();
+
+    public sealed override string ToString() => base.ToString();
+}

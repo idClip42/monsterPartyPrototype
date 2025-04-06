@@ -8,6 +8,7 @@ using UnityEngine;
 [RequireComponent(typeof(SimpleCharacterComponentMovementAI))]
 [RequireComponent(typeof(SimpleCharacterComponentCrouch))]
 [RequireComponent(typeof(SimpleCharacterComponentInteract))]
+[RequireComponent(typeof(SimpleCharacterComponentCarry))]
 [RequireComponent(typeof(SimpleCharacterComponentNoiseLevel))]
 public class SimpleCharacter : Character
 {
@@ -22,12 +23,14 @@ public class SimpleCharacter : Character
     private SimpleCharacterComponentMovementPlayer? _playerMovement = null;
     private SimpleCharacterComponentMovementAI? _aiMovement = null;
     private SimpleCharacterComponentNoiseLevel? _noiseLevel = null;
+    private SimpleCharacterComponentCarry? _carry = null;
 
     public override CharacterComponentCrouch? Crouch => _crouch;
     public override CharacterComponentInteract? Interact => _interact;
     public override CharacterComponentMovementPlayer? PlayerMovement => _playerMovement;
     public override CharacterComponentMovementAI? AIMovement => _aiMovement;
     public override CharacterComponentNoiseLevel? NoiseLevel => _noiseLevel;
+    public override CharacterComponentCarry? Carry => _carry;
 
     public sealed override void FillInDebugInfo(Dictionary<string, string> infoTarget)
     {
@@ -58,6 +61,9 @@ public class SimpleCharacter : Character
         _noiseLevel = GetComponent<SimpleCharacterComponentNoiseLevel>();
         if(_noiseLevel == null)
             throw new System.Exception($"Missing SimpleCharacterNoiseLevel on {this.gameObject.name}");
+        _carry = GetComponent<SimpleCharacterComponentCarry>();
+        if(_carry == null)
+            throw new System.Exception($"Missing SimpleCharacterComponentCarry on {this.gameObject.name}");
 
         Renderer[] renderers = GetComponentsInChildren<Renderer>(false);
         _meshBounds.center = transform.position;
