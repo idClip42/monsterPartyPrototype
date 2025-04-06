@@ -66,6 +66,10 @@ public abstract class CharacterComponentCarry : CharacterComponent
         // 6. Trigger any logic tied to pickup
         target.OnPickUp(this);
     }
+
+    public void ForceDrop(){
+        DropHeldObject();
+    }
     
     private void DropHeldObject()
     {

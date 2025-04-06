@@ -76,6 +76,20 @@ public class CarryableObject : MonoBehaviour, IInteractible, ICarryable
         _rb.angularVelocity = Vector3.zero;
     }
 
+    public void LockInPlace(Transform targetParent){
+        if(_rb == null)
+            throw new System.Exception($"Missing rigidbody on {gameObject.name}.");
+        if(_holder != null)
+            throw new System.Exception("Cannot lock in place while held. Drop first.");
+
+        _isHeld = true;
+        _rb.isKinematic = true;
+
+        transform.SetParent(targetParent);
+        transform.localPosition = Vector3.zero;
+        transform.localRotation = Quaternion.identity;
+    }
+
     public sealed override bool Equals(object other) => base.Equals(other);
     public sealed override int GetHashCode() => base.GetHashCode();
 

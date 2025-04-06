@@ -13,4 +13,6 @@ public interface ICarryable
     void OnPickUp(CharacterComponentCarry pickerUpper);
 
     void OnDrop(CharacterComponentCarry pickerUpper);
+
+    void LockInPlace(Transform targetParent);
 }
