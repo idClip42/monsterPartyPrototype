@@ -11,6 +11,7 @@ public class SimpleMonsterBarks {
         public AudioClip? onHearTarget;
         public AudioClip? onLoseTarget;
         public AudioClip? onReturnToWander;
+        public AudioClip? onDeath;
     }
     
     private Config _config;
@@ -49,6 +50,14 @@ public class SimpleMonsterBarks {
             return;
         }
         PlayClip(_config.onReturnToWander);
+    }
+
+    public void PlayOnDeath(){
+        if(_config.onDeath == null){
+            Debug.LogWarning("Missing audio clip");
+            return;
+        }
+        PlayClip(_config.onDeath);
     }
 
     private void PlayClip(AudioClip clip){

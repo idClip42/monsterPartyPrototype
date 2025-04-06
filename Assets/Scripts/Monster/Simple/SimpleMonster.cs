@@ -112,6 +112,8 @@ public class SimpleMonster : Entity, IDebugInfoProvider
         _hearing = new SimpleMonsterHearing(this, noiseSources, _navManager, _hearingConfig);
 
         _barks = new SimpleMonsterBarks(_barksConfig);
+
+        this.OnDeath += HandleDeath;
     }
 
     private void Start()
@@ -127,6 +129,8 @@ public class SimpleMonster : Entity, IDebugInfoProvider
 
     private void Update()
     {
+        if(this.Alive == false) return;
+
         if(_headBehavior == null)
             throw new System.Exception($"Missing head behavior on {this.gameObject.name}");
 
@@ -230,6 +234,26 @@ public class SimpleMonster : Entity, IDebugInfoProvider
             State.Search => _searchBehavior,
             _ => throw new System.Exception($"Unrecognized monster state '{state}'")
         };
+    }
+
+    public void Kill(){
+        this.Die();
+    }
+
+    protected virtual void HandleDeath(Entity deadEntity){
+        if(_barks == null)
+            throw new System.Exception($"Missing barks on {this.gameObject.name}");
+        if (_navMeshAgent == null)
+            throw new System.Exception($"Null nav mesh agent on {this.gameObject.name}");
+
+        Light[] allLights = GetComponentsInChildren<Light>();
+        foreach(Light l in allLights)
+            l.enabled = false;
+
+        _barks.PlayOnDeath();
+
+        _navMeshAgent.isStopped = true;
+        _state = State.Wander;
     }
 
 #if UNITY_EDITOR

@@ -5971,6 +5971,7 @@ MonoBehaviour:
     onHearTarget: {fileID: 8300000, guid: 958b38aa88e254e0db80b7aa8a1bd031, type: 3}
     onLoseTarget: {fileID: 8300000, guid: f09aaf3ef30f644d9995edb7b6851854, type: 3}
     onReturnToWander: {fileID: 8300000, guid: 1defa61df60974cfeaeed27109836616, type: 3}
+    onDeath: {fileID: 8300000, guid: f4d64ab9d71134793bbb11ce5ac1d3a9, type: 3}
   _killRadius: 1
   _killSoundEffect: {fileID: 2076068100}
 --- !u!195 &672855602
@@ -15608,6 +15609,10 @@ PrefabInstance:
       propertyPath: _target
       value: 
       objectReference: {fileID: 1245187578}
+    - target: {fileID: 5632175654019743491, guid: 2c3cbb1cd2a45429bac931e5f44d425f, type: 3}
+      propertyPath: _killTarget
+      value: 
+      objectReference: {fileID: 672855601}
     - target: {fileID: 6135442773820998471, guid: 2c3cbb1cd2a45429bac931e5f44d425f, type: 3}
       propertyPath: m_IsActive
       value: 1
