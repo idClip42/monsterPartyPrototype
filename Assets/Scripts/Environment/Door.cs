@@ -24,8 +24,6 @@ public class Door : MonoBehaviour, IInteractible
     [SerializeField]
     private AudioSource? _doorCloseSoundEffect = null;
 
-    public bool IsInteractible => true;
-
     public Vector3 InteractionWorldPosition => _interactor ? _interactor.position : transform.position;
 
     private Quaternion _baseRotation;
@@ -49,6 +47,10 @@ public class Door : MonoBehaviour, IInteractible
         _baseRotation = _axis.rotation;
 
         SetDoorState(_startState);
+    }
+
+    public bool IsInteractible(Character interactor){
+        return true;
     }
 
     public void DoInteraction(Character interactor)

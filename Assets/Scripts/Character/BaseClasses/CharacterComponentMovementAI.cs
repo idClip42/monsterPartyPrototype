@@ -27,7 +27,6 @@ public abstract class CharacterComponentMovementAI : CharacterComponentMovement,
     public string CurrentBehavior => $"{_behavior} : {_behaviorTarget?.gameObject?.name}";
 
     public Vector3 InteractionWorldPosition => this.gameObject.transform.position + Vector3.up;
-    public bool IsInteractible => this.Character ? this.Character.Alive : false;
 
     public sealed override string DebugHeader => "AI Movement";
 
@@ -168,6 +167,12 @@ public abstract class CharacterComponentMovementAI : CharacterComponentMovement,
 
         // Stop any navigating
         _navMeshAgent.isStopped = this._behavior == Behavior.HoldPosition;
+    }
+
+    public bool IsInteractible(Character interactor) {
+        return this.Character ? 
+            this.Character.Alive : 
+            false;
     }
 
     public string GetInteractionName(Character interactor) {

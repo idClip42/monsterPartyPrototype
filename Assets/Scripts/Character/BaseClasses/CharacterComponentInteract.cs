@@ -40,7 +40,8 @@ public abstract class CharacterComponentInteract : CharacterComponent
 
     private void Update()
     {
-        if(this.Character == null) throw new System.Exception("Null _characterBase");
+        if(this.Character == null)
+            throw new System.Exception("Null _characterBase");
 
         if(this.Character.State == Character.StateType.Player){
             _interactibleWithinReach = GetInteractibleWithinReach();
@@ -73,7 +74,7 @@ public abstract class CharacterComponentInteract : CharacterComponent
             foreach (var interactible in _interactibles){
                 if(interactible == null) throw new System.Exception("null interactible");
                 if(interactible.gameObject == this.gameObject) continue;
-                if(interactible.IsInteractible == false) continue;
+                if(interactible.IsInteractible(this.Character) == false) continue;
                 Vector3 diff = interactible.InteractionWorldPosition - ReferencePosition;
                 float distSqr = diff.sqrMagnitude;
                 if(distSqr > gizmoMaxDistanceSqr) continue;
@@ -88,6 +89,9 @@ public abstract class CharacterComponentInteract : CharacterComponent
 #endif
 
     private IInteractible? GetInteractibleWithinReach(){
+        if(this.Character == null)
+            throw new System.Exception("Null _characterBase");
+
         IInteractible? closest = null;
         float closestDistSq = float.MaxValue;
 
@@ -95,7 +99,7 @@ public abstract class CharacterComponentInteract : CharacterComponent
         {
             if(interactible == null) continue;
             if(interactible.gameObject == this.gameObject) continue;
-            if(interactible.IsInteractible == false) continue;
+            if(interactible.IsInteractible(this.Character) == false) continue;
             Vector3 posDiff = interactible.InteractionWorldPosition - ReferencePosition;
             float distSq = posDiff.sqrMagnitude;
             if (distSq < closestDistSq)

@@ -20,7 +20,6 @@ public class CarryableObject : MonoBehaviour, IInteractible, ICarryable
         return _carryHandle;
     }}
 
-    public bool IsInteractible => _isHeld == false;
     public bool IsCarryable => _isHeld == false;
     public CharacterComponentCarry? Carrier => _holder;
 
@@ -38,6 +37,16 @@ public class CarryableObject : MonoBehaviour, IInteractible, ICarryable
             throw new System.Exception($"Missing carry handle on {gameObject.name}.");
 
         _defaultKinematicState = _rb.isKinematic;
+    }
+
+    public bool IsInteractible(Character interactor){
+        if(interactor.Carry == null)
+            throw new System.Exception($"{gameObject.name} missing Carry.");
+        if(interactor.Carry.HeldObject != null)
+            return false;
+        if(this._isHeld)
+            return false;
+        return true;
     }
 
     public void DoInteraction(Character interactor) {

@@ -12,8 +12,6 @@ public class SimpleMonsterKillerMachineReceptacle : MonoBehaviour, IInteractible
     private bool _hasComponent = false;
     public bool HasComponent => _hasComponent;
 
-    public bool IsInteractible => _hasComponent == false;
-
     public Vector3 InteractionWorldPosition => transform.position;
 
     private void Awake()
@@ -25,12 +23,24 @@ public class SimpleMonsterKillerMachineReceptacle : MonoBehaviour, IInteractible
             thing.SetActive(false);
     }
 
+    public bool IsInteractible(Character interactor){
+        if(interactor.Carry == null)
+            throw new System.Exception($"Character {interactor.gameObject.name} missing Carry.");
+
+        if(_hasComponent) return false;
+        if(interactor.Carry.HeldObject == null) return false;
+        if(DoesCharacterCarryTarget(interactor) == false) return false;
+        return true;
+    }
+
     public void DoInteraction(Character interactor)
     {
         if(interactor.Carry == null)
             throw new System.Exception($"Character {interactor.gameObject.name} missing Carry.");
-        if(interactor.Carry.HeldObject == null) return;
-        if(DoesCharacterCarryTarget(interactor) == false) return;
+        if(interactor.Carry.HeldObject == null) 
+            throw new System.Exception($"Character {interactor.gameObject.name} missing Carry.HeldObject. Code should never have gotten here.");
+        if(DoesCharacterCarryTarget(interactor) == false)
+            throw new System.Exception($"Character {interactor.gameObject.name} Carry.HeldObject in not target. Code should never have gotten here.");
         
         ICarryable component = interactor.Carry.HeldObject;
         LockInTarget(component);
