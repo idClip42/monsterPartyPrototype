@@ -39,6 +39,7 @@ public abstract class CharacterComponentCarry : CharacterComponent
     public void OnInteractWithCarryable(ICarryable target)
     {
         if (!target.IsCarryable) return;
+        if (_heldObject != null) return;
 
         _heldObject = target;
 
