@@ -24,6 +24,18 @@ public abstract class CharacterComponentCarry : CharacterComponent
         base.Awake();
     }
 
+    private void Update()
+    {
+        if(this.Character == null) throw new System.Exception("Null _characterBase");
+
+        if(this.Character.State == Character.StateType.Player){
+            if(Input.GetButtonDown("Drop")){
+                DropHeldObject();
+            }
+        }
+
+    }
+
     public void OnInteractWithCarryable(ICarryable target)
     {
         if (!target.IsCarryable) return;
@@ -51,5 +63,13 @@ public abstract class CharacterComponentCarry : CharacterComponent
         // 6. Trigger any logic tied to pickup
         target.OnPickUp(this);
     }
+    
+    private void DropHeldObject()
+    {
+        if (_heldObject == null) return;
 
+        _heldObject.gameObject.transform.SetParent(null); // unparent from the hand
+        _heldObject.OnDrop(this); // let the object handle physics toggling, etc.
+        _heldObject = null;
+    }
 }

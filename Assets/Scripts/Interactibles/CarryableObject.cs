@@ -52,9 +52,13 @@ public class CarryableObject : MonoBehaviour, IInteractible, ICarryable
             throw new System.Exception("Tried to pick up something that is already held.");
         if(_rb == null)
             throw new System.Exception($"Missing rigidbody on {gameObject.name}.");
+            
         _isHeld = true;
         _holder = pickerUpper;
+        
         _rb.isKinematic = true;
+        _rb.linearVelocity = Vector3.zero;
+        _rb.angularVelocity = Vector3.zero;
     }
 
     public void OnDrop(CharacterComponentCarry pickerUpper){
@@ -62,9 +66,13 @@ public class CarryableObject : MonoBehaviour, IInteractible, ICarryable
             throw new System.Exception("Tried to drop something that isn't held.");
         if(_rb == null)
             throw new System.Exception($"Missing rigidbody on {gameObject.name}.");
+
         _isHeld = false;
         _holder = null;
+
         _rb.isKinematic = false;
+        _rb.linearVelocity = Vector3.zero;
+        _rb.angularVelocity = Vector3.zero;
     }
 
     public sealed override bool Equals(object other) => base.Equals(other);
