@@ -24,6 +24,10 @@ public abstract class CharacterComponentCarry : CharacterComponent
     protected override void Awake()
     {
         base.Awake();
+
+        if(this.Character == null)
+            throw new System.Exception($"Null Character on {this.gameObject.name}");
+        this.Character.OnDeath += HandleDeath;
     }
 
     private void Update()
@@ -78,5 +82,9 @@ public abstract class CharacterComponentCarry : CharacterComponent
         _heldObject.gameObject.transform.SetParent(null); // unparent from the hand
         _heldObject.OnDrop(this); // let the object handle physics toggling, etc.
         _heldObject = null;
+    }
+
+    private void HandleDeath(Entity deadEntity){ 
+        DropHeldObject();
     }
 }
