@@ -33,12 +33,7 @@ public class SimpleMonsterKillerMachineReceptacle : MonoBehaviour, IInteractible
         if(DoesCharacterCarryTarget(interactor) == false) return;
         
         ICarryable component = interactor.Carry.HeldObject;
-        interactor.Carry.ForceDrop();
-        component.LockInPlace(this.transform);
-        _hasComponent = true;
-
-        foreach(var thing in _thingsToTurnOn)
-            thing.SetActive(true);
+        LockInTarget(component);
     }
 
     public string GetInteractionName(Character interactor) {
@@ -46,6 +41,28 @@ public class SimpleMonsterKillerMachineReceptacle : MonoBehaviour, IInteractible
             return "Place Component";
         else
             return "";
+    }
+
+    public void ForceLockInTarget(){
+        if(Application.IsPlaying(this) == false)
+            throw new System.Exception("Can only call this in play mode.");
+        if(_target == null)
+            throw new System.Exception($"Missing target on {gameObject.name}.");
+        ICarryable? component = _target.GetComponent<ICarryable>();
+        if(component == null)
+            throw new System.Exception($"Missing ICarryable on {_target.name}.");
+        LockInTarget(component);
+    }
+
+    private void LockInTarget(ICarryable component){
+        if(component.Carrier != null)
+            component.Carrier.ForceDrop();
+
+        component.LockInPlace(this.transform);
+        _hasComponent = true;
+
+        foreach(var thing in _thingsToTurnOn)
+            thing.SetActive(true);
     }
 
     private bool DoesCharacterCarryTarget(Character interactor){

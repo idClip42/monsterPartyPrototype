@@ -8,6 +8,8 @@ public interface ICarryable
 
     Transform CarryHandle { get; }
 
+    CharacterComponentCarry? Carrier { get; }
+
     bool IsCarryable { get; }
 
     void OnPickUp(CharacterComponentCarry pickerUpper);

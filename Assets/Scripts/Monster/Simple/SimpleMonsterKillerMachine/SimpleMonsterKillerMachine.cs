@@ -21,8 +21,17 @@ public class SimpleMonsterKillerMachine : MonoBehaviour {
 
     private void Update()
     {
-        bool isOn = _receptacles.All(r=>r.HasComponent);
+        bool isOn = IsReady();
         foreach(var thing in _thingsToTurnOn)
             thing.SetActive(isOn);
+    }
+
+    public void ForceFillAllReceptacles(){
+        foreach(var thing in _receptacles)
+            thing.ForceLockInTarget();
+    }
+
+    public bool IsReady(){
+        return _receptacles.All(r=>r.HasComponent);
     }
 }

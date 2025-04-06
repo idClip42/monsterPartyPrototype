@@ -22,6 +22,7 @@ public class CarryableObject : MonoBehaviour, IInteractible, ICarryable
 
     public bool IsInteractible => _isHeld == false;
     public bool IsCarryable => _isHeld == false;
+    public CharacterComponentCarry? Carrier => _holder;
 
     public string GetInteractionName(Character interactor) => "Pick up";
 
