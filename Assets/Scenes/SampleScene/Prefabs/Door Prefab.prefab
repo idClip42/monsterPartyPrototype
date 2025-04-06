@@ -657,8 +657,8 @@ ReflectionProbe:
   m_TimeSlicingMode: 0
   m_Resolution: 16
   m_UpdateFrequency: 0
-  m_BoxSize: {x: 0.7998915, y: 2.847651, z: 1.3790061}
-  m_BoxOffset: {x: 0.026793003, y: -0.26744485, z: -0.007273555}
+  m_BoxSize: {x: 1.3923731, y: 2.847651, z: 1.3790061}
+  m_BoxOffset: {x: 0.0040049553, y: -0.26744485, z: -0.007273555}
   m_NearClip: 0.3
   m_FarClip: 1000
   m_ShadowDistance: 100
@@ -673,7 +673,7 @@ ReflectionProbe:
   m_BoxProjection: 1
   m_RenderDynamicObjects: 0
   m_UseOcclusionCulling: 1
-  m_Importance: 2
+  m_Importance: 3
   m_CustomBakedTexture: {fileID: 0}
 --- !u!1 &3726665642718876298
 GameObject:

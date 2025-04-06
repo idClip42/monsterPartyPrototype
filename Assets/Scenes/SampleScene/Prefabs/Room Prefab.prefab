@@ -724,13 +724,13 @@ ReflectionProbe:
   m_TimeSlicingMode: 0
   m_Resolution: 16
   m_UpdateFrequency: 0
-  m_BoxSize: {x: 17.49996, y: 8.114658, z: 17.735483}
-  m_BoxOffset: {x: -4.0627913, y: -1.1197038, z: 4.2032757}
+  m_BoxSize: {x: 12.365343, y: 8.114658, z: 12.355896}
+  m_BoxOffset: {x: -2.5723293, y: -1.1197038, z: 2.5454597}
   m_NearClip: 0.3
-  m_FarClip: 1000
+  m_FarClip: 12
   m_ShadowDistance: 100
   m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
   m_CullingMask:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -740,7 +740,7 @@ ReflectionProbe:
   m_BoxProjection: 1
   m_RenderDynamicObjects: 0
   m_UseOcclusionCulling: 1
-  m_Importance: 1
+  m_Importance: 2
   m_CustomBakedTexture: {fileID: 0}
 --- !u!1 &773396491519325427
 GameObject:
@@ -1592,13 +1592,13 @@ ReflectionProbe:
   m_TimeSlicingMode: 0
   m_Resolution: 16
   m_UpdateFrequency: 0
-  m_BoxSize: {x: 17.49996, y: 8.114658, z: 17.735483}
-  m_BoxOffset: {x: 4.1697054, y: -1.1197038, z: 4.40781}
+  m_BoxSize: {x: 12.455082, y: 8.114658, z: 12.443673}
+  m_BoxOffset: {x: 2.6343749, y: -1.1197038, z: 2.7640738}
   m_NearClip: 0.3
-  m_FarClip: 1000
+  m_FarClip: 12
   m_ShadowDistance: 100
   m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
   m_CullingMask:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -1608,7 +1608,7 @@ ReflectionProbe:
   m_BoxProjection: 1
   m_RenderDynamicObjects: 0
   m_UseOcclusionCulling: 1
-  m_Importance: 1
+  m_Importance: 2
   m_CustomBakedTexture: {fileID: 0}
 --- !u!1 &2324354519411567397
 GameObject:
@@ -2445,10 +2445,10 @@ ReflectionProbe:
   m_BoxSize: {x: 17.49996, y: 8.114658, z: 17.735483}
   m_BoxOffset: {x: 0.027890205, y: -1.1197038, z: 0.010327339}
   m_NearClip: 0.3
-  m_FarClip: 1000
+  m_FarClip: 12
   m_ShadowDistance: 100
   m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
   m_CullingMask:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -2507,13 +2507,13 @@ ReflectionProbe:
   m_TimeSlicingMode: 0
   m_Resolution: 16
   m_UpdateFrequency: 0
-  m_BoxSize: {x: 17.49996, y: 8.114658, z: 17.735483}
-  m_BoxOffset: {x: 4.1697054, y: -1.1197038, z: -4.3360214}
+  m_BoxSize: {x: 12.410212, y: 8.114658, z: 12.5297985}
+  m_BoxOffset: {x: 2.6568096, y: -1.1197038, z: -2.7651587}
   m_NearClip: 0.3
-  m_FarClip: 1000
+  m_FarClip: 12
   m_ShadowDistance: 100
   m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
   m_CullingMask:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -2523,7 +2523,7 @@ ReflectionProbe:
   m_BoxProjection: 1
   m_RenderDynamicObjects: 0
   m_UseOcclusionCulling: 1
-  m_Importance: 1
+  m_Importance: 2
   m_CustomBakedTexture: {fileID: 0}
 --- !u!1 &3195899656875756480
 GameObject:
@@ -4483,13 +4483,13 @@ ReflectionProbe:
   m_TimeSlicingMode: 0
   m_Resolution: 16
   m_UpdateFrequency: 0
-  m_BoxSize: {x: 17.49996, y: 8.114658, z: 17.735483}
-  m_BoxOffset: {x: -4.0116587, y: -1.1197038, z: -4.1314874}
+  m_BoxSize: {x: 12.397112, y: 8.114658, z: 12.47183}
+  m_BoxOffset: {x: -2.4473448, y: -1.1197038, z: -2.53164}
   m_NearClip: 0.3
-  m_FarClip: 1000
+  m_FarClip: 12
   m_ShadowDistance: 100
   m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
   m_CullingMask:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -4499,7 +4499,7 @@ ReflectionProbe:
   m_BoxProjection: 1
   m_RenderDynamicObjects: 0
   m_UseOcclusionCulling: 1
-  m_Importance: 1
+  m_Importance: 2
   m_CustomBakedTexture: {fileID: 0}
 --- !u!1 &6058552090601364389
 GameObject:

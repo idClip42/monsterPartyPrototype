@@ -171,7 +171,7 @@ ReflectionProbe:
   m_BoxProjection: 1
   m_RenderDynamicObjects: 0
   m_UseOcclusionCulling: 1
-  m_Importance: 2
+  m_Importance: 3
   m_CustomBakedTexture: {fileID: 0}
 --- !u!1 &4662572691824697045
 GameObject:
