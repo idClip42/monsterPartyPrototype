@@ -57,8 +57,9 @@ public class CarryableObject : MonoBehaviour, IInteractible, ICarryable
         _holder = pickerUpper;
         
         _rb.isKinematic = true;
-        _rb.linearVelocity = Vector3.zero;
-        _rb.angularVelocity = Vector3.zero;
+        // Apparently you can't do this on kinematic bodies
+        // _rb.linearVelocity = Vector3.zero;
+        // _rb.angularVelocity = Vector3.zero;
     }
 
     public void OnDrop(CharacterComponentCarry pickerUpper){
