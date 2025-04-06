@@ -16,7 +16,7 @@ public class SimpleMonsterKillerMachineReceptacle : MonoBehaviour, IInteractible
 
     public Vector3 InteractionWorldPosition => transform.position;
 
-    void Awake()
+    private void Awake()
     {
         if(_target == null)
             throw new System.Exception($"Missing target on {gameObject.name}.");
