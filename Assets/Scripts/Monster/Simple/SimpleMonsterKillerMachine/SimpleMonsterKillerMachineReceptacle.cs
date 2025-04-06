@@ -6,6 +6,9 @@ public class SimpleMonsterKillerMachineReceptacle : MonoBehaviour, IInteractible
     [SerializeField]
     private GameObject? _target;
 
+    [SerializeField]
+    private GameObject[] _thingsToTurnOn = {};
+
     private bool _hasComponent = false;
     public bool HasComponent => _hasComponent;
 
@@ -17,6 +20,9 @@ public class SimpleMonsterKillerMachineReceptacle : MonoBehaviour, IInteractible
     {
         if(_target == null)
             throw new System.Exception($"Missing target on {gameObject.name}.");
+
+        foreach(var thing in _thingsToTurnOn)
+            thing.SetActive(false);
     }
 
     public void DoInteraction(Character interactor)
@@ -30,6 +36,9 @@ public class SimpleMonsterKillerMachineReceptacle : MonoBehaviour, IInteractible
         interactor.Carry.ForceDrop();
         component.LockInPlace(this.transform);
         _hasComponent = true;
+
+        foreach(var thing in _thingsToTurnOn)
+            thing.SetActive(true);
     }
 
     public string GetInteractionName(Character interactor) {
