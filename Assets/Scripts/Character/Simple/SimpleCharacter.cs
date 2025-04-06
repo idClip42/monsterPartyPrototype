@@ -94,6 +94,14 @@ public class SimpleCharacter : Character
     }
 
 #if UNITY_EDITOR
+    public override void Resurrect()
+    {
+        transform.Rotate(-90, 0, 0);
+        base.Resurrect();
+    }
+#endif
+
+#if UNITY_EDITOR
     protected sealed override void OnDrawGizmos() => base.OnDrawGizmos();
 
     void OnDrawGizmosSelected()

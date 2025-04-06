@@ -53,6 +53,7 @@ public class SimpleMonsterKillerMachineReceptacle : MonoBehaviour, IInteractible
             return "";
     }
 
+#if UNITY_EDITOR
     public void ForceLockInTarget(){
         if(Application.IsPlaying(this) == false)
             throw new System.Exception("Can only call this in play mode.");
@@ -63,6 +64,7 @@ public class SimpleMonsterKillerMachineReceptacle : MonoBehaviour, IInteractible
             throw new System.Exception($"Missing ICarryable on {_target.name}.");
         LockInTarget(component);
     }
+#endif
 
     private void LockInTarget(ICarryable component){
         if(component.Carrier != null)

@@ -58,6 +58,14 @@ public abstract class Entity : MonoBehaviour
         OnDeath?.Invoke(this);
     }
 
+#if UNITY_EDITOR
+    public virtual void Resurrect(){
+        if(_alive == true)
+            throw new Exception("You cannot resurrect that which is not dead!");
+        _alive = true;
+    }
+#endif
+
     public sealed override bool Equals(object other) => base.Equals(other);
     public sealed override int GetHashCode() => base.GetHashCode();
     public sealed override string ToString() => base.ToString();

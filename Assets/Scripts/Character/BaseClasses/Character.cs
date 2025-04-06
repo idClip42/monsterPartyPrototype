@@ -130,4 +130,12 @@ public abstract class Character : Entity, IDebugInfoProvider
         else
             Debug.LogWarning("Missing death scream");
     }
+
+#if UNITY_EDITOR
+    public override void Resurrect()
+    {
+        base.Resurrect();
+        SetState(_state);
+    }
+#endif
 }

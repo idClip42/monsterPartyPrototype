@@ -18,11 +18,19 @@ public class EntityEditor : Editor
         EditorGUILayout.LabelField("Debug Info", EditorStyles.boldLabel);
         EditorGUILayout.LabelField(entity.GetDebugInfoString(), EditorStyles.wordWrappedMiniLabel);
 
-        // Button to call Die() method
+        // Button to call Kill() method
         GUI.enabled = entity.Alive && Application.isPlaying;
         if (GUILayout.Button("Kill"))
         {
             entity.Kill();
+        }
+        GUI.enabled = true;
+
+        // Button to call Resurrect() method
+        GUI.enabled = !entity.Alive && Application.isPlaying;
+        if (GUILayout.Button("Resurrect"))
+        {
+            entity.Resurrect();
         }
         GUI.enabled = true;
     }

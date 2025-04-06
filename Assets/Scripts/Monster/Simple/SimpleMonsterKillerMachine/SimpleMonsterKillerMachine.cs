@@ -26,10 +26,12 @@ public class SimpleMonsterKillerMachine : MonoBehaviour {
             thing.SetActive(isOn);
     }
 
+#if UNITY_EDITOR
     public void ForceFillAllReceptacles(){
         foreach(var thing in _receptacles)
             thing.ForceLockInTarget();
     }
+#endif
 
     public bool IsReady(){
         return _receptacles.All(r=>r.HasComponent);

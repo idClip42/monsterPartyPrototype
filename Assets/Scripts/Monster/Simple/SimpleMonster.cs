@@ -259,6 +259,26 @@ public class SimpleMonster : Entity, IDebugInfoProvider
     }
 
 #if UNITY_EDITOR
+    public override void Resurrect()
+    {
+        if (_navMeshAgent == null)
+            throw new System.Exception($"Null nav mesh agent on {this.gameObject.name}");
+
+        Light[] allLights = GetComponentsInChildren<Light>();
+        foreach(Light l in allLights)
+            l.enabled = true;
+
+        _navMeshAgent.isStopped = false;
+        _state = State.Wander;
+
+        foreach(var go in _setInactiveOnDeath)
+            go.SetActive(true);
+
+        base.Resurrect();
+    }
+#endif
+
+#if UNITY_EDITOR
     protected sealed override void OnDrawGizmos() {
         if(_headConfig == null)
             throw new System.Exception($"Missing head config on {this.gameObject.name}");
