@@ -37,6 +37,9 @@ public class SimpleMonster : Entity, IDebugInfoProvider
     [SerializeField]
     private AudioSource? _killSoundEffect = null;
 
+    [SerializeField]
+    private GameObject[] _setInactiveOnDeath = {};
+
     private NavigationManager? _navManager = null;
     private NavMeshAgent? _navMeshAgent = null;
 
@@ -254,6 +257,9 @@ public class SimpleMonster : Entity, IDebugInfoProvider
 
         _navMeshAgent.isStopped = true;
         _state = State.Wander;
+
+        foreach(var go in _setInactiveOnDeath)
+            go.SetActive(false);
     }
 
 #if UNITY_EDITOR

@@ -5974,6 +5974,8 @@ MonoBehaviour:
     onDeath: {fileID: 8300000, guid: f4d64ab9d71134793bbb11ce5ac1d3a9, type: 3}
   _killRadius: 1
   _killSoundEffect: {fileID: 2076068100}
+  _setInactiveOnDeath:
+  - {fileID: 1610947173}
 --- !u!195 &672855602
 NavMeshAgent:
   m_ObjectHideFlags: 0
