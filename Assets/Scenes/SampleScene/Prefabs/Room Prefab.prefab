@@ -366,7 +366,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 2147483647
+  m_StaticEditorFlags: 63
   m_IsActive: 1
 --- !u!4 &2387863537415429495
 Transform:
@@ -724,8 +724,8 @@ ReflectionProbe:
   m_TimeSlicingMode: 0
   m_Resolution: 16
   m_UpdateFrequency: 0
-  m_BoxSize: {x: 12.365343, y: 8.114658, z: 12.355896}
-  m_BoxOffset: {x: -2.5723293, y: -1.1197038, z: 2.5454597}
+  m_BoxSize: {x: 6.8984804, y: 8.114658, z: 6.7922764}
+  m_BoxOffset: {x: 0.16110098, y: -1.1197038, z: -0.23635006}
   m_NearClip: 0.3
   m_FarClip: 12
   m_ShadowDistance: 100
@@ -1592,8 +1592,8 @@ ReflectionProbe:
   m_TimeSlicingMode: 0
   m_Resolution: 16
   m_UpdateFrequency: 0
-  m_BoxSize: {x: 12.455082, y: 8.114658, z: 12.443673}
-  m_BoxOffset: {x: 2.6343749, y: -1.1197038, z: 2.7640738}
+  m_BoxSize: {x: 6.9882197, y: 8.114658, z: 6.7832947}
+  m_BoxOffset: {x: -0.099056005, y: -1.1197038, z: -0.0661149}
   m_NearClip: 0.3
   m_FarClip: 12
   m_ShadowDistance: 100
@@ -2507,8 +2507,8 @@ ReflectionProbe:
   m_TimeSlicingMode: 0
   m_Resolution: 16
   m_UpdateFrequency: 0
-  m_BoxSize: {x: 12.410212, y: 8.114658, z: 12.5297985}
-  m_BoxOffset: {x: 2.6568096, y: -1.1197038, z: -2.7651587}
+  m_BoxSize: {x: 6.798212, y: 8.114658, z: 6.9178}
+  m_BoxOffset: {x: -0.14918995, y: -1.1197038, z: 0.040840745}
   m_NearClip: 0.3
   m_FarClip: 12
   m_ShadowDistance: 100
@@ -3863,7 +3863,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 2147483647
+  m_StaticEditorFlags: 127
   m_IsActive: 1
 --- !u!4 &915648077531256204
 Transform:
@@ -4483,8 +4483,8 @@ ReflectionProbe:
   m_TimeSlicingMode: 0
   m_Resolution: 16
   m_UpdateFrequency: 0
-  m_BoxSize: {x: 12.397112, y: 8.114658, z: 12.47183}
-  m_BoxOffset: {x: -2.4473448, y: -1.1197038, z: -2.53164}
+  m_BoxSize: {x: 6.792548, y: 8.114658, z: 6.763073}
+  m_BoxOffset: {x: 0.3549372, y: -1.1197038, z: 0.32273865}
   m_NearClip: 0.3
   m_FarClip: 12
   m_ShadowDistance: 100
@@ -5500,7 +5500,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 2147483647
+  m_StaticEditorFlags: 63
   m_IsActive: 1
 --- !u!4 &2121972221482196371
 Transform:
