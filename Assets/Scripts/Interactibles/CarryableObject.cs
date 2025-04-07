@@ -81,7 +81,7 @@ public class CarryableObject : MonoBehaviour, IInteractible, ICarryable
         _isHeld = false;
         _holder = null;
 
-        _rb.isKinematic = false;
+        _rb.isKinematic = _defaultKinematicState;
         _rb.linearVelocity = Vector3.zero;
         _rb.angularVelocity = Vector3.zero;
     }
