@@ -504,6 +504,7 @@ GameObject:
   - component: {fileID: 7362463697378040570}
   - component: {fileID: 4622617248466409261}
   - component: {fileID: 5804451113014147049}
+  - component: {fileID: 2052317091871049249}
   m_Layer: 0
   m_Name: Carryable Machine Component Prefab
   m_TagString: Untagged
@@ -569,6 +570,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _carryHandle: {fileID: 5912054176597297956}
+--- !u!114 &2052317091871049249
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6261107659900739788}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee7a15b3a7e1043caae7191a443be349, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _minForceForNoise: 1
+  _noiseRadiusFromForceMultiplier: 1
+  _maxNoiseDistance: 10
 --- !u!1 &6875388236723036985
 GameObject:
   m_ObjectHideFlags: 0
