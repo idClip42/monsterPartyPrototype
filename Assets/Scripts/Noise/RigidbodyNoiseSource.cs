@@ -5,6 +5,7 @@ using UnityEngine;
 #nullable enable
 
 [RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(AudioSource))]
 public class RigidbodyNoiseSource : MonoBehaviour, INoiseSource
 {
     private struct CollisionRecord{
@@ -28,13 +29,22 @@ public class RigidbodyNoiseSource : MonoBehaviour, INoiseSource
     [Range(1, 20)]
     private int _maxCollisionRecords = 10;
 
+    private AudioSource? _audioSource;
+
     private float _currentNoiseRadius = 0;
 
     public float CurrentNoiseRadius => _currentNoiseRadius;
 
     private readonly List<CollisionRecord> _collisionRecords = new List<CollisionRecord>();
 
-    void FixedUpdate()
+    private void Awake()
+    {
+        _audioSource = GetComponent<AudioSource>();
+        if(_audioSource == null)
+            Debug.LogWarning($"Missing audio source on {gameObject.name}");
+    }
+
+    private void FixedUpdate()
     {
         // This occurs before OnCollisionEnter(),
         // which in turn occurs before Update()
@@ -61,6 +71,13 @@ public class RigidbodyNoiseSource : MonoBehaviour, INoiseSource
             });
             while(_collisionRecords.Count > this._maxCollisionRecords)
                 _collisionRecords.RemoveAt(0);
+
+
+            if(_audioSource != null){
+                _audioSource.Stop();
+                _audioSource.volume = noiseRadius / _maxNoiseDistance;
+                _audioSource.Play();
+            }
         }
     }
 
