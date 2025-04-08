@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 #nullable enable
@@ -6,34 +8,37 @@ using UnityEngine;
 public class KickOnCollision : MonoBehaviour
 {
     [Tooltip("Force to apply to the object when kicked.")]
-    public float kickForce = 2f;
+    public float _kickForce = 10f;
 
     [Tooltip("Angle above the horizontal (in degrees) to kick the object.")]
-    public float kickAngle = 30f;
+    public float _kickAngle = 30f;
+
+    [Tooltip("Delay before an object can be kicked again.")]
+    public float _kickDelay = 0.2f;
 
     [Tooltip("Layers of objects that can be kicked.")]
-    public LayerMask kickableLayers = Physics.AllLayers;
+    public LayerMask _kickableLayers = Physics.AllLayers;
 
-    private CharacterController? controller;
+    private CharacterController? _controller;
+
+    private List<Rigidbody> _objectsToNotKick = new List<Rigidbody>();
 
     private void Awake()
     {
-        controller = GetComponent<CharacterController>();
+        _controller = GetComponent<CharacterController>();
     }
 
     void OnControllerColliderHit(ControllerColliderHit hit)
     {
         // Check if the object is on the kickable layers
-        if ((kickableLayers.value & (1 << hit.gameObject.layer)) == 0)
+        if ((_kickableLayers.value & (1 << hit.gameObject.layer)) == 0)
             return;
 
         Rigidbody rb = hit.collider.attachedRigidbody;
 
         if(rb == null) return;
         if(rb.isKinematic) return;
-
-        // We don't need to do this if we're making them heavier
-        // if(rb.GetComponent<ICarryable>() != null) return;
+        if(_objectsToNotKick.Contains(rb)) return;
 
         Vector3 direction = hit.collider.transform.position - transform.position;
 
@@ -42,17 +47,32 @@ public class KickOnCollision : MonoBehaviour
         direction.Normalize();
 
         // Rotate the direction upwards by the kickAngle
-        Quaternion tilt = Quaternion.AngleAxis(-kickAngle, Vector3.Cross(Vector3.up, direction));
+        Quaternion tilt = Quaternion.AngleAxis(-_kickAngle, Vector3.Cross(Vector3.up, direction));
         Vector3 kickDirection = tilt * direction;
 
         // Apply the force
-        rb.AddForce(kickDirection * kickForce, ForceMode.Impulse);
+        rb.AddForce(kickDirection * _kickForce, ForceMode.Impulse);
+
+        this._objectsToNotKick.Add(rb);
 
         Debug.DrawLine(
             rb.transform.position,
-            rb.transform.position + kickDirection * kickForce,
+            rb.transform.position + kickDirection * _kickForce,
             Color.yellow,
             0.5f
         );
+
+        StartCoroutine(RemoveKickedObjectAfterDelay(rb, this._kickDelay));
     }
+
+    private IEnumerator RemoveKickedObjectAfterDelay(Rigidbody rb, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
+        // Remove the object from the list
+        this._objectsToNotKick.Remove(rb);
+
+        // Debug.Log("Removed kicked object from the list.");
+    }
+
 }
