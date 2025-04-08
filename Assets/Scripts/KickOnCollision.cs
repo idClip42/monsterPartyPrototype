@@ -21,7 +21,7 @@ public class KickOnCollision : MonoBehaviour
 
     private CharacterController? _controller;
 
-    private List<Rigidbody> _objectsToNotKick = new List<Rigidbody>();
+    private readonly List<Rigidbody> _objectsToNotKick = new List<Rigidbody>();
 
     private void Awake()
     {

@@ -229,8 +229,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _minForceForNoise: 1
-  _noiseRadiusFromForceMultiplier: 1
+  _noiseRadiusFromForceMultiplier: 2
   _maxNoiseDistance: 10
+  _maxCollisionRecords: 10
 --- !u!1 &4119118486205132238
 GameObject:
   m_ObjectHideFlags: 0

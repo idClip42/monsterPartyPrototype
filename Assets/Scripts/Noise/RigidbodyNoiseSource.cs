@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
@@ -6,21 +7,39 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class RigidbodyNoiseSource : MonoBehaviour, INoiseSource
 {
+    private struct CollisionRecord{
+        public Vector3 position;
+        public float collisionForce;
+    }
+
     [SerializeField]
     [Range(0, 10)]
     private float _minForceForNoise = 1;
 
     [SerializeField]
     [Range(0.1f, 10)]
-    private float _noiseRadiusFromForceMultiplier = 1;
+    private float _noiseRadiusFromForceMultiplier = 2;
 
     [SerializeField]
     [Range(0.1f, 60)]
-    private float _maxNoiseDistance = 10;
+    private float _maxNoiseDistance = 20;
+
+    [SerializeField]
+    [Range(1, 20)]
+    private int _maxCollisionRecords = 10;
 
     private float _currentNoiseRadius = 0;
 
     public float CurrentNoiseRadius => _currentNoiseRadius;
+
+    private readonly List<CollisionRecord> _collisionRecords = new List<CollisionRecord>();
+
+    void FixedUpdate()
+    {
+        // This occurs before OnCollisionEnter(),
+        // which in turn occurs before Update()
+        _currentNoiseRadius = 0;
+    }
 
     private void OnCollisionEnter(Collision collision)
     {
@@ -35,9 +54,13 @@ public class RigidbodyNoiseSource : MonoBehaviour, INoiseSource
 
             // Trigger the noise event (this is where you would notify your noise system)
             _currentNoiseRadius = noiseRadius;
-        }
-        else {
-            _currentNoiseRadius = 0;
+
+            _collisionRecords.Add(new CollisionRecord{
+                position = collision.GetContact(0).point,
+                collisionForce = collisionForce
+            });
+            while(_collisionRecords.Count > this._maxCollisionRecords)
+                _collisionRecords.RemoveAt(0);
         }
     }
 
@@ -45,6 +68,13 @@ public class RigidbodyNoiseSource : MonoBehaviour, INoiseSource
     void OnDrawGizmos()
     {
         NoiseUtilities.NoiseSourceGizmos(this);
+
+        foreach(var col in _collisionRecords){
+            Handles.Label(
+                col.position,
+                $"{col.collisionForce:F2} m/s"
+            );
+        }
     }
 
     void OnDrawGizmosSelected()

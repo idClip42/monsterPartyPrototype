@@ -150,5 +150,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _minForceForNoise: 1
-  _noiseRadiusFromForceMultiplier: 1
-  _maxNoiseDistance: 10
+  _noiseRadiusFromForceMultiplier: 2
+  _maxNoiseDistance: 20
+  _maxCollisionRecords: 10
