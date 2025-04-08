@@ -23,6 +23,12 @@ public class CarryableObject : MonoBehaviour, IInteractible, ICarryable
     public bool IsCarryable => _isHeld == false;
     public CharacterComponentCarry? Carrier => _holder;
 
+    public float Mass { get {
+        if(_rb == null)
+            throw new System.Exception($"Missing rigidbody on {gameObject.name}.");
+        return _rb.mass;
+    }}
+
     public string GetInteractionName(Character interactor) => "Pick up";
 
     public Vector3 InteractionWorldPosition => transform.position;

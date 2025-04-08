@@ -10,6 +10,8 @@ public interface ICarryable
 
     CharacterComponentCarry? Carrier { get; }
 
+    float Mass { get; }
+
     bool IsCarryable { get; }
 
     void OnPickUp(CharacterComponentCarry pickerUpper);

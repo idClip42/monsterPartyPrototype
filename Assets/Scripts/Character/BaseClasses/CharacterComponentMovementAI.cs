@@ -130,7 +130,7 @@ public abstract class CharacterComponentMovementAI : CharacterComponentMovement,
 
         this._navMeshAgent.SetDestination(this._behaviorTarget.transform.position);
         this.Character.Crouch.SetCrouching(this._behaviorTarget.Crouch.IsCrouching);
-        _navMeshAgent.speed = GetFollowSpeed(this._behaviorTarget, this.Character.Movement);
+        _navMeshAgent.speed = GetFollowSpeed(this._behaviorTarget, this.Character.Movement) * GetMoveSpeedMultiplier();
     }
 
     private void UpdateHoldPosition(){

@@ -31,7 +31,9 @@ public class KickOnCollision : MonoBehaviour
 
         if(rb == null) return;
         if(rb.isKinematic) return;
-        if(rb.GetComponent<ICarryable>() != null) return;
+
+        // We don't need to do this if we're making them heavier
+        // if(rb.GetComponent<ICarryable>() != null) return;
 
         Vector3 direction = hit.collider.transform.position - transform.position;
 
