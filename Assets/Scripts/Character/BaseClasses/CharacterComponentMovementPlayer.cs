@@ -77,7 +77,8 @@ public abstract class CharacterComponentMovementPlayer : CharacterComponentMovem
             speed = this.Character.Movement.RunSpeed;
         else
             speed = this.Character.Movement.WalkSpeed;
-        speed *= GetMoveSpeedMultiplier();
+        // speed *= GetMoveSpeedMultiplier();
+        speed = Mathf.Clamp(speed, 0, GetMaxMoveSpeed());
 
         // TODO: This isn't a perfect solution.
         // TODO: Surely there's a real solution out there somewhere.

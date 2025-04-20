@@ -11,15 +11,20 @@ public abstract class CharacterComponentMovement : CharacterComponent
 
     public abstract Vector3 CurrentVelocity { get; }
 
-    protected float GetMoveSpeedMultiplier(){
+    protected float GetMaxMoveSpeed(){
         if(this.Character == null)
             throw new System.Exception($"Null Character on {this.gameObject.name}");
         if(this.Character.Carry == null)
             throw new System.Exception($"Null Carry on character {this.gameObject.name}");
+
+        float baseSpeed = this.Character.Movement.RunSpeed;
+
         if(this.Character.Carry.HeldObject == null)
-            return 1;
+            return baseSpeed;
+            
         float heldMass = this.Character.Carry.HeldObject.Mass;
-        return Mathf.Clamp01(1f - (heldMass * speedHandicapPerMassUnit));
+        float speedMultiplier = Mathf.Clamp01(1f - (heldMass * speedHandicapPerMassUnit));
+        return baseSpeed * speedMultiplier;
     }
 
 #if UNITY_EDITOR
