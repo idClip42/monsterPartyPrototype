@@ -119,6 +119,7 @@ public class CameraControl : MonoBehaviour
             _transitionEndCallback();
             _transitionEndCallback = null;
             _currentState = State.Orbit;
+            Debug.Log($"Camera ending transition to Character.");
         }
     }
 
@@ -134,6 +135,8 @@ public class CameraControl : MonoBehaviour
             _navMeshRaycastLayers
         );
         _transitionEndCallback = arrivalCallback;
+
+        Debug.Log($"Camera beginning transition to Character '{target.gameObject.name}'.");
     }
 
     public Vector3 GetCharacterAxis(Character target){

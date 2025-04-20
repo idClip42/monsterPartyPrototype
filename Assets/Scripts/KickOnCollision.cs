@@ -62,6 +62,8 @@ public class KickOnCollision : MonoBehaviour
             0.5f
         );
 
+        Debug.Log($"Character Controller '{gameObject.name}' has kicked Rigidbody '{rb.gameObject.name}'.");
+
         StartCoroutine(RemoveKickedObjectAfterDelay(rb, this._kickDelay));
     }
 

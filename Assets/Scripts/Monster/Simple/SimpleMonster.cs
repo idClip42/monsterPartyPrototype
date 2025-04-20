@@ -178,6 +178,7 @@ public class SimpleMonster : Entity, IDebugInfoProvider
             newState = State.Search;
             nextBehavior = _searchBehavior;
             // Alert head behavior to sound.
+            Debug.Log($"SimpleMonster '{gameObject.name}' heard something.");
             _headBehavior.AttractAttention(targetSound.soundLocation);
             heardSomething = true;
         }
@@ -202,6 +203,7 @@ public class SimpleMonster : Entity, IDebugInfoProvider
                 _barks.PlayOnReturnToWander();
             }
 
+            Debug.Log($"SimpleMonster '{gameObject.name}' changing state from '{this._state}' to '{newState}'.");
             this._state = newState;
         }
     }
@@ -219,6 +221,7 @@ public class SimpleMonster : Entity, IDebugInfoProvider
                     _killSoundEffect.Play();
                 else
                     Debug.LogWarning("Null kill sound effect");
+                Debug.Log($"SimpleMonster '{gameObject.name}' killed '{target.gameObject.name}'.");
             }
         }
     }

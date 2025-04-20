@@ -54,6 +54,8 @@ public abstract class CharacterComponentCarry : CharacterComponent, ISpeedLimite
 
     public void OnInteractWithCarryable(ICarryable target)
     {
+        if(this.Character == null) throw new System.Exception("Null Character.");
+
         if (!target.IsCarryable) return;
         if (_heldObject != null) return;
 
@@ -79,6 +81,8 @@ public abstract class CharacterComponentCarry : CharacterComponent, ISpeedLimite
 
         // 6. Trigger any logic tied to pickup
         target.OnPickUp(this);
+
+        Debug.Log($"Character '{gameObject.name}' picked up '{target.gameObject.name}'. Max move speed is now {this.Character.GetCurrentMovementComponent().GetMaxMoveSpeed()}.");
     }
 
     public void ForceDrop(){
@@ -91,6 +95,9 @@ public abstract class CharacterComponentCarry : CharacterComponent, ISpeedLimite
 
         _heldObject.gameObject.transform.SetParent(null); // unparent from the hand
         _heldObject.OnDrop(this); // let the object handle physics toggling, etc.
+
+        Debug.Log($"Character '{gameObject.name}' dropped '{_heldObject.gameObject.name}'.");
+
         _heldObject = null;
     }
 

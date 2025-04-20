@@ -78,6 +78,8 @@ public class RigidbodyNoiseSource : MonoBehaviour, INoiseSource
                 _audioSource.volume = noiseRadius / _maxNoiseDistance;
                 _audioSource.Play();
             }
+
+            Debug.Log($"RigidbodyNoiseSource '{gameObject.name}' made a noise that could be heard from up to {noiseRadius}m away.");
         }
     }
 

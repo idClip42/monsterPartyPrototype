@@ -89,6 +89,8 @@ public class Door : MonoBehaviour, IInteractible
             _doorOpenSoundEffect.Play();
         else
             Debug.LogWarning("Missing door open sound effect");
+
+        Debug.Log($"Door '{gameObject.name}' opened.");
     }
 
     public void CloseDoor(){
@@ -98,6 +100,8 @@ public class Door : MonoBehaviour, IInteractible
             _doorCloseSoundEffect.Play();
         else
             Debug.LogWarning("Missing door close sound effect");
+
+        Debug.Log($"Door '{gameObject.name}' closed.");
     }
 
     private void SetDoorState(DoorState newState){

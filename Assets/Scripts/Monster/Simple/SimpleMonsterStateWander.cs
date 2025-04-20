@@ -119,5 +119,6 @@ public class SimpleMonsterStateWander : SimpleMonsterState
         agent.SetDestination(
             this._navManager.GetRandomDestination(false, true, _config.destinationMinWallDist)
         );
+        Debug.Log($"Redirected wandering '{agent.gameObject.name}' to new destination.");
     }
 }

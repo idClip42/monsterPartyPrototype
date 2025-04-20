@@ -48,6 +48,7 @@ public abstract class CharacterComponentInteract : CharacterComponent
             if(Input.GetButtonDown("Interact")){
                 if(_interactibleWithinReach != null){
                     _interactibleWithinReach.DoInteraction(this.Character);
+                    Debug.Log($"Character '{gameObject.name}' interacted with '{_interactibleWithinReach.gameObject.name}'.");
                 }
             }
         }

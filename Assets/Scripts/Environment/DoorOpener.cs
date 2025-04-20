@@ -24,8 +24,10 @@ public class DoorOpener : MonoBehaviour
                 continue;
             Vector3 diff = this.transform.position - door.transform.position;
             float sqrMag = diff.sqrMagnitude;
-            if(sqrMag < sqrThreshold)
+            if(sqrMag < sqrThreshold){
                 door.OpenDoor(this.transform);
+                Debug.Log($"DoorOpener '{gameObject.name}' opened door '{door.gameObject.name}'.");
+            }
         }
     }
 

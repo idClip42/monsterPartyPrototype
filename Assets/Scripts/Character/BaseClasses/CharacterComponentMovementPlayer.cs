@@ -34,6 +34,16 @@ public abstract class CharacterComponentMovementPlayer : CharacterComponentMovem
         _navMeshAgent = GetComponent<NavMeshAgent>();
     }
 
+    protected virtual void OnEnable()
+    {
+        Debug.Log($"Player Movement on '{gameObject.name}' enabled.");
+    }
+
+    protected virtual void OnDisable()
+    {
+        Debug.Log($"Player Movement on '{gameObject.name}' enabled.");
+    }
+
     private void Update()
     {
         if(this.Character == null)

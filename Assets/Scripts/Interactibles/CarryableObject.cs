@@ -76,6 +76,8 @@ public class CarryableObject : MonoBehaviour, IInteractible, ICarryable
         // Apparently you can't do this on kinematic bodies
         // _rb.linearVelocity = Vector3.zero;
         // _rb.angularVelocity = Vector3.zero;
+
+        Debug.Log($"CarryableObject '{gameObject.name}' has been picked up by '{pickerUpper.gameObject.name}'.");
     }
 
     public void OnDrop(CharacterComponentCarry pickerUpper){
@@ -90,6 +92,8 @@ public class CarryableObject : MonoBehaviour, IInteractible, ICarryable
         _rb.isKinematic = _defaultKinematicState;
         _rb.linearVelocity = Vector3.zero;
         _rb.angularVelocity = Vector3.zero;
+
+        Debug.Log($"CarryableObject '{gameObject.name}' has been dropped by '{pickerUpper.gameObject.name}'.");
     }
 
     public void LockInPlace(Transform targetParent){

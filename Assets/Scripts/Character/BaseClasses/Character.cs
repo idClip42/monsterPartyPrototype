@@ -60,6 +60,9 @@ public abstract class Character : Entity, IDebugInfoProvider
             throw new Exception("Null AIMovement");
 
         _state = newState;
+
+        Debug.Log($"Character '{gameObject.name}' state set to '{newState}'.");
+
         if(this.Alive == false) return;
 
         switch (_state)
@@ -73,7 +76,7 @@ public abstract class Character : Entity, IDebugInfoProvider
                 AIMovement.enabled = true;
                 break;
             default:
-                throw new Exception($"Unknown state enum for {this.gameObject.name}: {_state}");
+                throw new Exception($"Unknown state enum for {this.gameObject.name}: {_state}.");
         }
     }
 
@@ -102,6 +105,25 @@ public abstract class Character : Entity, IDebugInfoProvider
             _deathScream.Play();
         else
             Debug.LogWarning("Missing death scream");
+
+        Debug.Log($"Character '{gameObject.name}' is dead.");
+    }
+
+    public CharacterComponentMovement GetCurrentMovementComponent(){
+        if(PlayerMovement == null) 
+            throw new Exception("Null PlayerMovement");
+        if(AIMovement == null) 
+            throw new Exception("Null AIMovement");
+            
+        switch (_state)
+        {
+            case StateType.Player:
+                return PlayerMovement;
+            case StateType.AI:
+                return AIMovement;
+            default:
+                throw new Exception($"Unknown state enum for {this.gameObject.name}: {_state}.");
+        }
     }
 
 #if UNITY_EDITOR
@@ -109,6 +131,7 @@ public abstract class Character : Entity, IDebugInfoProvider
     {
         base.Resurrect();
         SetState(_state);
+        Debug.Log($"Character '{gameObject.name}' is resurrected.");
     }
 #endif
 }

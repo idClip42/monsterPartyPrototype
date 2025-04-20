@@ -88,6 +88,7 @@ public class SimpleMonsterHead{
         this._currentKnowledge.visibleTarget = null;
         this._currentKnowledge.lastSeenPosition = targetSpot;
         this._currentKnowledge.lastSeenVelocity = Vector3.zero;
+        Debug.Log($"SimpleMonsterHead '{_monster.gameObject.name}' has had its attention drawn to {targetSpot}.");
     }
 
     private void MoveHead(float deltaTime)

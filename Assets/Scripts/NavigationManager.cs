@@ -111,6 +111,8 @@ public class NavigationManager : MonoBehaviour
         );
 
         _navPoints = tempNavPoints.ToArray();
+
+        Debug.Log($"Navigation Manager found {_navPoints.Length} viable nav points.");
     }
 
     public Vector3 GetRandomDestination(bool excludeStanding, bool excludeCrouching, float minDistFromWall){

@@ -75,6 +75,8 @@ public class SimpleMonsterKillerMachineReceptacle : MonoBehaviour, IInteractible
 
         foreach(var thing in _thingsToTurnOn)
             thing.SetActive(true);
+
+        Debug.Log($"'{component.gameObject.name}' locked into '{gameObject.name}'.");
     }
 
     private bool DoesCharacterCarryTarget(Character interactor){

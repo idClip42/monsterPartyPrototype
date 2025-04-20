@@ -94,12 +94,14 @@ public abstract class CharacterComponentMovementAI : CharacterComponentMovement,
     {
         if(_navMeshAgent == null) return;
         _navMeshAgent.enabled = true;
+        Debug.Log($"AI Movement on '{gameObject.name}' enabled.");
     }
 
     protected virtual void OnDisable()
     {
         if(_navMeshAgent == null) return;
         _navMeshAgent.enabled = false;
+        Debug.Log($"AI Movement on '{gameObject.name}' disabled.");
     }
 
     protected virtual void Update()
@@ -151,6 +153,7 @@ public abstract class CharacterComponentMovementAI : CharacterComponentMovement,
     // }
 
     private void OnCrouchToggle(bool isCrouching){
+        Debug.Log($"AI Movement for '{gameObject.name}' received a new crouch value of {isCrouching}.");
         if(_navMeshAgent == null) 
             throw new System.Exception("Null _navMeshAgent");
         this._navMeshAgent.agentTypeID = CurrentAgentTypeId;
@@ -167,6 +170,7 @@ public abstract class CharacterComponentMovementAI : CharacterComponentMovement,
 
         this._behavior = behavior;
         this._behaviorTarget = target;
+        Debug.Log($"AI Movement for '{gameObject.name}' received a new behavior of '{behavior}' with target '{target?.gameObject.name}'.");
 
         // Stop any navigating
         _navMeshAgent.isStopped = this._behavior == Behavior.HoldPosition;

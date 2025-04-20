@@ -29,7 +29,7 @@ public abstract class CharacterComponentMovement : CharacterComponent
         _speedLimiters = GetComponents<ISpeedLimiter>();
     } 
 
-    protected float GetMaxMoveSpeed(){
+    public float GetMaxMoveSpeed(){
         if(this.Character == null)
             throw new System.Exception($"Null Character on {this.gameObject.name}");
 

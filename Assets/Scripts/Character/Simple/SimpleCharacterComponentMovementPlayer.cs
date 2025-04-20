@@ -48,14 +48,16 @@ public class SimpleCharacterComponentMovementPlayer : CharacterComponentMovement
             throw new System.Exception($"Null character controller on {this.gameObject.name}");
     }
 
-    private void OnEnable()
+    protected override void OnEnable()
     {
+        base.OnEnable();
         if(_characterController == null) return;
         _characterController.enabled = true;
     }
 
-    private void OnDisable()
+    protected override void OnDisable()
     {
+        base.OnDisable();
         if(_characterController == null) return;
         _characterController.enabled = false;
     }

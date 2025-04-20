@@ -51,14 +51,20 @@ public abstract class CharacterComponentCrouch : CharacterComponent, ISpeedLimit
     }
 
     private void ToggleCrouch(){
+        if(this.Character == null) throw new System.Exception("Null Character.");
+        
         if(this._isCrouching && !_canUncrouch)
             return;
 
         this._isCrouching = !this._isCrouching; 
-        if(this._isCrouching) 
+        if(this._isCrouching) {
             EnableCrouch();
-        else 
+            Debug.Log($"Character '{gameObject.name}' crouched. Max move speed is now {this.Character.GetCurrentMovementComponent().GetMaxMoveSpeed()}.");
+        }
+        else {
             DisableCrouch();
+            Debug.Log($"Character '{gameObject.name}' uncrouched. Max move speed is now {this.Character.GetCurrentMovementComponent().GetMaxMoveSpeed()}.");
+        }
         OnCrouchToggle?.Invoke(this._isCrouching);
     }
 

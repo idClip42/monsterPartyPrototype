@@ -28,8 +28,10 @@ public class SimpleMonsterKillZone : MonoBehaviour {
         Vector3 diff = transform.position - _killTarget.transform.position;
         float distSqr = diff.sqrMagnitude;
 
-        if(distSqr < rangeSqr)
+        if(distSqr < rangeSqr){
             _killTarget.Kill();
+            Debug.Log($"Kill zone killed monster '{_killTarget.gameObject.name}'.");
+        }
     }
 
 
