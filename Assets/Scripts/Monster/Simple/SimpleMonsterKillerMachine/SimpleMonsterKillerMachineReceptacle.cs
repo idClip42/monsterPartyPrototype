@@ -17,7 +17,7 @@ public class SimpleMonsterKillerMachineReceptacle : MonoBehaviour, IInteractible
     private void Awake()
     {
         if(_target == null)
-            throw new System.Exception($"Missing target on {gameObject.name}.");
+            throw new MonsterPartyException($"Missing target on {gameObject.name}.");
 
         foreach(var thing in _thingsToTurnOn)
             thing.SetActive(false);
@@ -25,7 +25,7 @@ public class SimpleMonsterKillerMachineReceptacle : MonoBehaviour, IInteractible
 
     public bool IsInteractible(Character interactor){
         if(interactor.Carry == null)
-            throw new System.Exception($"Character {interactor.gameObject.name} missing Carry.");
+            throw new MonsterPartyException($"Character {interactor.gameObject.name} missing Carry.");
 
         if(_hasComponent) return false;
         if(interactor.Carry.HeldObject == null) return false;
@@ -36,11 +36,11 @@ public class SimpleMonsterKillerMachineReceptacle : MonoBehaviour, IInteractible
     public void DoInteraction(Character interactor)
     {
         if(interactor.Carry == null)
-            throw new System.Exception($"Character {interactor.gameObject.name} missing Carry.");
+            throw new MonsterPartyException($"Character {interactor.gameObject.name} missing Carry.");
         if(interactor.Carry.HeldObject == null) 
-            throw new System.Exception($"Character {interactor.gameObject.name} missing Carry.HeldObject. Code should never have gotten here.");
+            throw new MonsterPartyException($"Character {interactor.gameObject.name} missing Carry.HeldObject. Code should never have gotten here.");
         if(DoesCharacterCarryTarget(interactor) == false)
-            throw new System.Exception($"Character {interactor.gameObject.name} Carry.HeldObject in not target. Code should never have gotten here.");
+            throw new MonsterPartyException($"Character {interactor.gameObject.name} Carry.HeldObject in not target. Code should never have gotten here.");
         
         ICarryable component = interactor.Carry.HeldObject;
         LockInTarget(component);
@@ -56,12 +56,12 @@ public class SimpleMonsterKillerMachineReceptacle : MonoBehaviour, IInteractible
 #if UNITY_EDITOR
     public void ForceLockInTarget(){
         if(Application.IsPlaying(this) == false)
-            throw new System.Exception("Can only call this in play mode.");
+            throw new MonsterPartyException("Can only call this in play mode.");
         if(_target == null)
-            throw new System.Exception($"Missing target on {gameObject.name}.");
+            throw new MonsterPartyException($"Missing target on {gameObject.name}.");
         ICarryable? component = _target.GetComponent<ICarryable>();
         if(component == null)
-            throw new System.Exception($"Missing ICarryable on {_target.name}.");
+            throw new MonsterPartyException($"Missing ICarryable on {_target.name}.");
         LockInTarget(component);
     }
 #endif
@@ -81,9 +81,9 @@ public class SimpleMonsterKillerMachineReceptacle : MonoBehaviour, IInteractible
 
     private bool DoesCharacterCarryTarget(Character interactor){
         if(interactor.Carry == null)
-            throw new System.Exception($"Character {interactor.gameObject.name} missing Carry.");
+            throw new MonsterPartyException($"Character {interactor.gameObject.name} missing Carry.");
         if(_target == null)
-            throw new System.Exception($"Missing target on {gameObject.name}.");
+            throw new MonsterPartyException($"Missing target on {gameObject.name}.");
 
         if(interactor.Carry.HeldObject == null) return false;
         if(interactor.Carry.HeldObject.gameObject != _target) return false;

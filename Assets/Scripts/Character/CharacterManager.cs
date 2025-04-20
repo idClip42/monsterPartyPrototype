@@ -15,7 +15,7 @@ public class CharacterManager : MonoBehaviour
     private void Awake()
     {
         _cameraControl = FindFirstObjectByType<CameraControl>();
-        if(_cameraControl == null) throw new System.Exception("Missing camera control");
+        if(_cameraControl == null) throw new MonsterPartyException("Missing camera control");
 
         _characters = FindObjectsByType<Character>(FindObjectsSortMode.None);
         foreach(Character c in _characters){
@@ -38,13 +38,13 @@ public class CharacterManager : MonoBehaviour
     }
 
     private void SelectCharacter(int index, bool immediate){
-        if(index < 0) throw new System.Exception($"Invalid character index {index}");
+        if(index < 0) throw new MonsterPartyException($"Invalid character index {index}");
         if(index >= _characters.Length) return;
         SelectCharacter(_characters[index], immediate);
     }
 
     private void SelectCharacter(Character newSelection, bool immediate){
-        if(_cameraControl == null) throw new System.Exception("Null _cameraControl");
+        if(_cameraControl == null) throw new MonsterPartyException("Null _cameraControl");
 
         if(_selectedCharacter == newSelection) return;
         if(newSelection.Alive == false) return;

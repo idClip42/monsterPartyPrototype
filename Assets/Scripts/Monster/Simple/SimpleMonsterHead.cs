@@ -65,13 +65,13 @@ public class SimpleMonsterHead{
         this._characters = characters;
 
         if(this._config.eye == null)
-            throw new System.Exception("Missing eye.");
+            throw new MonsterPartyException("Missing eye.");
         this._config.eye.enabled = true;
     }
 
     public void OnUpdate(float deltaTime, SimpleMonsterState currentStateInfo){
         if(this._config.eye == null)
-            throw new System.Exception("Missing eye.");
+            throw new MonsterPartyException("Missing eye.");
         this._config.eye.range = this._config.maxSightDistance;
         this._config.eye.spotAngle = this._config.fieldOfView;
        
@@ -97,7 +97,7 @@ public class SimpleMonsterHead{
         newThing.visibleTarget = null;
 
         if (_config.head == null)
-            throw new System.Exception("Missing head.");
+            throw new MonsterPartyException("Missing head.");
 
         Vector3? lookTarget = GetLookTarget();
         if (lookTarget != null && this._currentKnowledge.visibleTarget != null)
@@ -138,14 +138,14 @@ public class SimpleMonsterHead{
                 return _currentKnowledge.lastSeenPosition.Value + 
                     _currentKnowledge.lastSeenVelocity.Value;
             default:
-                throw new System.Exception($"Unrecognized behavior: {_config.headFollowBehavior}");
+                throw new MonsterPartyException($"Unrecognized behavior: {_config.headFollowBehavior}");
         }
     }
 
     private void LookForCharacters(float deltaTime)
     {
         if (_config.eye == null)
-            throw new System.Exception("Missing eye.");
+            throw new MonsterPartyException("Missing eye.");
 
         Character? closestVisibleCharacter = null;
         float closestDistance = float.MaxValue;
@@ -257,7 +257,7 @@ public class SimpleMonsterHead{
             SimpleMonster.State.Wander => this._config.wanderLightColor,
             SimpleMonster.State.Chase => this._config.chaseLightColor,
             SimpleMonster.State.Search => this._config.searchLightColor,
-            _ => throw new System.Exception($"Unrecognized state '{state}'")
+            _ => throw new MonsterPartyException($"Unrecognized state '{state}'")
         };
     }
 

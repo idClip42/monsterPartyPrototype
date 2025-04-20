@@ -38,11 +38,11 @@ public class Door : MonoBehaviour, IInteractible
     void Awake()
     {
         if(_axis == null)
-            throw new System.Exception("Missing axis.");
+            throw new MonsterPartyException("Missing axis.");
         if(_interactor == null)
-            throw new System.Exception("Missing interactor.");
+            throw new MonsterPartyException("Missing interactor.");
         if(_occlusionPortal == null)
-            throw new System.Exception("Missing occlusion portal.");
+            throw new MonsterPartyException("Missing occlusion portal.");
 
         _baseRotation = _axis.rotation;
 
@@ -73,7 +73,7 @@ public class Door : MonoBehaviour, IInteractible
 
     public void OpenDoor(Transform opener){
         if(_axis == null)
-            throw new System.Exception("Missing axis.");
+            throw new MonsterPartyException("Missing axis.");
 
         Vector3 doorToChar = opener.position - this.transform.position;
         Vector3 doorForward = _axis.forward;
@@ -106,11 +106,11 @@ public class Door : MonoBehaviour, IInteractible
 
     private void SetDoorState(DoorState newState){
         if(_axis == null)
-            throw new System.Exception("Missing axis.");
+            throw new MonsterPartyException("Missing axis.");
         if(_baseRotation == null)
-            throw new System.Exception("Missing base rotation.");
+            throw new MonsterPartyException("Missing base rotation.");
         if(_occlusionPortal == null)
-            throw new System.Exception("Missing occlusion portal.");
+            throw new MonsterPartyException("Missing occlusion portal.");
 
         switch(newState){
             case DoorState.Closed:
@@ -126,7 +126,7 @@ public class Door : MonoBehaviour, IInteractible
                 _occlusionPortal.open = true;
                 break;
             default:
-                throw new System.Exception($"Unhandled door state '{newState}'");
+                throw new MonsterPartyException($"Unhandled door state '{newState}'");
         };
 
         _state = newState;

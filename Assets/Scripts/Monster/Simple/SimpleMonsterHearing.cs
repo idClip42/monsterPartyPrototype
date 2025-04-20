@@ -39,7 +39,7 @@ public class SimpleMonsterHearing{
         Vector3 myPos = this._monster.transform.position;
         foreach(var noiseSource in this._noiseSources){
             if(noiseSource == null)
-                throw new System.Exception("Noise source is null.");
+                throw new MonsterPartyException("Noise source is null.");
 
             if(noiseSource.CurrentNoiseRadius <= 0){
                 // No point in doing anything for 0-level noise-makers

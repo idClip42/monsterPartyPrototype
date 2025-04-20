@@ -53,7 +53,7 @@ public abstract class Entity : MonoBehaviour
 
     public void Kill(){
         if(_alive == false)
-            throw new Exception("You cannot kill that which is already dead!");
+            throw new MonsterPartyException("You cannot kill that which is already dead!");
         Debug.Log($"Entity '{gameObject.name}' has been killed.");
         _alive = false;
         OnDeath?.Invoke(this);
@@ -62,7 +62,7 @@ public abstract class Entity : MonoBehaviour
 #if UNITY_EDITOR
     public virtual void Resurrect(){
         if(_alive == true)
-            throw new Exception("You cannot resurrect that which is not dead!");
+            throw new MonsterPartyException("You cannot resurrect that which is not dead!");
         Debug.Log($"Entity '{gameObject.name}' has been resurrected.");
         _alive = true;
     }

@@ -44,11 +44,11 @@ public class SimpleCharacterComponentCrouch : CharacterComponentCrouch
         
         _simpleCharacter = GetComponent<SimpleCharacter>();
         if(_simpleCharacter == null)
-            throw new Exception($"Null character on {this.gameObject.name}");
+            throw new MonsterPartyException($"Null character on {this.gameObject.name}");
         
         _characterController = GetComponent<CharacterController>();
         if(_characterController == null)
-            throw new Exception($"Null character controller on {this.gameObject.name}");
+            throw new MonsterPartyException($"Null character controller on {this.gameObject.name}");
     }
 
 #if UNITY_EDITOR
@@ -70,9 +70,9 @@ public class SimpleCharacterComponentCrouch : CharacterComponentCrouch
 
     private void ToggleCrouch(bool isCrouching){
         if(_simpleCharacter == null)
-            throw new Exception($"Null character on {this.gameObject.name}");
+            throw new MonsterPartyException($"Null character on {this.gameObject.name}");
         if(_characterController == null)
-            throw new Exception($"Null character controller on {this.gameObject.name}");
+            throw new MonsterPartyException($"Null character controller on {this.gameObject.name}");
         
         // float meshHeight = _character.ModelHeight;
         float startYScale = transform.localScale.y;
@@ -109,7 +109,7 @@ public class SimpleCharacterComponentCrouch : CharacterComponentCrouch
     protected sealed override bool CanUncrouch()
     {
         if(_characterController == null)
-            throw new Exception($"Null character controller on {this.gameObject.name}");
+            throw new MonsterPartyException($"Null character controller on {this.gameObject.name}");
         if(this.IsCrouching == false) return false;
         
         float radius = _characterController.radius * _uncrouchRadiusPercentage;

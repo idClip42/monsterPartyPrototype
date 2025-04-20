@@ -44,26 +44,26 @@ public class SimpleCharacter : Character
         base.Awake();
 
         if(_model == null)
-            throw new System.Exception($"Missing model on {gameObject.name}");
+            throw new MonsterPartyException($"Missing model on {gameObject.name}");
 
         _crouch = GetComponent<SimpleCharacterComponentCrouch>();
         if(_crouch == null)
-            throw new System.Exception($"Missing SimpleCharacterCrouch on {this.gameObject.name}");
+            throw new MonsterPartyException($"Missing SimpleCharacterCrouch on {this.gameObject.name}");
         _interact = GetComponent<SimpleCharacterComponentInteract>();
         if(_interact == null)
-            throw new System.Exception($"Missing SimpleCharacterInteract on {this.gameObject.name}");
+            throw new MonsterPartyException($"Missing SimpleCharacterInteract on {this.gameObject.name}");
         _playerMovement = GetComponent<SimpleCharacterComponentMovementPlayer>();
         if(_playerMovement == null)
-            throw new System.Exception($"Missing SimpleCharacterMovementPlayer on {this.gameObject.name}");
+            throw new MonsterPartyException($"Missing SimpleCharacterMovementPlayer on {this.gameObject.name}");
         _aiMovement = GetComponent<SimpleCharacterComponentMovementAI>();
         if(_aiMovement == null)
-            throw new System.Exception($"Missing SimpleCharacterMovementAI on {this.gameObject.name}");
+            throw new MonsterPartyException($"Missing SimpleCharacterMovementAI on {this.gameObject.name}");
         _noiseLevel = GetComponent<SimpleCharacterComponentNoiseLevel>();
         if(_noiseLevel == null)
-            throw new System.Exception($"Missing SimpleCharacterNoiseLevel on {this.gameObject.name}");
+            throw new MonsterPartyException($"Missing SimpleCharacterNoiseLevel on {this.gameObject.name}");
         _carry = GetComponent<SimpleCharacterComponentCarry>();
         if(_carry == null)
-            throw new System.Exception($"Missing SimpleCharacterComponentCarry on {this.gameObject.name}");
+            throw new MonsterPartyException($"Missing SimpleCharacterComponentCarry on {this.gameObject.name}");
 
         Renderer[] renderers = GetComponentsInChildren<Renderer>(false);
         _meshBounds.center = transform.position;
@@ -75,7 +75,7 @@ public class SimpleCharacter : Character
     void Update()
     {
         if(_model == null)
-            throw new System.Exception($"Missing model on {gameObject.name}");
+            throw new MonsterPartyException($"Missing model on {gameObject.name}");
             
         Vector3 projectedMovementVelocity = Vector3.ProjectOnPlane(
             this.CurrentVelocity,

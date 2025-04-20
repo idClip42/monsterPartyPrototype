@@ -57,7 +57,7 @@ public struct SoundInfo
     public static SoundInfo GetNearest(SoundInfo[] sounds)
     {
         if (sounds.Length == 0)
-            throw new System.Exception("Passed in empty sound array.");
+            throw new MonsterPartyException("Passed in empty sound array.");
         SoundInfo? targetSound = null;
         foreach (SoundInfo sound in sounds)
         {
@@ -67,7 +67,7 @@ public struct SoundInfo
                 targetSound = sound;
         }
         if (targetSound == null)
-            throw new System.Exception("Target sound should not be null.");
+            throw new MonsterPartyException("Target sound should not be null.");
         return targetSound.Value;
     }
 }

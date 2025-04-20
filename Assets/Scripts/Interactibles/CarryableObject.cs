@@ -16,7 +16,7 @@ public class CarryableObject : MonoBehaviour, IInteractible, ICarryable
 
     public Transform CarryHandle { get {
         if(_carryHandle == null)
-            throw new System.Exception($"Missing carry handle on {gameObject.name}");
+            throw new MonsterPartyException($"Missing carry handle on {gameObject.name}");
         return _carryHandle;
     }}
 
@@ -25,7 +25,7 @@ public class CarryableObject : MonoBehaviour, IInteractible, ICarryable
 
     public float Mass { get {
         if(_rb == null)
-            throw new System.Exception($"Missing rigidbody on {gameObject.name}.");
+            throw new MonsterPartyException($"Missing rigidbody on {gameObject.name}.");
         return _rb.mass;
     }}
 
@@ -37,17 +37,17 @@ public class CarryableObject : MonoBehaviour, IInteractible, ICarryable
     {
         _rb = GetComponent<Rigidbody>();
         if(_rb == null)
-            throw new System.Exception($"Missing rigidbody on {gameObject.name}.");
+            throw new MonsterPartyException($"Missing rigidbody on {gameObject.name}.");
 
         if(_carryHandle == null)
-            throw new System.Exception($"Missing carry handle on {gameObject.name}.");
+            throw new MonsterPartyException($"Missing carry handle on {gameObject.name}.");
 
         _defaultKinematicState = _rb.isKinematic;
     }
 
     public bool IsInteractible(Character interactor){
         if(interactor.Carry == null)
-            throw new System.Exception($"{gameObject.name} missing Carry.");
+            throw new MonsterPartyException($"{gameObject.name} missing Carry.");
         if(interactor.Carry.HeldObject != null)
             return false;
         if(this._isHeld)
@@ -57,17 +57,17 @@ public class CarryableObject : MonoBehaviour, IInteractible, ICarryable
 
     public void DoInteraction(Character interactor) {
         if(interactor.Carry == null)
-            throw new System.Exception($"Missing Carry component on {interactor.gameObject.name}.");
+            throw new MonsterPartyException($"Missing Carry component on {interactor.gameObject.name}.");
         interactor.Carry.OnInteractWithCarryable(this);
     }
 
     public void OnPickUp(CharacterComponentCarry pickerUpper){
         if(IsCarryable == false)
-            throw new System.Exception("Tried to pick up something that isn't carryable.");
+            throw new MonsterPartyException("Tried to pick up something that isn't carryable.");
         if(_isHeld == true)
-            throw new System.Exception("Tried to pick up something that is already held.");
+            throw new MonsterPartyException("Tried to pick up something that is already held.");
         if(_rb == null)
-            throw new System.Exception($"Missing rigidbody on {gameObject.name}.");
+            throw new MonsterPartyException($"Missing rigidbody on {gameObject.name}.");
             
         _isHeld = true;
         _holder = pickerUpper;
@@ -82,9 +82,9 @@ public class CarryableObject : MonoBehaviour, IInteractible, ICarryable
 
     public void OnDrop(CharacterComponentCarry pickerUpper){
         if(_isHeld == false)
-            throw new System.Exception("Tried to drop something that isn't held.");
+            throw new MonsterPartyException("Tried to drop something that isn't held.");
         if(_rb == null)
-            throw new System.Exception($"Missing rigidbody on {gameObject.name}.");
+            throw new MonsterPartyException($"Missing rigidbody on {gameObject.name}.");
 
         _isHeld = false;
         _holder = null;
@@ -98,9 +98,9 @@ public class CarryableObject : MonoBehaviour, IInteractible, ICarryable
 
     public void LockInPlace(Transform targetParent){
         if(_rb == null)
-            throw new System.Exception($"Missing rigidbody on {gameObject.name}.");
+            throw new MonsterPartyException($"Missing rigidbody on {gameObject.name}.");
         if(_holder != null)
-            throw new System.Exception("Cannot lock in place while held. Drop first.");
+            throw new MonsterPartyException("Cannot lock in place while held. Drop first.");
 
         _isHeld = true;
         _rb.isKinematic = true;

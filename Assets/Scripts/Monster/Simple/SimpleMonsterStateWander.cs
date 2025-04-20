@@ -62,7 +62,7 @@ public class SimpleMonsterStateWander : SimpleMonsterState
         this._navManager = navManager;
 
         if (_config.minRedirectTime > _config.maxRedirectTime)
-            throw new System.Exception("Invalid redirect times");
+            throw new MonsterPartyException("Invalid redirect times");
     }
 
     public sealed override void Start(NavMeshAgent agent, Knowledge currentKnowledge)

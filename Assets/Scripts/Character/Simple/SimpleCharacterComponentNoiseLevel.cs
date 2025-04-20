@@ -37,15 +37,15 @@ public class SimpleCharacterComponentNoiseLevel : CharacterComponentNoiseLevel
         base.Awake();
 
         if(_minNoiseSpeed > _maxNoiseSpeed)
-            throw new System.Exception($"Invalid values for min and max noise speed");
+            throw new MonsterPartyException($"Invalid values for min and max noise speed");
         if(_minNoiseDistance > _maxNoiseDistance)
-            throw new System.Exception($"Invalid values for min and max noise distance");
+            throw new MonsterPartyException($"Invalid values for min and max noise distance");
     }
 
     void Update()
     {
         if (this.Character == null)
-            throw new System.Exception($"Null character on {this.gameObject.name}");
+            throw new MonsterPartyException($"Null character on {this.gameObject.name}");
 
         float speed = this.Character.CurrentVelocity.magnitude;
 

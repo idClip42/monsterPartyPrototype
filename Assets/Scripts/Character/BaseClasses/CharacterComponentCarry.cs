@@ -36,13 +36,13 @@ public abstract class CharacterComponentCarry : CharacterComponent, ISpeedLimite
         base.Awake();
 
         if(this.Character == null)
-            throw new System.Exception($"Null Character on {this.gameObject.name}");
+            throw new MonsterPartyException($"Null Character on {this.gameObject.name}");
         this.Character.OnDeath += HandleDeath;
     }
 
     private void Update()
     {
-        if(this.Character == null) throw new System.Exception("Null _characterBase");
+        if(this.Character == null) throw new MonsterPartyException("Null _characterBase");
 
         if(this.Character.State == Character.StateType.Player){
             if(Input.GetButtonDown("Drop")){
@@ -54,7 +54,7 @@ public abstract class CharacterComponentCarry : CharacterComponent, ISpeedLimite
 
     public void OnInteractWithCarryable(ICarryable target)
     {
-        if(this.Character == null) throw new System.Exception("Null Character.");
+        if(this.Character == null) throw new MonsterPartyException("Null Character.");
 
         if (!target.IsCarryable) return;
         if (_heldObject != null) return;

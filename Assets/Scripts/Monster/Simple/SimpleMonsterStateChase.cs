@@ -105,7 +105,7 @@ public class SimpleMonsterStateChase : SimpleMonsterState
         }
         else 
         {
-            throw new System.Exception($"Unhandled chase target mode '{_config.chaseTargetMode}'");
+            throw new MonsterPartyException($"Unhandled chase target mode '{_config.chaseTargetMode}'");
         }
         agent.SetDestination(chaseTargetPosition);
         return SimpleMonster.State.Chase;

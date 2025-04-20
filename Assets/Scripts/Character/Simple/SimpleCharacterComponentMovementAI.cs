@@ -16,14 +16,14 @@ public class SimpleCharacterComponentMovementAI : CharacterComponentMovementAI
 
         _doorOpener = GetComponent<DoorOpener>();
         if(_doorOpener == null)
-            throw new System.Exception($"Missing DoorOpener on {this.gameObject.name}");
+            throw new MonsterPartyException($"Missing DoorOpener on {this.gameObject.name}");
     }
 
     protected override void OnEnable()
     {
         base.OnEnable();
         if(_doorOpener == null)
-            throw new System.Exception($"Missing DoorOpener on {this.gameObject.name}");
+            throw new MonsterPartyException($"Missing DoorOpener on {this.gameObject.name}");
         _doorOpener.enabled = true;
     }
 
@@ -31,7 +31,7 @@ public class SimpleCharacterComponentMovementAI : CharacterComponentMovementAI
     {
         base.OnDisable();
         if(_doorOpener == null)
-            throw new System.Exception($"Missing DoorOpener on {this.gameObject.name}");
+            throw new MonsterPartyException($"Missing DoorOpener on {this.gameObject.name}");
         _doorOpener.enabled = false;
     }
 
@@ -40,6 +40,6 @@ public class SimpleCharacterComponentMovementAI : CharacterComponentMovementAI
         base.Update();
 
         if(_characterController != null && _characterController.enabled == true)
-            throw new System.Exception("CharacterController is enabled while AI is going.");
+            throw new MonsterPartyException("CharacterController is enabled while AI is going.");
     }
 }
