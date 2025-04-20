@@ -13,29 +13,7 @@ using System.Collections.Generic;
 [DisallowMultipleComponent]
 public abstract class Character : Entity, IDebugInfoProvider
 {
-    [System.Serializable]
-    public class MovementConfig{
-        [SerializeField]
-        [Range(1,10)]
-        private float _crouchSpeed = 2.0f;
-        
-        [SerializeField]
-        [Range(1,10)]
-        private float _walkSpeed = 3.0f;
-        
-        [SerializeField]
-        [Range(1,10)]
-        private float _runSpeed = 5.0f;
-
-        public float CrouchSpeed => _crouchSpeed;
-        public float WalkSpeed => _walkSpeed;
-        public float RunSpeed => _runSpeed;
-    }
-
     public enum StateType { Player, AI };
-
-    [SerializeField]
-    private MovementConfig? _movementConfig;
 
     [SerializeField]
     private AudioSource? _deathScream = null;
@@ -49,11 +27,6 @@ public abstract class Character : Entity, IDebugInfoProvider
     public abstract CharacterComponentNoiseLevel? NoiseLevel { get; }
     public abstract CharacterComponentCarry? Carry { get; }
 
-    public MovementConfig Movement { get{
-        if(_movementConfig == null)
-            throw new Exception("Missing movement config. Should never happen.");
-        return _movementConfig;
-    }}
     public IReadOnlyCollection<Transform> LookRaycastTargets => _lookRaycastTargets;
 
     public string DebugHeader => "Character";

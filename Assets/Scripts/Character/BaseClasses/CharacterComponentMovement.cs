@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
@@ -6,25 +8,43 @@ using UnityEngine;
 public abstract class CharacterComponentMovement : CharacterComponent
 {
     [SerializeField]
-    [Range(0, 0.2f)]
-    private float speedHandicapPerMassUnit = 0.05f;
+    [Range(1,10)]
+    private float _maxSpeed = 5.0f;
+
+    private ISpeedLimiter[] _speedLimiters = {};
 
     public abstract Vector3 CurrentVelocity { get; }
+
+    protected float BaseMaxSpeed => _maxSpeed;
+
+    public override void FillInDebugInfo(Dictionary<string, string> infoTarget)
+    {
+        infoTarget["Speed Limiters"] = _speedLimiters.Length.ToString();
+        infoTarget["Max Speed"] = GetMaxMoveSpeed().ToString();
+    }
+
+    protected override void Awake()
+    {
+        base.Awake();
+        _speedLimiters = GetComponents<ISpeedLimiter>();
+    } 
 
     protected float GetMaxMoveSpeed(){
         if(this.Character == null)
             throw new System.Exception($"Null Character on {this.gameObject.name}");
-        if(this.Character.Carry == null)
-            throw new System.Exception($"Null Carry on character {this.gameObject.name}");
 
-        float baseSpeed = this.Character.Movement.RunSpeed;
+        float maxSpeedMultiplier = _speedLimiters.Aggregate(
+            1.0f,
+            (acc, test) => {
+                if(test.IsLimitingMaxSpeed == false)
+                    return acc;
+                if(test.MaxSpeedPercentageLimit >= acc)
+                    return acc;
+                return test.MaxSpeedPercentageLimit;
+            }
+        );
 
-        if(this.Character.Carry.HeldObject == null)
-            return baseSpeed;
-            
-        float heldMass = this.Character.Carry.HeldObject.Mass;
-        float speedMultiplier = Mathf.Clamp01(1f - (heldMass * speedHandicapPerMassUnit));
-        return baseSpeed * speedMultiplier;
+        return _maxSpeed * maxSpeedMultiplier;
     }
 
 #if UNITY_EDITOR

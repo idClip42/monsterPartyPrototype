@@ -4,13 +4,22 @@ using UnityEngine;
 #nullable enable
 
 [DisallowMultipleComponent]
-public abstract class CharacterComponentCrouch : CharacterComponent
+public abstract class CharacterComponentCrouch : CharacterComponent, ISpeedLimiter
 {
+    [SerializeField]
+    [Range(0, 1)]
+    private float _crouchSpeedPercentage = 0.4f;
+
     private bool _isCrouching = false;
     public bool IsCrouching => _isCrouching;
     private bool _canUncrouch = false;
 
     public sealed override string DebugHeader => "Crouch";
+
+    public bool IsLimitingMaxSpeed => IsCrouching;
+
+    public float MaxSpeedPercentageLimit => _crouchSpeedPercentage;
+
     public override void FillInDebugInfo(Dictionary<string, string> infoTarget)
     {
         infoTarget["State"] = _isCrouching ? "Crouching" : "Standing";

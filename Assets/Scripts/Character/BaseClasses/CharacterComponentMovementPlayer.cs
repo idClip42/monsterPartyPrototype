@@ -20,21 +20,9 @@ public abstract class CharacterComponentMovementPlayer : CharacterComponentMovem
         }
 
         infoTarget["Speed"] = $"{CurrentVelocity.magnitude:F2} m/s";
-        infoTarget["IsRunning"] = IsRunning.ToString();
+
+        base.FillInDebugInfo(infoTarget);
     }
-
-    public bool IsRunning { get {
-        if(this.enabled == false) 
-            return false;
-
-        if(this.Character != null && this.Character.Crouch != null){
-            if(this.Character.Crouch.IsCrouching == true)
-                return false;
-        }
-
-        bool runButtonDown = Input.GetButton("Run");
-        return runButtonDown;
-    }}
 
     protected override void Awake(){
         base.Awake();
@@ -70,14 +58,7 @@ public abstract class CharacterComponentMovementPlayer : CharacterComponentMovem
             Vector3.up
         ).normalized;
 
-        float speed;
-        if(this.Character.Crouch.IsCrouching)
-            speed = this.Character.Movement.CrouchSpeed;
-        else if(this.IsRunning)
-            speed = this.Character.Movement.RunSpeed;
-        else
-            speed = this.Character.Movement.WalkSpeed;
-        // speed *= GetMoveSpeedMultiplier();
+        float speed = GetDesiredSpeed();
         speed = Mathf.Clamp(speed, 0, GetMaxMoveSpeed());
 
         // TODO: This isn't a perfect solution.
@@ -93,4 +74,6 @@ public abstract class CharacterComponentMovementPlayer : CharacterComponentMovem
     }
 
     protected abstract void Move(Vector3 desiredMovementVelocity, float deltaTime);
+
+    public abstract float GetDesiredSpeed();
 }

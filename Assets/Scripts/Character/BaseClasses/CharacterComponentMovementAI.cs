@@ -49,6 +49,8 @@ public abstract class CharacterComponentMovementAI : CharacterComponentMovement,
         infoTarget["Speed"] = $"{CurrentVelocity.magnitude:F2} m/s";
         infoTarget["Max Speed"] = $"{MaxSpeed:F2} m/s";
         infoTarget["Agent Type"] = NavMesh.GetSettingsNameFromID(CurrentAgentTypeId);
+        
+        base.FillInDebugInfo(infoTarget);
     }
 
     public sealed override Vector3 CurrentVelocity { get{
@@ -106,7 +108,7 @@ public abstract class CharacterComponentMovementAI : CharacterComponentMovement,
             UpdateFollow();
         }
         else if(this._behavior == Behavior.HoldPosition) {
-            UpdateHoldPosition();
+            // UpdateHoldPosition();
         }
         else {
             throw new System.Exception($"Unhandled behavior: {this._behavior}");
@@ -130,23 +132,23 @@ public abstract class CharacterComponentMovementAI : CharacterComponentMovement,
 
         this._navMeshAgent.SetDestination(this._behaviorTarget.transform.position);
         this.Character.Crouch.SetCrouching(this._behaviorTarget.Crouch.IsCrouching);
-        float followSpeed = GetFollowSpeed(this._behaviorTarget, this.Character.Movement);
+        float followSpeed = GetFollowSpeed(this._behaviorTarget);
         _navMeshAgent.speed = Mathf.Clamp(followSpeed, 0, GetMaxMoveSpeed());
     }
 
-    private void UpdateHoldPosition(){
-        if(this.Character == null)
-            throw new System.Exception($"Null character on {this.gameObject.name}");
-        if(this.Character.Crouch == null)
-            throw new System.Exception($"Null crouch on {this.gameObject.name}");
-        if(_navMeshAgent == null) 
-            throw new System.Exception("Null _navMeshAgent");
+    // private void UpdateHoldPosition(){
+    //     if(this.Character == null)
+    //         throw new System.Exception($"Null character on {this.gameObject.name}");
+    //     if(this.Character.Crouch == null)
+    //         throw new System.Exception($"Null crouch on {this.gameObject.name}");
+    //     if(_navMeshAgent == null) 
+    //         throw new System.Exception("Null _navMeshAgent");
 
-        if(this.Character.Crouch.IsCrouching)
-            _navMeshAgent.speed = this.Character.Movement.CrouchSpeed;
-        else
-            _navMeshAgent.speed = this.Character.Movement.WalkSpeed;
-    }
+    //     if(this.Character.Crouch.IsCrouching)
+    //         _navMeshAgent.speed = this.Character.Movement.CrouchSpeed;
+    //     else
+    //         _navMeshAgent.speed = this.Character.Movement.WalkSpeed;
+    // }
 
     private void OnCrouchToggle(bool isCrouching){
         if(_navMeshAgent == null) 
@@ -237,7 +239,7 @@ public abstract class CharacterComponentMovementAI : CharacterComponentMovement,
     }
 #endif
 
-    private static float GetFollowSpeed(Character target, Character.MovementConfig options){
+    private float GetFollowSpeed(Character target){
         if(target.Crouch == null) 
             throw new System.Exception("Null _behaviorTarget.Crouch");
 
@@ -249,12 +251,10 @@ public abstract class CharacterComponentMovementAI : CharacterComponentMovement,
         else if(target.State == Character.StateType.Player){
             if(target.PlayerMovement == null) 
                 throw new System.Exception("Null this.Character.PlayerMovement");
-            if(target.Crouch.IsCrouching)
-                return options.CrouchSpeed;
-            else if(target.PlayerMovement.IsRunning)
-                return options.RunSpeed;
-            else
-                return options.WalkSpeed;
+            return Mathf.Min(
+                target.PlayerMovement.GetDesiredSpeed(),
+                this.GetMaxMoveSpeed()
+            );
         }
         else {
             throw new System.Exception($"Unhandled state type '{target.State}'");

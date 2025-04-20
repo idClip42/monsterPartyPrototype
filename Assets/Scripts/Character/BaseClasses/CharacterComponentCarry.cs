@@ -4,8 +4,12 @@ using UnityEngine;
 #nullable enable
 
 [DisallowMultipleComponent]
-public abstract class CharacterComponentCarry : CharacterComponent
+public abstract class CharacterComponentCarry : CharacterComponent, ISpeedLimiter
 {
+    [SerializeField]
+    [Range(0, 0.2f)]
+    private float speedHandicapPerMassUnit = 0.05f;
+
     ICarryable? _heldObject = null;
 
     protected abstract Transform CarryParent { get; }
@@ -13,6 +17,12 @@ public abstract class CharacterComponentCarry : CharacterComponent
     public ICarryable? HeldObject => _heldObject;
 
     public override string DebugHeader => "Carry";
+
+    public bool IsLimitingMaxSpeed => _heldObject != null;
+
+    public float MaxSpeedPercentageLimit => _heldObject == null ? 
+        1 : 
+        Mathf.Clamp01(1f - (_heldObject.Mass * speedHandicapPerMassUnit));
 
     public override void FillInDebugInfo(Dictionary<string, string> infoTarget)
     {
