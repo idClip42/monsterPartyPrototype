@@ -48,8 +48,6 @@ public abstract class CharacterComponentMovementPlayer : CharacterComponentMovem
     {
         if(this.Character == null)
             throw new MonsterPartyNullReferenceException(this, "Character");
-        if(this.Character.Crouch == null)
-            throw new MonsterPartyNullReferenceException(this, "Character.Crouch.Crouch");
         if(_camera == null)
             throw new MonsterPartyNullReferenceException(this, "_camera");
 

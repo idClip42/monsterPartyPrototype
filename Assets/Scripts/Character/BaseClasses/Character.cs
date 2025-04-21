@@ -20,12 +20,12 @@ public abstract class Character : Entity, IDebugInfoProvider
 
     private Transform[] _lookRaycastTargets = {};
 
-    public abstract CharacterComponentCrouch? Crouch { get; }
-    public abstract CharacterComponentInteract? Interact { get; }
-    public abstract CharacterComponentMovementPlayer? PlayerMovement { get; }
-    public abstract CharacterComponentMovementAI? AIMovement { get; }
-    public abstract CharacterComponentNoiseLevel? NoiseLevel { get; }
-    public abstract CharacterComponentCarry? Carry { get; }
+    public abstract CharacterComponentCrouch GetCrouchComponent();
+    public abstract CharacterComponentInteract GetInteractComponent();
+    public abstract CharacterComponentMovementPlayer GetPlayerMovementComponent();
+    public abstract CharacterComponentMovementAI GetAiMovementComponent();
+    public abstract CharacterComponentNoiseLevel GetNoiseLevelComponent();
+    public abstract CharacterComponentCarry GetCarryComponent();
 
     public IReadOnlyCollection<Transform> LookRaycastTargets => _lookRaycastTargets;
 
@@ -38,11 +38,11 @@ public abstract class Character : Entity, IDebugInfoProvider
     }
 
     public Vector3 CurrentVelocity { get{
-        if(PlayerMovement != null && PlayerMovement.enabled){
-            return PlayerMovement.CurrentVelocity;
+        if(GetPlayerMovementComponent().enabled){
+            return GetPlayerMovementComponent().CurrentVelocity;
         }
-        else if(AIMovement != null && AIMovement.enabled){
-            return AIMovement.CurrentVelocity;
+        else if(GetAiMovementComponent().enabled){
+            return GetAiMovementComponent().CurrentVelocity;
         }
         else {
             return Vector3.zero;
@@ -54,11 +54,6 @@ public abstract class Character : Entity, IDebugInfoProvider
 
     public void SetState(StateType newState)
     {
-        if(PlayerMovement == null) 
-            throw new MonsterPartyNullReferenceException(this, "PlayerMovement");
-        if(AIMovement == null) 
-            throw new MonsterPartyNullReferenceException(this, "AIMovement");
-
         _state = newState;
 
         Debug.Log($"Character '{gameObject.name}' state set to '{newState}'.");
@@ -68,12 +63,12 @@ public abstract class Character : Entity, IDebugInfoProvider
         switch (_state)
         {
             case StateType.Player:
-                PlayerMovement.enabled = true;
-                AIMovement.enabled = false;
+                GetPlayerMovementComponent().enabled = true;
+                GetAiMovementComponent().enabled = false;
                 break;
             case StateType.AI:
-                PlayerMovement.enabled = false;
-                AIMovement.enabled = true;
+                GetPlayerMovementComponent().enabled = false;
+                GetAiMovementComponent().enabled = true;
                 break;
             default:
                 throw new MonsterPartyUnhandledEnumException<StateType>(_state);
@@ -93,13 +88,9 @@ public abstract class Character : Entity, IDebugInfoProvider
     protected virtual void HandleDeath(Entity deadEntity){        
         if(deadEntity != this)
             throw new MonsterPartyException("This function should only be called for own death.");
-        if(PlayerMovement == null) 
-            throw new MonsterPartyNullReferenceException(this, "_playerMovement");
-        if(AIMovement == null) 
-            throw new MonsterPartyNullReferenceException(this, "_aiMovement");
 
-        PlayerMovement.enabled = false;
-        AIMovement.enabled = false;
+        GetPlayerMovementComponent().enabled = false;
+        GetAiMovementComponent().enabled = false;
 
         if(_deathScream != null)
             _deathScream.Play();
@@ -110,17 +101,12 @@ public abstract class Character : Entity, IDebugInfoProvider
     }
 
     public CharacterComponentMovement GetCurrentMovementComponent(){
-        if(PlayerMovement == null) 
-            throw new MonsterPartyNullReferenceException(this, "PlayerMovement");
-        if(AIMovement == null) 
-            throw new MonsterPartyNullReferenceException(this, "AIMovement");
-            
         switch (_state)
         {
             case StateType.Player:
-                return PlayerMovement;
+                return GetPlayerMovementComponent();
             case StateType.AI:
-                return AIMovement;
+                return GetAiMovementComponent();
             default:
                 throw new MonsterPartyUnhandledEnumException<StateType>(_state);
         }

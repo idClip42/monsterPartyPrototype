@@ -46,9 +46,7 @@ public class CarryableObject : MonoBehaviour, IInteractible, ICarryable
     }
 
     public bool IsInteractible(Character interactor){
-        if(interactor.Carry == null)
-            throw new MonsterPartyNullReferenceException(this, "interactor.Carry");
-        if(interactor.Carry.HeldObject != null)
+        if(interactor.GetCarryComponent().HeldObject != null)
             return false;
         if(this._isHeld)
             return false;
@@ -56,9 +54,9 @@ public class CarryableObject : MonoBehaviour, IInteractible, ICarryable
     }
 
     public void DoInteraction(Character interactor) {
-        if(interactor.Carry == null)
+        if(interactor.GetCarryComponent() == null)
             throw new MonsterPartyNullReferenceException(this, "interactor.Carry");
-        interactor.Carry.OnInteractWithCarryable(this);
+        interactor.GetCarryComponent().OnInteractWithCarryable(this);
     }
 
     public void OnPickUp(CharacterComponentCarry pickerUpper){

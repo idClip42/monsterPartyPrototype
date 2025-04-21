@@ -68,17 +68,17 @@ public class NavigationManager : MonoBehaviour
 
     private NavSpot[]? _navPoints = null;
 
-    public int StandingAgentTypeId { get {
+    public int GetStandingAgentTypeId() {
         if(_standingNavMesh == null)
             throw new MonsterPartyNullReferenceException(this, "_standingNavMesh");
         return _standingNavMesh.agentTypeID;
-    }} 
+    }
 
-    public int CrouchingAgentTypeId { get {
+    public int GetCrouchingAgentTypeId() {
         if(_crouchingNavMesh == null)
             throw new MonsterPartyNullReferenceException(this, "_crouchingNavMesh");
         return _crouchingNavMesh.agentTypeID;
-    }} 
+    }
 
     public int NavPointsCount => _navPoints != null ? _navPoints.Length : -1;
 

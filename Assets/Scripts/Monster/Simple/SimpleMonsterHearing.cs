@@ -65,7 +65,7 @@ public class SimpleMonsterHearing{
                 charPos,
                 new NavMeshQueryFilter(){
                     areaMask=NavMesh.AllAreas, 
-                    agentTypeID=_navManager.CrouchingAgentTypeId
+                    agentTypeID=_navManager.GetCrouchingAgentTypeId()
                 },
                 _reusableNavmeshPath
             );

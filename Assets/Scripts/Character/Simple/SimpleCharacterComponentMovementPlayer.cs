@@ -24,8 +24,8 @@ public class SimpleCharacterComponentMovementPlayer : CharacterComponentMovement
         if(this.enabled == false) 
             return false;
 
-        if(this.Character != null && this.Character.Crouch != null){
-            if(this.Character.Crouch.IsCrouching == true)
+        if(this.Character != null){
+            if(this.Character.GetCrouchComponent().IsCrouching == true)
                 return false;
         }
 

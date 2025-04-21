@@ -99,7 +99,7 @@ public class CameraControlTransition
     private NavMeshQueryFilter GetFilter(){
         return new NavMeshQueryFilter(){
             areaMask=NavMesh.AllAreas, 
-            agentTypeID=_navManager.CrouchingAgentTypeId
+            agentTypeID=_navManager.GetCrouchingAgentTypeId()
         };
     }
 

@@ -24,25 +24,21 @@ public class SimpleMonsterKillerMachineReceptacle : MonoBehaviour, IInteractible
     }
 
     public bool IsInteractible(Character interactor){
-        if(interactor.Carry == null)
-            throw new MonsterPartyNullReferenceException(this, "interactor.Carry");
-
         if(_hasComponent) return false;
-        if(interactor.Carry.HeldObject == null) return false;
+        if(interactor.GetCarryComponent().HeldObject == null) return false;
         if(DoesCharacterCarryTarget(interactor) == false) return false;
         return true;
     }
 
     public void DoInteraction(Character interactor)
     {
-        if(interactor.Carry == null)
-            throw new MonsterPartyNullReferenceException(this, $"interactor.Carry");
-        if(interactor.Carry.HeldObject == null) 
+        var carryComp = interactor.GetCarryComponent();
+        if(carryComp.HeldObject == null) 
             throw new MonsterPartyNullReferenceException(this, $"interactor.Carry.HeldObject");
         if(DoesCharacterCarryTarget(interactor) == false)
             throw new MonsterPartyException($"Character {interactor.gameObject.name} Carry.HeldObject in not target. Code should never have gotten here.");
         
-        ICarryable component = interactor.Carry.HeldObject;
+        ICarryable component = carryComp.HeldObject;
         LockInTarget(component);
     }
 
@@ -80,13 +76,12 @@ public class SimpleMonsterKillerMachineReceptacle : MonoBehaviour, IInteractible
     }
 
     private bool DoesCharacterCarryTarget(Character interactor){
-        if(interactor.Carry == null)
-            throw new MonsterPartyNullReferenceException(this, "interactor.Carry");
         if(_target == null)
             throw new MonsterPartyNullReferenceException(this, "_target");
 
-        if(interactor.Carry.HeldObject == null) return false;
-        if(interactor.Carry.HeldObject.gameObject != _target) return false;
+        var carryComp = interactor.GetCarryComponent();
+        if(carryComp.HeldObject == null) return false;
+        if(carryComp.HeldObject.gameObject != _target) return false;
         return true;
     }
 }
