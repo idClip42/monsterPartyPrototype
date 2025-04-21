@@ -14,8 +14,8 @@ public class CameraControlTransition
     private LayerMask _navMeshRaycastLayers;
 
     public CameraControlTransition(CameraControl owner, NavigationManager navManager){
-        if(owner == null) throw new MonsterPartyException("Missing camera control owner.");
-        if(navManager == null) throw new MonsterPartyException("Missing navManager.");
+        if(owner == null) throw new MonsterPartyNullReferenceException("owner");
+        if(navManager == null) throw new MonsterPartyNullReferenceException("navManager");
         _cameraControl = owner;
         _navManager = navManager;
     }
@@ -39,11 +39,10 @@ public class CameraControlTransition
     /// </summary>
     /// <param name="deltaTime"></param>
     /// <returns>Whether to finish transitioning</returns>
-    /// <exception cref="MonsterPartyException"></exception>
     public bool MoveCamera(float deltaTime){
-        if(_cameraControl == null) throw new MonsterPartyException("Null _cameraControl");
-        if(_transitionTarget == null) throw new MonsterPartyException("Missing transition target.");
-        if(_transitionSpeed <= 0) throw new MonsterPartyException("Invalid transition speed.");
+        if(_cameraControl == null) throw new MonsterPartyNullReferenceException("_cameraControl");
+        if(_transitionTarget == null) throw new MonsterPartyNullReferenceException("_transitionTarget");
+        if(_transitionSpeed <= 0) throw new MonsterPartyNullReferenceException("_transitionSpeed");
 
         NavMeshPath path = new NavMeshPath();
 

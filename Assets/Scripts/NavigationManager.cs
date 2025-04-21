@@ -70,13 +70,13 @@ public class NavigationManager : MonoBehaviour
 
     public int StandingAgentTypeId { get {
         if(_standingNavMesh == null)
-            throw new MonsterPartyException("Null _standingNavMesh");
+            throw new MonsterPartyNullReferenceException("_standingNavMesh");
         return _standingNavMesh.agentTypeID;
     }} 
 
     public int CrouchingAgentTypeId { get {
         if(_crouchingNavMesh == null)
-            throw new MonsterPartyException("Null _crouchingNavMesh");
+            throw new MonsterPartyNullReferenceException("_crouchingNavMesh");
         return _crouchingNavMesh.agentTypeID;
     }} 
 
@@ -89,9 +89,9 @@ public class NavigationManager : MonoBehaviour
 
     public void Refresh(){
         if(_standingNavMesh == null)
-            throw new MonsterPartyException("Null _standingNavMesh");
+            throw new MonsterPartyNullReferenceException("_standingNavMesh");
         if(_crouchingNavMesh == null)
-            throw new MonsterPartyException("Null _crouchingNavMesh");
+            throw new MonsterPartyNullReferenceException("_crouchingNavMesh");
 
         var standingNavPoints = GetPossiblePointsOnNavMesh(_standingNavMesh);
         var crouchingNavPoints = GetPossiblePointsOnNavMesh(_crouchingNavMesh);
@@ -117,7 +117,7 @@ public class NavigationManager : MonoBehaviour
 
     public Vector3 GetRandomDestination(bool excludeStanding, bool excludeCrouching, float minDistFromWall){
         if(_navPoints == null) 
-            throw new MonsterPartyException("No nav points array!");
+            throw new MonsterPartyNullReferenceException("_navPoints");
         var filteredPoints = _navPoints.Where(pt => {
             if(excludeStanding && pt.standable) return false;
             if(excludeCrouching && pt.crouchable) return false;
@@ -161,7 +161,7 @@ public class NavigationManager : MonoBehaviour
         if(_navPoints == null)
             Refresh();
         if(_navPoints == null) 
-            throw new MonsterPartyException("No nav points array!");
+            throw new MonsterPartyNullReferenceException("_navPoints");
 
         foreach(var pt in _navPoints){
             Color color = pt.standable ? Color.green : Color.magenta;

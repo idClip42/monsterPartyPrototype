@@ -67,7 +67,7 @@ public struct SoundInfo
                 targetSound = sound;
         }
         if (targetSound == null)
-            throw new MonsterPartyException("Target sound should not be null.");
+            throw new MonsterPartyNullReferenceException("targetSound");
         return targetSound.Value;
     }
 }

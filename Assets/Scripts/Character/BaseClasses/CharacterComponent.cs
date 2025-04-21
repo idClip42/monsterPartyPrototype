@@ -16,7 +16,7 @@ public abstract class CharacterComponent : MonoBehaviour, IDebugInfoProvider
     {
         _character = GetComponent<Character>();
         if(_character == null)
-            throw new MonsterPartyException($"Null character on {this.gameObject.name}");
+            throw new MonsterPartyNullReferenceException($"_character");
     }
 
     public sealed override bool Equals(object other) => base.Equals(other);

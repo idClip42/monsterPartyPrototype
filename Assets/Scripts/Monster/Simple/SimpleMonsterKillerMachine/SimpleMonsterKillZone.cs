@@ -14,13 +14,13 @@ public class SimpleMonsterKillZone : MonoBehaviour {
     private void Awake()
     {
         if(_killTarget == null)
-            throw new MonsterPartyException($"{gameObject.name} missing kill target");
+            throw new MonsterPartyNullReferenceException("_killTarget");
     }
 
     private void Update()
     {
         if(_killTarget == null)
-            throw new MonsterPartyException($"{gameObject.name} missing kill target");
+            throw new MonsterPartyNullReferenceException("_killTarget");
 
         if(_killTarget.Alive == false) return;
 

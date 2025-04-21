@@ -38,11 +38,11 @@ public class Door : MonoBehaviour, IInteractible
     void Awake()
     {
         if(_axis == null)
-            throw new MonsterPartyException("Missing axis.");
+            throw new MonsterPartyNullReferenceException("_axis");
         if(_interactor == null)
-            throw new MonsterPartyException("Missing interactor.");
+            throw new MonsterPartyNullReferenceException("_interactor");
         if(_occlusionPortal == null)
-            throw new MonsterPartyException("Missing occlusion portal.");
+            throw new MonsterPartyNullReferenceException("_occlusionPortal");
 
         _baseRotation = _axis.rotation;
 
@@ -73,7 +73,7 @@ public class Door : MonoBehaviour, IInteractible
 
     public void OpenDoor(Transform opener){
         if(_axis == null)
-            throw new MonsterPartyException("Missing axis.");
+            throw new MonsterPartyNullReferenceException("_axis");
 
         Vector3 doorToChar = opener.position - this.transform.position;
         Vector3 doorForward = _axis.forward;
@@ -106,11 +106,11 @@ public class Door : MonoBehaviour, IInteractible
 
     private void SetDoorState(DoorState newState){
         if(_axis == null)
-            throw new MonsterPartyException("Missing axis.");
+            throw new MonsterPartyNullReferenceException("_axis");
         if(_baseRotation == null)
-            throw new MonsterPartyException("Missing base rotation.");
+            throw new MonsterPartyNullReferenceException("_baseRotation");
         if(_occlusionPortal == null)
-            throw new MonsterPartyException("Missing occlusion portal.");
+            throw new MonsterPartyNullReferenceException("_occlusionPortal");
 
         switch(newState){
             case DoorState.Closed:
@@ -126,7 +126,7 @@ public class Door : MonoBehaviour, IInteractible
                 _occlusionPortal.open = true;
                 break;
             default:
-                throw new MonsterPartyException($"Unhandled door state '{newState}'");
+                throw new MonsterPartyUnhandledEnumException<DoorState>(newState);
         };
 
         _state = newState;

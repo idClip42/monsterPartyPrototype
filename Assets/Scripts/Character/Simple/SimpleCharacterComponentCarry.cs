@@ -10,7 +10,7 @@ public class SimpleCharacterComponentCarry : CharacterComponentCarry
 
     protected override Transform CarryParent { get {
         if(_carryParent == null)
-            throw new MonsterPartyException($"Null carry parent on {this.gameObject.name}");
+            throw new MonsterPartyNullReferenceException("_carryParent");
         return _carryParent;
     }}
 
@@ -19,6 +19,6 @@ public class SimpleCharacterComponentCarry : CharacterComponentCarry
         base.Awake();
         
         if(_carryParent == null)
-            throw new MonsterPartyException($"Null carry parent on {this.gameObject.name}");
+            throw new MonsterPartyNullReferenceException("_carryParent");
     }
 }

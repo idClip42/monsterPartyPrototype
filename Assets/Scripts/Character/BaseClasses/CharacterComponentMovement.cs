@@ -31,7 +31,7 @@ public abstract class CharacterComponentMovement : CharacterComponent
 
     public float GetMaxMoveSpeed(){
         if(this.Character == null)
-            throw new MonsterPartyException($"Null Character on {this.gameObject.name}");
+            throw new MonsterPartyNullReferenceException("Character");
 
         float maxSpeedMultiplier = _speedLimiters.Aggregate(
             1.0f,

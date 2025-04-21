@@ -25,19 +25,19 @@ public class SimpleCharacterFootsteps : MonoBehaviour {
     {
         _character = GetComponentInParent<Character>();
         if(_character == null)
-            throw new MonsterPartyException("Missing character");
+            throw new MonsterPartyGetComponentException<Character>(this);
 
         _audioSource = GetComponent<AudioSource>();
         if(_audioSource == null)
-            throw new MonsterPartyException("Missing footsteps audio source");
+            throw new MonsterPartyGetComponentException<AudioSource>(this);
     }
 
     void Update()
     {
         if(_character == null)
-            throw new MonsterPartyException("Missing character");
+            throw new MonsterPartyNullReferenceException("_character");
         if(_audioSource == null)
-            throw new MonsterPartyException("Missing footsteps audio source");
+            throw new MonsterPartyNullReferenceException("_audioSource");
 
         _stepTimer += Time.deltaTime;
 
@@ -51,7 +51,7 @@ public class SimpleCharacterFootsteps : MonoBehaviour {
 
             _audioSource.clip = _footstepClips[_currentClipIndex];
             if(_audioSource.clip == null)
-                throw new MonsterPartyException("Null audio clip");
+                throw new MonsterPartyNullReferenceException("_audioSource.clip");
             _audioSource.Play();
 
             _stepTimer = 0;

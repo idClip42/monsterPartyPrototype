@@ -55,9 +55,9 @@ public abstract class Character : Entity, IDebugInfoProvider
     public void SetState(StateType newState)
     {
         if(PlayerMovement == null) 
-            throw new MonsterPartyException("Null PlayerMovement");
+            throw new MonsterPartyNullReferenceException("PlayerMovement");
         if(AIMovement == null) 
-            throw new MonsterPartyException("Null AIMovement");
+            throw new MonsterPartyNullReferenceException("AIMovement");
 
         _state = newState;
 
@@ -76,7 +76,7 @@ public abstract class Character : Entity, IDebugInfoProvider
                 AIMovement.enabled = true;
                 break;
             default:
-                throw new MonsterPartyException($"Unknown state enum for {this.gameObject.name}: {_state}.");
+                throw new MonsterPartyUnhandledEnumException<StateType>(_state);
         }
     }
 
@@ -94,9 +94,9 @@ public abstract class Character : Entity, IDebugInfoProvider
         if(deadEntity != this)
             throw new MonsterPartyException("This function should only be called for own death.");
         if(PlayerMovement == null) 
-            throw new MonsterPartyException("Null _playerMovement");
+            throw new MonsterPartyNullReferenceException("_playerMovement");
         if(AIMovement == null) 
-            throw new MonsterPartyException("Null _aiMovement");
+            throw new MonsterPartyNullReferenceException("_aiMovement");
 
         PlayerMovement.enabled = false;
         AIMovement.enabled = false;
@@ -111,9 +111,9 @@ public abstract class Character : Entity, IDebugInfoProvider
 
     public CharacterComponentMovement GetCurrentMovementComponent(){
         if(PlayerMovement == null) 
-            throw new MonsterPartyException("Null PlayerMovement");
+            throw new MonsterPartyNullReferenceException("PlayerMovement");
         if(AIMovement == null) 
-            throw new MonsterPartyException("Null AIMovement");
+            throw new MonsterPartyNullReferenceException("AIMovement");
             
         switch (_state)
         {
@@ -122,7 +122,7 @@ public abstract class Character : Entity, IDebugInfoProvider
             case StateType.AI:
                 return AIMovement;
             default:
-                throw new MonsterPartyException($"Unknown state enum for {this.gameObject.name}: {_state}.");
+                throw new MonsterPartyUnhandledEnumException<StateType>(_state);
         }
     }
 

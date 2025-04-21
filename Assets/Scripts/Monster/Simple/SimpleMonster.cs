@@ -69,7 +69,7 @@ public class SimpleMonster : Entity, IDebugInfoProvider
             State.Wander => _wanderBehavior,
             State.Chase => _chaseBehavior,
             State.Search => _searchBehavior,
-            _ => throw new MonsterPartyException($"Unrecognized monster state: {this._state}")
+            _ => throw new MonsterPartyUnhandledEnumException<State>(this._state)
         };
         if(currentBehavior != null)
             currentBehavior.FillInDebugInfo(infoTarget);
@@ -80,24 +80,25 @@ public class SimpleMonster : Entity, IDebugInfoProvider
         base.Awake();
 
         if(_headConfig == null)
-            throw new MonsterPartyException($"Missing head config on {this.gameObject.name}");
+            throw new MonsterPartyNullReferenceException("_headConfig");
         if(_wanderConfig == null)
-            throw new MonsterPartyException($"Missing wander config on {this.gameObject.name}");
+            throw new MonsterPartyNullReferenceException("_wanderConfig");
         if(_chaseConfig == null)
-            throw new MonsterPartyException($"Missing chase config on {this.gameObject.name}");
+            throw new MonsterPartyNullReferenceException("_chaseConfig");
         if(_searchConfig == null)
-            throw new MonsterPartyException($"Missing search config on {this.gameObject.name}");
+            throw new MonsterPartyNullReferenceException("_searchConfig");
         if(_barksConfig == null)
-            throw new MonsterPartyException($"Missing barks config on {this.gameObject.name}");
+            throw new MonsterPartyNullReferenceException("_barksConfig");
         if(_hearingConfig == null)
-            throw new MonsterPartyException($"Missing hearing config on {this.gameObject.name}");
+            throw new MonsterPartyNullReferenceException("_hearingConfig");
 
         _navManager = FindFirstObjectByType<NavigationManager>();
         if (_navManager == null)
-            throw new MonsterPartyException($"Null _navManager on {this.gameObject.name}");
+            throw new MonsterPartyFindFailException<NavigationManager>();
+
         _navMeshAgent = GetComponent<NavMeshAgent>();
         if (_navMeshAgent == null)
-            throw new MonsterPartyException($"Null nav mesh agent on {this.gameObject.name}");
+            throw new MonsterPartyGetComponentException<NavMeshAgent>(this);
 
         _wanderBehavior = new SimpleMonsterStateWander(_wanderConfig, _navManager);
         _chaseBehavior = new SimpleMonsterStateChase(_chaseConfig);
@@ -122,11 +123,11 @@ public class SimpleMonster : Entity, IDebugInfoProvider
     private void Start()
     {
         if(_wanderBehavior == null)
-            throw new MonsterPartyException($"Missing wander behavior on {this.gameObject.name}");
+            throw new MonsterPartyNullReferenceException("_wanderBehavior");
         if (_navMeshAgent == null)
-            throw new MonsterPartyException($"Null nav mesh agent on {this.gameObject.name}");
+            throw new MonsterPartyNullReferenceException("_navMeshAgent");
         if(_headBehavior == null)
-            throw new MonsterPartyException($"Missing head behavior on {this.gameObject.name}");
+            throw new MonsterPartyNullReferenceException("_headBehavior");
         _wanderBehavior.Start(_navMeshAgent, _headBehavior.CurrentKnowledge);
     }
 
@@ -135,7 +136,7 @@ public class SimpleMonster : Entity, IDebugInfoProvider
         if(this.Alive == false) return;
 
         if(_headBehavior == null)
-            throw new MonsterPartyException($"Missing head behavior on {this.gameObject.name}");
+            throw new MonsterPartyNullReferenceException("_headBehavior");
 
         UpdateBehavior();
 
@@ -145,15 +146,15 @@ public class SimpleMonster : Entity, IDebugInfoProvider
 
     private void UpdateBehavior(){
         if(_headBehavior == null)
-            throw new MonsterPartyException($"Missing head behavior on {this.gameObject.name}");
+            throw new MonsterPartyNullReferenceException("_headBehavior");
         if(_hearing == null)
-            throw new MonsterPartyException($"Missing hearing on {this.gameObject.name}");
+            throw new MonsterPartyNullReferenceException("_hearing");
         if(_barks == null)
-            throw new MonsterPartyException($"Missing barks on {this.gameObject.name}");
+            throw new MonsterPartyNullReferenceException("_barks");
         if(_searchBehavior == null)
-            throw new MonsterPartyException($"Missing search behavior on {this.gameObject.name}");
+            throw new MonsterPartyNullReferenceException("_searchBehavior");
         if (_navMeshAgent == null)
-            throw new MonsterPartyException($"Null nav mesh agent on {this.gameObject.name}");
+            throw new MonsterPartyNullReferenceException("_navMeshAgent");
 
         // Handle current behavior and
         // get prospective behavior change.
@@ -228,25 +229,25 @@ public class SimpleMonster : Entity, IDebugInfoProvider
 
     private SimpleMonsterState StateToBehavior(State state){
         if(_wanderBehavior == null)
-            throw new MonsterPartyException($"Missing wander behavior on {this.gameObject.name}");
+            throw new MonsterPartyNullReferenceException("_wanderBehavior");
         if(_chaseBehavior == null)
-            throw new MonsterPartyException($"Missing chase behavior on {this.gameObject.name}");
+            throw new MonsterPartyNullReferenceException("_chaseBehavior");
         if(_searchBehavior == null)
-            throw new MonsterPartyException($"Missing search behavior on {this.gameObject.name}");
+            throw new MonsterPartyNullReferenceException("_searchBehavior");
 
         return state switch {
             State.Wander => _wanderBehavior,
             State.Chase => _chaseBehavior,
             State.Search => _searchBehavior,
-            _ => throw new MonsterPartyException($"Unrecognized monster state '{state}'")
+            _ => throw new MonsterPartyUnhandledEnumException<State>(state)
         };
     }
 
     protected virtual void HandleDeath(Entity deadEntity){
         if(_barks == null)
-            throw new MonsterPartyException($"Missing barks on {this.gameObject.name}");
+            throw new MonsterPartyNullReferenceException("_barks");
         if (_navMeshAgent == null)
-            throw new MonsterPartyException($"Null nav mesh agent on {this.gameObject.name}");
+            throw new MonsterPartyNullReferenceException("_navMeshAgent");
 
         Light[] allLights = GetComponentsInChildren<Light>();
         foreach(Light l in allLights)
@@ -265,7 +266,7 @@ public class SimpleMonster : Entity, IDebugInfoProvider
     public override void Resurrect()
     {
         if (_navMeshAgent == null)
-            throw new MonsterPartyException($"Null nav mesh agent on {this.gameObject.name}");
+            throw new MonsterPartyNullReferenceException("_navMeshAgent");
 
         Light[] allLights = GetComponentsInChildren<Light>();
         foreach(Light l in allLights)
@@ -284,9 +285,9 @@ public class SimpleMonster : Entity, IDebugInfoProvider
 #if UNITY_EDITOR
     protected sealed override void OnDrawGizmos() {
         if(_headConfig == null)
-            throw new MonsterPartyException($"Missing head config on {this.gameObject.name}");
+            throw new MonsterPartyNullReferenceException("_headConfig");
         if(_headConfig.eye == null)
-            throw new MonsterPartyException($"Missing eye on {this.gameObject.name}");
+            throw new MonsterPartyNullReferenceException("_headConfig.eye");
 
         base.OnDrawGizmos();
 

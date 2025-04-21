@@ -43,11 +43,11 @@ public class CameraControl : MonoBehaviour
     {
         _characterManager = FindFirstObjectByType<CharacterManager>();
         if(_characterManager == null)
-            throw new MonsterPartyException("Could not find character manager");
+            throw new MonsterPartyFindFailException<CharacterManager>();
 
         _navManager = FindFirstObjectByType<NavigationManager>();
         if(_navManager == null)
-            throw new MonsterPartyException("Could not find NavigationManager");
+            throw new MonsterPartyFindFailException<NavigationManager>();
 
         _transitioner = new CameraControlTransition(this, _navManager);
     }
@@ -64,7 +64,7 @@ public class CameraControl : MonoBehaviour
 
     private void OrbitControl(){
         if(_characterManager == null)
-            throw new MonsterPartyException("Null _characterManager");
+            throw new MonsterPartyNullReferenceException("_characterManager");
             
         // TODO: This is for the non-physics movement of the CharacterController
         // TODO: If and when this changes, this'll need to move to FixedUpdate()
@@ -108,9 +108,9 @@ public class CameraControl : MonoBehaviour
 
     private void TransitionUpdate(){
         if(_transitioner == null)
-            throw new MonsterPartyException("Null _transitioner");
+            throw new MonsterPartyNullReferenceException("_transitioner");
         if(_transitionEndCallback == null)
-            throw new MonsterPartyException("Null _transitionEndCallback");
+            throw new MonsterPartyNullReferenceException("_transitionEndCallback");
 
         bool endTransition = _transitioner.MoveCamera(Time.deltaTime);
 
@@ -125,7 +125,7 @@ public class CameraControl : MonoBehaviour
 
     public void SendCameraToNewCharacter(Character target, Action arrivalCallback){
         if(_transitioner == null)
-            throw new MonsterPartyException("Null _transitioner");
+            throw new MonsterPartyNullReferenceException("_transitioner");
         
         _currentState = State.Transition;
         _transitioner.Initialize(
