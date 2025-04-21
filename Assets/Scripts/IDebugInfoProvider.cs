@@ -2,8 +2,11 @@
 
 using System.Collections.Generic;
 
-public interface IDebugInfoProvider
+namespace MonsterParty
 {
-    string DebugHeader { get; }
-    void FillInDebugInfo(Dictionary<string, string> infoTarget);
+    public interface IDebugInfoProvider
+    {
+        string DebugHeader { get; }
+        void FillInDebugInfo(Dictionary<string, string> infoTarget);
+    }
 }

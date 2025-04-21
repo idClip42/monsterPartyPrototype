@@ -3,76 +3,84 @@ using UnityEditor;
 
 #nullable enable
 
-[DisallowMultipleComponent]
-public class SimpleCharacterComponentNoiseLevel : CharacterComponentNoiseLevel
+namespace MonsterParty
 {
-    [SerializeField]
-    [Range(0, 10)]
-    private float _minNoiseSpeed = 1.6f;
-
-    [SerializeField]
-    [Range(0, 10)]
-    private float _maxNoiseSpeed = 5;
-
-    [SerializeField]
-    [Range(0, 100)]
-    private float _minNoiseDistance = 1;
-
-    [SerializeField]
-    [Range(0, 100)]
-    private float _maxNoiseDistance = 20;
-
-    private float _currentNoiseRadius;
-
-    public sealed override float CurrentNoiseRadius { get{
-        if (this.Character == null)
-            return 0;
-        if(this.Character.Alive == false) 
-            return 0;
-        return _currentNoiseRadius;
-    }}
-
-    protected sealed override void Awake()
+    [DisallowMultipleComponent]
+    public class SimpleCharacterComponentNoiseLevel : CharacterComponentNoiseLevel
     {
-        base.Awake();
+        [SerializeField]
+        [Range(0, 10)]
+        private float _minNoiseSpeed = 1.6f;
 
-        if(_minNoiseSpeed > _maxNoiseSpeed)
-            throw new MonsterPartyException($"Invalid values for min and max noise speed");
-        if(_minNoiseDistance > _maxNoiseDistance)
-            throw new MonsterPartyException($"Invalid values for min and max noise distance");
-    }
+        [SerializeField]
+        [Range(0, 10)]
+        private float _maxNoiseSpeed = 5;
 
-    void Update()
-    {
-        if (this.Character == null)
-            throw new MonsterPartyNullReferenceException(this, "Character");
+        [SerializeField]
+        [Range(0, 100)]
+        private float _minNoiseDistance = 1;
 
-        float speed = this.Character.GetCurrentMovementComponent().CurrentVelocity.magnitude;
+        [SerializeField]
+        [Range(0, 100)]
+        private float _maxNoiseDistance = 20;
 
-        if (speed < _minNoiseSpeed)
+        private float _currentNoiseRadius;
+
+        public sealed override float CurrentNoiseRadius
         {
-            this._currentNoiseRadius = 0; // No noise if below min speed
+            get
+            {
+                if (this.Character == null)
+                    return 0;
+                if (this.Character.Alive == false)
+                    return 0;
+                return _currentNoiseRadius;
+            }
         }
-        else
-        {
-            float noisePerc = Mathf.InverseLerp(_minNoiseSpeed, _maxNoiseSpeed, speed);
-            this._currentNoiseRadius = Mathf.Lerp(_minNoiseDistance, _maxNoiseDistance, noisePerc);
-        }
-    }
 
-    void OnDrawGizmosSelected()
-    {
-        using(new Handles.DrawingScope(Color.cyan)){
-            Handles.DrawWireDisc(
-                transform.position,
-                Vector3.up,
-                _minNoiseDistance
-            );
-            Handles.DrawWireDisc(
-                transform.position,
-                Vector3.up,
-                _maxNoiseDistance
-            );
+        protected sealed override void Awake()
+        {
+            base.Awake();
+
+            if (_minNoiseSpeed > _maxNoiseSpeed)
+                throw new MonsterPartyException($"Invalid values for min and max noise speed");
+            if (_minNoiseDistance > _maxNoiseDistance)
+                throw new MonsterPartyException($"Invalid values for min and max noise distance");
+        }
+
+        void Update()
+        {
+            if (this.Character == null)
+                throw new MonsterPartyNullReferenceException(this, "Character");
+
+            float speed = this.Character.GetCurrentMovementComponent().CurrentVelocity.magnitude;
+
+            if (speed < _minNoiseSpeed)
+            {
+                this._currentNoiseRadius = 0; // No noise if below min speed
+            }
+            else
+            {
+                float noisePerc = Mathf.InverseLerp(_minNoiseSpeed, _maxNoiseSpeed, speed);
+                this._currentNoiseRadius = Mathf.Lerp(_minNoiseDistance, _maxNoiseDistance, noisePerc);
+            }
+        }
+
+        void OnDrawGizmosSelected()
+        {
+            using (new Handles.DrawingScope(Color.cyan))
+            {
+                Handles.DrawWireDisc(
+                    transform.position,
+                    Vector3.up,
+                    _minNoiseDistance
+                );
+                Handles.DrawWireDisc(
+                    transform.position,
+                    Vector3.up,
+                    _maxNoiseDistance
+                );
+            }
         }
     }
 }

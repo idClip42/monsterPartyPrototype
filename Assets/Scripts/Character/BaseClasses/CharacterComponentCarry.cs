@@ -3,106 +3,113 @@ using UnityEngine;
 
 #nullable enable
 
-[DisallowMultipleComponent]
-public abstract class CharacterComponentCarry : CharacterComponent, ISpeedLimiter
+namespace MonsterParty
 {
-    [SerializeField]
-    [Range(0, 0.2f)]
-    private float speedHandicapPerMassUnit = 0.05f;
-
-    ICarryable? _heldObject = null;
-
-    protected abstract Transform GetCarryParent();
-
-    public ICarryable? HeldObject => _heldObject;
-
-    public override string DebugHeader => "Carry";
-
-    public bool IsLimitingMaxSpeed => _heldObject != null;
-
-    public float MaxSpeedPercentageLimit => _heldObject == null ? 
-        1 : 
-        Mathf.Clamp01(1f - (_heldObject.Mass * speedHandicapPerMassUnit));
-
-    public override void FillInDebugInfo(Dictionary<string, string> infoTarget)
+    [DisallowMultipleComponent]
+    public abstract class CharacterComponentCarry : CharacterComponent, ISpeedLimiter
     {
-        infoTarget["Held"] = _heldObject != null ? 
-            _heldObject.gameObject.name : 
-            "None";
-    }
+        [SerializeField]
+        [Range(0, 0.2f)]
+        private float speedHandicapPerMassUnit = 0.05f;
 
-    protected override void Awake()
-    {
-        base.Awake();
+        ICarryable? _heldObject = null;
 
-        if(this.Character == null)
-            throw new MonsterPartyNullReferenceException(this, $"Character");
-        this.Character.OnDeath += HandleDeath;
-    }
+        protected abstract Transform GetCarryParent();
 
-    private void Update()
-    {
-        if(this.Character == null) throw new MonsterPartyNullReferenceException(this, "Character");
+        public ICarryable? HeldObject => _heldObject;
 
-        if(this.Character.State == Character.StateType.Player){
-            if(Input.GetButtonDown("Drop")){
-                DropHeldObject();
-            }
+        public override string DebugHeader => "Carry";
+
+        public bool IsLimitingMaxSpeed => _heldObject != null;
+
+        public float MaxSpeedPercentageLimit => _heldObject == null ?
+            1 :
+            Mathf.Clamp01(1f - (_heldObject.Mass * speedHandicapPerMassUnit));
+
+        public override void FillInDebugInfo(Dictionary<string, string> infoTarget)
+        {
+            infoTarget["Held"] = _heldObject != null ?
+                _heldObject.gameObject.name :
+                "None";
         }
 
-    }
+        protected override void Awake()
+        {
+            base.Awake();
 
-    public void OnInteractWithCarryable(ICarryable target)
-    {
-        if(this.Character == null) throw new MonsterPartyNullReferenceException(this, "Character");
+            if (this.Character == null)
+                throw new MonsterPartyNullReferenceException(this, $"Character");
+            this.Character.OnDeath += HandleDeath;
+        }
 
-        if (!target.IsCarryable) return;
-        if (_heldObject != null) return;
+        private void Update()
+        {
+            if (this.Character == null) throw new MonsterPartyNullReferenceException(this, "Character");
 
-        _heldObject = target;
+            if (this.Character.State == Character.StateType.Player)
+            {
+                if (Input.GetButtonDown("Drop"))
+                {
+                    DropHeldObject();
+                }
+            }
 
-        // 1. Temporarily unparent to avoid local rotation/position interference
-        Transform briefcaseTransform = _heldObject.gameObject.transform;
-        briefcaseTransform.SetParent(null); 
+        }
 
-        // 2. Calculate relative rotation of the handle to the briefcase
-        Quaternion relativeHandleRotation = Quaternion.Inverse(briefcaseTransform.rotation) * _heldObject.GetCarryHandle().rotation;
+        public void OnInteractWithCarryable(ICarryable target)
+        {
+            if (this.Character == null) throw new MonsterPartyNullReferenceException(this, "Character");
 
-        // 3. Determine how to rotate the briefcase so its handle matches the hand's rotation
-        var carryParent = GetCarryParent();
-        Quaternion desiredBriefcaseRotation = carryParent.rotation * Quaternion.Inverse(relativeHandleRotation);
-        briefcaseTransform.rotation = desiredBriefcaseRotation;
+            if (!target.IsCarryable) return;
+            if (_heldObject != null) return;
 
-        // 4. Position the briefcase so the handle aligns with the CarryParent
-        Vector3 handleOffset = _heldObject.GetCarryHandle().position - briefcaseTransform.position;
-        briefcaseTransform.position = carryParent.position - handleOffset;
+            _heldObject = target;
 
-        // 5. Re-parent it now that transform is in place
-        briefcaseTransform.SetParent(carryParent, worldPositionStays: true);
+            // 1. Temporarily unparent to avoid local rotation/position interference
+            Transform briefcaseTransform = _heldObject.gameObject.transform;
+            briefcaseTransform.SetParent(null);
 
-        // 6. Trigger any logic tied to pickup
-        target.OnPickUp(this);
+            // 2. Calculate relative rotation of the handle to the briefcase
+            Quaternion relativeHandleRotation = Quaternion.Inverse(briefcaseTransform.rotation) * _heldObject.GetCarryHandle().rotation;
 
-        Debug.Log($"Character '{gameObject.name}' picked up '{target.gameObject.name}'. Max move speed is now {this.Character.GetCurrentMovementComponent().GetMaxMoveSpeed()}.");
-    }
+            // 3. Determine how to rotate the briefcase so its handle matches the hand's rotation
+            var carryParent = GetCarryParent();
+            Quaternion desiredBriefcaseRotation = carryParent.rotation * Quaternion.Inverse(relativeHandleRotation);
+            briefcaseTransform.rotation = desiredBriefcaseRotation;
 
-    public void ForceDrop(){
-        DropHeldObject();
-    }
-    
-    private void DropHeldObject()
-    {
-        if (_heldObject == null) return;
+            // 4. Position the briefcase so the handle aligns with the CarryParent
+            Vector3 handleOffset = _heldObject.GetCarryHandle().position - briefcaseTransform.position;
+            briefcaseTransform.position = carryParent.position - handleOffset;
 
-        _heldObject.gameObject.transform.SetParent(null); // unparent from the hand
-        _heldObject.OnDrop(this); // let the object handle physics toggling, etc.
+            // 5. Re-parent it now that transform is in place
+            briefcaseTransform.SetParent(carryParent, worldPositionStays: true);
 
-        Debug.Log($"Character '{gameObject.name}' dropped '{_heldObject.gameObject.name}'.");
+            // 6. Trigger any logic tied to pickup
+            target.OnPickUp(this);
 
-        _heldObject = null;
-    }
+            Debug.Log($"Character '{gameObject.name}' picked up '{target.gameObject.name}'. Max move speed is now {this.Character.GetCurrentMovementComponent().GetMaxMoveSpeed()}.");
+        }
 
-    private void HandleDeath(Entity deadEntity){ 
-        DropHeldObject();
+        public void ForceDrop()
+        {
+            DropHeldObject();
+        }
+
+        private void DropHeldObject()
+        {
+            if (_heldObject == null) return;
+
+            _heldObject.gameObject.transform.SetParent(null); // unparent from the hand
+            _heldObject.OnDrop(this); // let the object handle physics toggling, etc.
+
+            Debug.Log($"Character '{gameObject.name}' dropped '{_heldObject.gameObject.name}'.");
+
+            _heldObject = null;
+        }
+
+        private void HandleDeath(Entity deadEntity)
+        {
+            DropHeldObject();
+        }
     }
 }

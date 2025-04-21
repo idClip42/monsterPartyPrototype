@@ -4,23 +4,28 @@ using UnityEngine.AI;
 
 # nullable enable
 
-public abstract class SimpleMonsterState{
-    public struct Knowledge {
-        public Character? visibleTarget;
-        public Vector3? lastSeenPosition;
-        public Vector3? lastSeenVelocity;
+namespace MonsterParty
+{
+    public abstract class SimpleMonsterState
+    {
+        public struct Knowledge
+        {
+            public Character? visibleTarget;
+            public Vector3? lastSeenPosition;
+            public Vector3? lastSeenVelocity;
+        }
+
+        public abstract void FillInDebugInfo(Dictionary<string, string> infoTarget);
+        public abstract SimpleMonster.State NextState { get; }
+        public abstract float ProgressToNextState { get; }
+        public abstract bool AllowInterruption { get; }
+
+        public abstract void Start(NavMeshAgent agent, Knowledge currentKnowledge);
+        public abstract void Stop(NavMeshAgent agent);
+        public abstract SimpleMonster.State OnUpdate(float deltaTime, Knowledge currentKnowledge, NavMeshAgent agent);
+
+        public sealed override bool Equals(object other) => base.Equals(other);
+        public sealed override int GetHashCode() => base.GetHashCode();
+        public sealed override string ToString() => base.ToString();
     }
-
-    public abstract void FillInDebugInfo(Dictionary<string, string> infoTarget);
-    public abstract SimpleMonster.State NextState { get; }
-    public abstract float ProgressToNextState { get; }
-    public abstract bool AllowInterruption { get; }
-
-    public abstract void Start(NavMeshAgent agent, Knowledge currentKnowledge);
-    public abstract void Stop(NavMeshAgent agent);
-    public abstract SimpleMonster.State OnUpdate(float deltaTime, Knowledge currentKnowledge, NavMeshAgent agent);
-
-    public sealed override bool Equals(object other) => base.Equals(other);
-    public sealed override int GetHashCode() => base.GetHashCode();
-    public sealed override string ToString() => base.ToString();
 }

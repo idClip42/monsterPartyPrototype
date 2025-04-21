@@ -1,6 +1,9 @@
 #nullable enable
 
-public class SimpleCharacterComponentInteract : CharacterComponentInteract
+namespace MonsterParty
 {
-    
+    public class SimpleCharacterComponentInteract : CharacterComponentInteract
+    {
+
+    }
 }

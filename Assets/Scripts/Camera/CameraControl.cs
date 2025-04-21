@@ -3,154 +3,166 @@ using UnityEngine;
 
 #nullable enable
 
-[RequireComponent(typeof(Camera))]
-[DisallowMultipleComponent]
-public class CameraControl : MonoBehaviour
+namespace MonsterParty
 {
-    private enum State { Orbit, Transition };
-
-    [SerializeField] 
-    private LayerMask _collisionLayers;
-    [SerializeField] 
-    private LayerMask _navMeshRaycastLayers;
-
-    [SerializeField]
-    private float _horizontalSpeed = 10;
-    [SerializeField]
-    private float _verticalSpeed = 8;
-    [SerializeField]
-    private float _distanceFromTarget = 5;
-    [SerializeField]
-    private float _targetHeightOffset = 1;
-    [SerializeField]
-    private float _verticalMin = -80;
-    [SerializeField]
-    private float _verticalMax = 80;
-    [SerializeField]
-    private float _transitionSpeed = 20;
-
-    private CharacterManager? _characterManager = null;
-    private NavigationManager? _navManager = null;
-
-    private State _currentState = State.Orbit;
-    private float _horizontalAngle = 0;
-    private float _verticalAngle = 0;
-
-    private CameraControlTransition? _transitioner = null;
-    private Action? _transitionEndCallback = null;
-
-    private void Awake()
+    [RequireComponent(typeof(Camera))]
+    [DisallowMultipleComponent]
+    public class CameraControl : MonoBehaviour
     {
-        _characterManager = FindFirstObjectByType<CharacterManager>();
-        if(_characterManager == null)
-            throw new MonsterPartyFindFailException<CharacterManager>();
+        private enum State { Orbit, Transition };
 
-        _navManager = FindFirstObjectByType<NavigationManager>();
-        if(_navManager == null)
-            throw new MonsterPartyFindFailException<NavigationManager>();
+        [SerializeField]
+        private LayerMask _collisionLayers;
+        [SerializeField]
+        private LayerMask _navMeshRaycastLayers;
 
-        _transitioner = new CameraControlTransition(this, _navManager);
-    }
+        [SerializeField]
+        private float _horizontalSpeed = 10;
+        [SerializeField]
+        private float _verticalSpeed = 8;
+        [SerializeField]
+        private float _distanceFromTarget = 5;
+        [SerializeField]
+        private float _targetHeightOffset = 1;
+        [SerializeField]
+        private float _verticalMin = -80;
+        [SerializeField]
+        private float _verticalMax = 80;
+        [SerializeField]
+        private float _transitionSpeed = 20;
 
-    private void Update()
-    {
-        if(_currentState == State.Orbit){
-            OrbitControl();
+        private CharacterManager? _characterManager = null;
+        private NavigationManager? _navManager = null;
+
+        private State _currentState = State.Orbit;
+        private float _horizontalAngle = 0;
+        private float _verticalAngle = 0;
+
+        private CameraControlTransition? _transitioner = null;
+        private Action? _transitionEndCallback = null;
+
+        private void Awake()
+        {
+            _characterManager = FindFirstObjectByType<CharacterManager>();
+            if (_characterManager == null)
+                throw new MonsterPartyFindFailException<CharacterManager>();
+
+            _navManager = FindFirstObjectByType<NavigationManager>();
+            if (_navManager == null)
+                throw new MonsterPartyFindFailException<NavigationManager>();
+
+            _transitioner = new CameraControlTransition(this, _navManager);
         }
-        else if(_currentState == State.Transition){
-            TransitionUpdate();
-        }
-    }
 
-    private void OrbitControl(){
-        if(_characterManager == null)
-            throw new MonsterPartyNullReferenceException(this, "_characterManager");
-            
-        // TODO: This is for the non-physics movement of the CharacterController
-        // TODO: If and when this changes, this'll need to move to FixedUpdate()
-        if(_characterManager.SelectedCharacter != null){
-            float mouseX = Input.GetAxisRaw("Mouse X");
-            float mouseY = Input.GetAxisRaw("Mouse Y");
-            _horizontalAngle += mouseX * _horizontalSpeed;
-            _verticalAngle += mouseY * _verticalSpeed;
-            _verticalAngle = Mathf.Clamp(_verticalAngle, _verticalMin, _verticalMax);
-
-            Vector3 direction = GetOffsetDirection();
-            Vector3 positionOffset = direction * _distanceFromTarget;
-            Vector3 characterAxis = GetCharacterAxis(_characterManager.SelectedCharacter);
-            Vector3 targetPosition = characterAxis + positionOffset;
-
-            // Raycast from the target position to the camera
-            RaycastHit hit;
-            if (Physics.Raycast(
-                characterAxis, 
-                direction, 
-                out hit, 
-                _distanceFromTarget,
-                _collisionLayers
-            )) {
-                var prevTgtPos = targetPosition;
-                
-                // If the ray hits something, adjust the camera position
-                targetPosition = hit.point + -direction * 0.2f; // Push the camera slightly in front of the hit point
-
-                Debug.DrawLine(
-                    prevTgtPos,
-                    targetPosition
-                );
+        private void Update()
+        {
+            if (_currentState == State.Orbit)
+            {
+                OrbitControl();
             }
-
-            // Set the camera's position to the calculated position
-            this.transform.position = targetPosition;
-            this.transform.forward = -direction;
+            else if (_currentState == State.Transition)
+            {
+                TransitionUpdate();
+            }
         }
-    }
 
-    private void TransitionUpdate(){
-        if(_transitioner == null)
-            throw new MonsterPartyNullReferenceException(this, "_transitioner");
-        if(_transitionEndCallback == null)
-            throw new MonsterPartyNullReferenceException(this, "_transitionEndCallback");
+        private void OrbitControl()
+        {
+            if (_characterManager == null)
+                throw new MonsterPartyNullReferenceException(this, "_characterManager");
 
-        bool endTransition = _transitioner.MoveCamera(Time.deltaTime);
+            // TODO: This is for the non-physics movement of the CharacterController
+            // TODO: If and when this changes, this'll need to move to FixedUpdate()
+            if (_characterManager.SelectedCharacter != null)
+            {
+                float mouseX = Input.GetAxisRaw("Mouse X");
+                float mouseY = Input.GetAxisRaw("Mouse Y");
+                _horizontalAngle += mouseX * _horizontalSpeed;
+                _verticalAngle += mouseY * _verticalSpeed;
+                _verticalAngle = Mathf.Clamp(_verticalAngle, _verticalMin, _verticalMax);
 
-        if(endTransition){
-            _transitioner.Clear();
-            _transitionEndCallback();
-            _transitionEndCallback = null;
-            _currentState = State.Orbit;
-            Debug.Log($"Camera ending transition to Character.");
+                Vector3 direction = GetOffsetDirection();
+                Vector3 positionOffset = direction * _distanceFromTarget;
+                Vector3 characterAxis = GetCharacterAxis(_characterManager.SelectedCharacter);
+                Vector3 targetPosition = characterAxis + positionOffset;
+
+                // Raycast from the target position to the camera
+                RaycastHit hit;
+                if (Physics.Raycast(
+                    characterAxis,
+                    direction,
+                    out hit,
+                    _distanceFromTarget,
+                    _collisionLayers
+                ))
+                {
+                    var prevTgtPos = targetPosition;
+
+                    // If the ray hits something, adjust the camera position
+                    targetPosition = hit.point + -direction * 0.2f; // Push the camera slightly in front of the hit point
+
+                    Debug.DrawLine(
+                        prevTgtPos,
+                        targetPosition
+                    );
+                }
+
+                // Set the camera's position to the calculated position
+                this.transform.position = targetPosition;
+                this.transform.forward = -direction;
+            }
         }
+
+        private void TransitionUpdate()
+        {
+            if (_transitioner == null)
+                throw new MonsterPartyNullReferenceException(this, "_transitioner");
+            if (_transitionEndCallback == null)
+                throw new MonsterPartyNullReferenceException(this, "_transitionEndCallback");
+
+            bool endTransition = _transitioner.MoveCamera(Time.deltaTime);
+
+            if (endTransition)
+            {
+                _transitioner.Clear();
+                _transitionEndCallback();
+                _transitionEndCallback = null;
+                _currentState = State.Orbit;
+                Debug.Log($"Camera ending transition to Character.");
+            }
+        }
+
+        public void SendCameraToNewCharacter(Character target, Action arrivalCallback)
+        {
+            if (_transitioner == null)
+                throw new MonsterPartyNullReferenceException(this, "_transitioner");
+
+            _currentState = State.Transition;
+            _transitioner.Initialize(
+                target,
+                GetOffsetDirection() * _distanceFromTarget,
+                _transitionSpeed,
+                _navMeshRaycastLayers
+            );
+            _transitionEndCallback = arrivalCallback;
+
+            Debug.Log($"Camera beginning transition to Character '{target.gameObject.name}'.");
+        }
+
+        public Vector3 GetCharacterAxis(Character target)
+        {
+            Vector3 characterAxis = target.transform.position +
+                Vector3.up * _targetHeightOffset;
+            return characterAxis;
+        }
+
+        private Vector3 GetOffsetDirection()
+        {
+            return Quaternion.Euler(_verticalAngle, _horizontalAngle, 0) * Vector3.forward;
+        }
+
+        public sealed override bool Equals(object other) => base.Equals(other);
+        public sealed override int GetHashCode() => base.GetHashCode();
+        public sealed override string ToString() => base.ToString();
     }
-
-    public void SendCameraToNewCharacter(Character target, Action arrivalCallback){
-        if(_transitioner == null)
-            throw new MonsterPartyNullReferenceException(this, "_transitioner");
-        
-        _currentState = State.Transition;
-        _transitioner.Initialize(
-            target,
-            GetOffsetDirection() * _distanceFromTarget,
-            _transitionSpeed,
-            _navMeshRaycastLayers
-        );
-        _transitionEndCallback = arrivalCallback;
-
-        Debug.Log($"Camera beginning transition to Character '{target.gameObject.name}'.");
-    }
-
-    public Vector3 GetCharacterAxis(Character target){
-        Vector3 characterAxis = target.transform.position +
-            Vector3.up * _targetHeightOffset;
-        return characterAxis;
-    }
-
-    private Vector3 GetOffsetDirection()
-    {
-        return Quaternion.Euler(_verticalAngle, _horizontalAngle, 0) * Vector3.forward;
-    }
-
-    public sealed override bool Equals(object other) => base.Equals(other);
-    public sealed override int GetHashCode() => base.GetHashCode();
-    public sealed override string ToString() => base.ToString();
 }

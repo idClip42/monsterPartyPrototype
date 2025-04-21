@@ -3,19 +3,24 @@ using UnityEditor;
 
 #nullable enable
 
-[CustomEditor(typeof(NavigationManager), true)]
-public class NavigationManagerEditor : Editor {
-    public override void OnInspectorGUI()
+namespace MonsterParty
+{
+    [CustomEditor(typeof(NavigationManager), true)]
+    public class NavigationManagerEditor : Editor
     {
-        base.OnInspectorGUI();
+        public override void OnInspectorGUI()
+        {
+            base.OnInspectorGUI();
 
-        // Get reference to the target script
-        NavigationManager manager = (NavigationManager)target;
+            // Get reference to the target script
+            NavigationManager manager = (NavigationManager)target;
 
-        EditorGUILayout.LabelField($"Nav Points: {manager.NavPointsCount}", EditorStyles.boldLabel);
+            EditorGUILayout.LabelField($"Nav Points: {manager.NavPointsCount}", EditorStyles.boldLabel);
 
-        if(GUILayout.Button("Refresh")){
-            manager.Refresh();
+            if (GUILayout.Button("Refresh"))
+            {
+                manager.Refresh();
+            }
         }
     }
 }

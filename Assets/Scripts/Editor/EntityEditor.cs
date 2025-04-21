@@ -3,35 +3,38 @@ using UnityEditor;
 
 #nullable enable
 
-[CustomEditor(typeof(Entity), true)] // 'true' makes this apply to subclasses as well
-public class EntityEditor : Editor
+namespace MonsterParty
 {
-    public override void OnInspectorGUI()
+    [CustomEditor(typeof(Entity), true)] // 'true' makes this apply to subclasses as well
+    public class EntityEditor : Editor
     {
-        // Draw default inspector properties
-        DrawDefaultInspector();
-
-        // Get reference to the target script
-        Entity entity = (Entity)target;
-
-        // Display DebugValues in a read-only text area
-        EditorGUILayout.LabelField("Debug Info", EditorStyles.boldLabel);
-        EditorGUILayout.LabelField(entity.GetDebugInfoString(), EditorStyles.wordWrappedMiniLabel);
-
-        // Button to call Kill() method
-        GUI.enabled = entity.Alive && Application.isPlaying;
-        if (GUILayout.Button("Kill"))
+        public override void OnInspectorGUI()
         {
-            entity.Kill();
-        }
-        GUI.enabled = true;
+            // Draw default inspector properties
+            DrawDefaultInspector();
 
-        // Button to call Resurrect() method
-        GUI.enabled = !entity.Alive && Application.isPlaying;
-        if (GUILayout.Button("Resurrect"))
-        {
-            entity.Resurrect();
+            // Get reference to the target script
+            Entity entity = (Entity)target;
+
+            // Display DebugValues in a read-only text area
+            EditorGUILayout.LabelField("Debug Info", EditorStyles.boldLabel);
+            EditorGUILayout.LabelField(entity.GetDebugInfoString(), EditorStyles.wordWrappedMiniLabel);
+
+            // Button to call Kill() method
+            GUI.enabled = entity.Alive && Application.isPlaying;
+            if (GUILayout.Button("Kill"))
+            {
+                entity.Kill();
+            }
+            GUI.enabled = true;
+
+            // Button to call Resurrect() method
+            GUI.enabled = !entity.Alive && Application.isPlaying;
+            if (GUILayout.Button("Resurrect"))
+            {
+                entity.Resurrect();
+            }
+            GUI.enabled = true;
         }
-        GUI.enabled = true;
     }
 }

@@ -2,23 +2,27 @@ using UnityEngine;
 
 #nullable enable
 
-[RequireComponent(typeof(SimpleCharacter))]
-public class SimpleCharacterComponentCarry : CharacterComponentCarry
+namespace MonsterParty
 {
-    [SerializeField]
-    private Transform? _carryParent;
-
-    protected override Transform GetCarryParent() {
-        if(_carryParent == null)
-            throw new MonsterPartyNullReferenceException(this, "_carryParent");
-        return _carryParent;
-    }
-
-    protected override void Awake()
+    [RequireComponent(typeof(SimpleCharacter))]
+    public class SimpleCharacterComponentCarry : CharacterComponentCarry
     {
-        base.Awake();
-        
-        if(_carryParent == null)
-            throw new MonsterPartyNullReferenceException(this, "_carryParent");
+        [SerializeField]
+        private Transform? _carryParent;
+
+        protected override Transform GetCarryParent()
+        {
+            if (_carryParent == null)
+                throw new MonsterPartyNullReferenceException(this, "_carryParent");
+            return _carryParent;
+        }
+
+        protected override void Awake()
+        {
+            base.Awake();
+
+            if (_carryParent == null)
+                throw new MonsterPartyNullReferenceException(this, "_carryParent");
+        }
     }
 }

@@ -1,7 +1,10 @@
 #nullable enable
 
-public interface ISpeedLimiter
+namespace MonsterParty
 {
-    bool IsLimitingMaxSpeed { get; }
-    float MaxSpeedPercentageLimit { get; }
+    public interface ISpeedLimiter
+    {
+        bool IsLimitingMaxSpeed { get; }
+        float MaxSpeedPercentageLimit { get; }
+    }
 }

@@ -2,8 +2,11 @@ using UnityEngine;
 
 #nullable enable
 
-public interface INoiseSource
+namespace MonsterParty
 {
-    GameObject gameObject { get; }
-    float CurrentNoiseRadius { get; }
+    public interface INoiseSource
+    {
+        GameObject gameObject { get; }
+        float CurrentNoiseRadius { get; }
+    }
 }

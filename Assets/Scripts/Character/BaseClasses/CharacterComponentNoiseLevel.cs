@@ -4,21 +4,25 @@ using System.Collections.Generic;
 
 #nullable enable
 
-[DisallowMultipleComponent]
-public abstract class CharacterComponentNoiseLevel : CharacterComponent, INoiseSource
+namespace MonsterParty
 {
-    public abstract float CurrentNoiseRadius { get; }
-
-    public sealed override string DebugHeader => "Noise";
-
-    public override void FillInDebugInfo(Dictionary<string, string> infoTarget)
+    [DisallowMultipleComponent]
+    public abstract class CharacterComponentNoiseLevel : CharacterComponent, INoiseSource
     {
-        infoTarget["Noise Radius"] = $"{CurrentNoiseRadius:F2}m";
-    }
+        public abstract float CurrentNoiseRadius { get; }
+
+        public sealed override string DebugHeader => "Noise";
+
+        public override void FillInDebugInfo(Dictionary<string, string> infoTarget)
+        {
+            infoTarget["Noise Radius"] = $"{CurrentNoiseRadius:F2}m";
+        }
 
 #if UNITY_EDITOR
-    private void OnDrawGizmos() {        
-        NoiseUtilities.NoiseSourceGizmos(this);
-    }
+        private void OnDrawGizmos()
+        {
+            NoiseUtilities.NoiseSourceGizmos(this);
+        }
 #endif
+    }
 }

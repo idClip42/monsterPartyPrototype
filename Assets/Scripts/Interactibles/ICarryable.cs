@@ -2,21 +2,24 @@ using UnityEngine;
 
 #nullable enable
 
-public interface ICarryable
+namespace MonsterParty
 {
-    GameObject gameObject { get; }
+    public interface ICarryable
+    {
+        GameObject gameObject { get; }
 
-    Transform GetCarryHandle();
+        Transform GetCarryHandle();
 
-    CharacterComponentCarry? Carrier { get; }
+        CharacterComponentCarry? Carrier { get; }
 
-    float Mass { get; }
+        float Mass { get; }
 
-    bool IsCarryable { get; }
+        bool IsCarryable { get; }
 
-    void OnPickUp(CharacterComponentCarry pickerUpper);
+        void OnPickUp(CharacterComponentCarry pickerUpper);
 
-    void OnDrop(CharacterComponentCarry pickerUpper);
+        void OnDrop(CharacterComponentCarry pickerUpper);
 
-    void LockInPlace(Transform targetParent);
+        void LockInPlace(Transform targetParent);
+    }
 }

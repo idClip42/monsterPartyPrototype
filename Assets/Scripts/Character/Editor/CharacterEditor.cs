@@ -3,14 +3,17 @@ using UnityEditor;
 
 #nullable enable
 
-[CustomEditor(typeof(Character), true)] // 'true' makes this apply to subclasses as well
-public class CharacterEditor : EntityEditor
+namespace MonsterParty
 {
-    public override void OnInspectorGUI()
+    [CustomEditor(typeof(Character), true)] // 'true' makes this apply to subclasses as well
+    public class CharacterEditor : EntityEditor
     {
-        base.OnInspectorGUI();
+        public override void OnInspectorGUI()
+        {
+            base.OnInspectorGUI();
 
-        // Get reference to the target script
-        Character character = (Character)target;
+            // Get reference to the target script
+            Character character = (Character)target;
+        }
     }
 }

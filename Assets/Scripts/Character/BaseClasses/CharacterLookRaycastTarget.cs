@@ -3,18 +3,22 @@ using UnityEditor;
 
 #nullable enable
 
-[DisallowMultipleComponent]
-public class CharacterLookRaycastTarget : MonoBehaviour
+namespace MonsterParty
 {
-#if UNITY_EDITOR
-    private void OnDrawGizmosSelected()
+    [DisallowMultipleComponent]
+    public class CharacterLookRaycastTarget : MonoBehaviour
     {
-        using(new Handles.DrawingScope(Color.magenta)){
-            Handles.DrawWireCube(
-                transform.position,
-                Vector3.one * 0.1f
-            );
+#if UNITY_EDITOR
+        private void OnDrawGizmosSelected()
+        {
+            using (new Handles.DrawingScope(Color.magenta))
+            {
+                Handles.DrawWireCube(
+                    transform.position,
+                    Vector3.one * 0.1f
+                );
+            }
         }
-    }
 #endif
+    }
 }
