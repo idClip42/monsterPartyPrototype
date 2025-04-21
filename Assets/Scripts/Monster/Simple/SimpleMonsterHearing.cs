@@ -42,7 +42,22 @@ namespace MonsterParty
             // every single time.
             _reusableChecksList.Clear();
 
-            Vector3 myPos = this._monster.transform.position;
+            const float SAMPLE_DIST = 5.0f;
+            NavMeshHit hit;
+
+            Vector3 baseMonsterPos = this._monster.transform.position;
+            bool foundMonsterNavPos = NavMesh.SamplePosition(
+                baseMonsterPos,
+                out hit,
+                SAMPLE_DIST,
+                NavMesh.AllAreas
+            );
+            if(foundMonsterNavPos == false){
+                Debug.LogWarning($"Unable to find Nav Mesh position for {this._monster.gameObject.name} at {baseMonsterPos}");
+                return _reusableChecksList.ToArray();
+            }
+            Vector3 myPos = hit.position;
+
             foreach (var noiseSource in this._noiseSources)
             {
                 if (noiseSource == null)
@@ -54,13 +69,24 @@ namespace MonsterParty
                     continue;
                 }
 
-                Vector3 charPos = noiseSource.gameObject.transform.position;
+                Vector3 baseNoisePos = noiseSource.gameObject.transform.position;
+                bool foundNoiseNavPos = NavMesh.SamplePosition(
+                    baseNoisePos,
+                    out hit,
+                    SAMPLE_DIST,
+                    NavMesh.AllAreas
+                );
+                if(foundNoiseNavPos == false){
+                    Debug.LogWarning($"Unable to find Nav Mesh position for {noiseSource.gameObject.name} at {baseNoisePos}");
+                    continue;
+                }
+                Vector3 noisePos = hit.position;
 
                 // We first filter out anything whose linear
                 // distance is greater than the max distance,
                 // because if that's the case then our more
                 // complex distance check will definitely fail.
-                float sqrDist = (charPos - myPos).sqrMagnitude;
+                float sqrDist = (noisePos - myPos).sqrMagnitude;
                 float noiseDist = noiseSource.CurrentNoiseRadius;
                 if (sqrDist > (noiseDist * noiseDist)) continue;
 
@@ -70,7 +96,7 @@ namespace MonsterParty
                 // better sense of whether it's audible or not.
                 bool hasPath = NavMesh.CalculatePath(
                     myPos,
-                    charPos,
+                    noisePos,
                     new NavMeshQueryFilter()
                     {
                         areaMask = NavMesh.AllAreas,
