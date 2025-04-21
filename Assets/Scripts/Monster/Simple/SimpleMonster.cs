@@ -80,17 +80,17 @@ public class SimpleMonster : Entity, IDebugInfoProvider
         base.Awake();
 
         if(_headConfig == null)
-            throw new MonsterPartyNullReferenceException("_headConfig");
+            throw new MonsterPartyNullReferenceException(this, "_headConfig");
         if(_wanderConfig == null)
-            throw new MonsterPartyNullReferenceException("_wanderConfig");
+            throw new MonsterPartyNullReferenceException(this, "_wanderConfig");
         if(_chaseConfig == null)
-            throw new MonsterPartyNullReferenceException("_chaseConfig");
+            throw new MonsterPartyNullReferenceException(this, "_chaseConfig");
         if(_searchConfig == null)
-            throw new MonsterPartyNullReferenceException("_searchConfig");
+            throw new MonsterPartyNullReferenceException(this, "_searchConfig");
         if(_barksConfig == null)
-            throw new MonsterPartyNullReferenceException("_barksConfig");
+            throw new MonsterPartyNullReferenceException(this, "_barksConfig");
         if(_hearingConfig == null)
-            throw new MonsterPartyNullReferenceException("_hearingConfig");
+            throw new MonsterPartyNullReferenceException(this, "_hearingConfig");
 
         _navManager = FindFirstObjectByType<NavigationManager>();
         if (_navManager == null)
@@ -123,11 +123,11 @@ public class SimpleMonster : Entity, IDebugInfoProvider
     private void Start()
     {
         if(_wanderBehavior == null)
-            throw new MonsterPartyNullReferenceException("_wanderBehavior");
+            throw new MonsterPartyNullReferenceException(this, "_wanderBehavior");
         if (_navMeshAgent == null)
-            throw new MonsterPartyNullReferenceException("_navMeshAgent");
+            throw new MonsterPartyNullReferenceException(this, "_navMeshAgent");
         if(_headBehavior == null)
-            throw new MonsterPartyNullReferenceException("_headBehavior");
+            throw new MonsterPartyNullReferenceException(this, "_headBehavior");
         _wanderBehavior.Start(_navMeshAgent, _headBehavior.CurrentKnowledge);
     }
 
@@ -136,7 +136,7 @@ public class SimpleMonster : Entity, IDebugInfoProvider
         if(this.Alive == false) return;
 
         if(_headBehavior == null)
-            throw new MonsterPartyNullReferenceException("_headBehavior");
+            throw new MonsterPartyNullReferenceException(this, "_headBehavior");
 
         UpdateBehavior();
 
@@ -146,15 +146,15 @@ public class SimpleMonster : Entity, IDebugInfoProvider
 
     private void UpdateBehavior(){
         if(_headBehavior == null)
-            throw new MonsterPartyNullReferenceException("_headBehavior");
+            throw new MonsterPartyNullReferenceException(this, "_headBehavior");
         if(_hearing == null)
-            throw new MonsterPartyNullReferenceException("_hearing");
+            throw new MonsterPartyNullReferenceException(this, "_hearing");
         if(_barks == null)
-            throw new MonsterPartyNullReferenceException("_barks");
+            throw new MonsterPartyNullReferenceException(this, "_barks");
         if(_searchBehavior == null)
-            throw new MonsterPartyNullReferenceException("_searchBehavior");
+            throw new MonsterPartyNullReferenceException(this, "_searchBehavior");
         if (_navMeshAgent == null)
-            throw new MonsterPartyNullReferenceException("_navMeshAgent");
+            throw new MonsterPartyNullReferenceException(this, "_navMeshAgent");
 
         // Handle current behavior and
         // get prospective behavior change.
@@ -229,11 +229,11 @@ public class SimpleMonster : Entity, IDebugInfoProvider
 
     private SimpleMonsterState StateToBehavior(State state){
         if(_wanderBehavior == null)
-            throw new MonsterPartyNullReferenceException("_wanderBehavior");
+            throw new MonsterPartyNullReferenceException(this, "_wanderBehavior");
         if(_chaseBehavior == null)
-            throw new MonsterPartyNullReferenceException("_chaseBehavior");
+            throw new MonsterPartyNullReferenceException(this, "_chaseBehavior");
         if(_searchBehavior == null)
-            throw new MonsterPartyNullReferenceException("_searchBehavior");
+            throw new MonsterPartyNullReferenceException(this, "_searchBehavior");
 
         return state switch {
             State.Wander => _wanderBehavior,
@@ -245,9 +245,9 @@ public class SimpleMonster : Entity, IDebugInfoProvider
 
     protected virtual void HandleDeath(Entity deadEntity){
         if(_barks == null)
-            throw new MonsterPartyNullReferenceException("_barks");
+            throw new MonsterPartyNullReferenceException(this, "_barks");
         if (_navMeshAgent == null)
-            throw new MonsterPartyNullReferenceException("_navMeshAgent");
+            throw new MonsterPartyNullReferenceException(this, "_navMeshAgent");
 
         Light[] allLights = GetComponentsInChildren<Light>();
         foreach(Light l in allLights)
@@ -266,7 +266,7 @@ public class SimpleMonster : Entity, IDebugInfoProvider
     public override void Resurrect()
     {
         if (_navMeshAgent == null)
-            throw new MonsterPartyNullReferenceException("_navMeshAgent");
+            throw new MonsterPartyNullReferenceException(this, "_navMeshAgent");
 
         Light[] allLights = GetComponentsInChildren<Light>();
         foreach(Light l in allLights)
@@ -285,9 +285,9 @@ public class SimpleMonster : Entity, IDebugInfoProvider
 #if UNITY_EDITOR
     protected sealed override void OnDrawGizmos() {
         if(_headConfig == null)
-            throw new MonsterPartyNullReferenceException("_headConfig");
+            throw new MonsterPartyNullReferenceException(this, "_headConfig");
         if(_headConfig.eye == null)
-            throw new MonsterPartyNullReferenceException("_headConfig.eye");
+            throw new MonsterPartyNullReferenceException(this, "_headConfig.eye");
 
         base.OnDrawGizmos();
 

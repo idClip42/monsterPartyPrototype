@@ -55,9 +55,9 @@ public abstract class Character : Entity, IDebugInfoProvider
     public void SetState(StateType newState)
     {
         if(PlayerMovement == null) 
-            throw new MonsterPartyNullReferenceException("PlayerMovement");
+            throw new MonsterPartyNullReferenceException(this, "PlayerMovement");
         if(AIMovement == null) 
-            throw new MonsterPartyNullReferenceException("AIMovement");
+            throw new MonsterPartyNullReferenceException(this, "AIMovement");
 
         _state = newState;
 
@@ -94,9 +94,9 @@ public abstract class Character : Entity, IDebugInfoProvider
         if(deadEntity != this)
             throw new MonsterPartyException("This function should only be called for own death.");
         if(PlayerMovement == null) 
-            throw new MonsterPartyNullReferenceException("_playerMovement");
+            throw new MonsterPartyNullReferenceException(this, "_playerMovement");
         if(AIMovement == null) 
-            throw new MonsterPartyNullReferenceException("_aiMovement");
+            throw new MonsterPartyNullReferenceException(this, "_aiMovement");
 
         PlayerMovement.enabled = false;
         AIMovement.enabled = false;
@@ -111,9 +111,9 @@ public abstract class Character : Entity, IDebugInfoProvider
 
     public CharacterComponentMovement GetCurrentMovementComponent(){
         if(PlayerMovement == null) 
-            throw new MonsterPartyNullReferenceException("PlayerMovement");
+            throw new MonsterPartyNullReferenceException(this, "PlayerMovement");
         if(AIMovement == null) 
-            throw new MonsterPartyNullReferenceException("AIMovement");
+            throw new MonsterPartyNullReferenceException(this, "AIMovement");
             
         switch (_state)
         {

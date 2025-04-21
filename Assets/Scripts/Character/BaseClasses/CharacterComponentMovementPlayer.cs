@@ -29,7 +29,7 @@ public abstract class CharacterComponentMovementPlayer : CharacterComponentMovem
 
         _camera = FindFirstObjectByType<CameraControl>();
         if(_camera == null)
-            throw new MonsterPartyNullReferenceException($"_camera");
+            throw new MonsterPartyNullReferenceException(this, $"_camera");
 
         _navMeshAgent = GetComponent<NavMeshAgent>();
     }
@@ -47,11 +47,11 @@ public abstract class CharacterComponentMovementPlayer : CharacterComponentMovem
     private void Update()
     {
         if(this.Character == null)
-            throw new MonsterPartyNullReferenceException("Character");
+            throw new MonsterPartyNullReferenceException(this, "Character");
         if(this.Character.Crouch == null)
-            throw new MonsterPartyNullReferenceException("Character.Crouch.Crouch");
+            throw new MonsterPartyNullReferenceException(this, "Character.Crouch.Crouch");
         if(_camera == null)
-            throw new MonsterPartyNullReferenceException("_camera");
+            throw new MonsterPartyNullReferenceException(this, "_camera");
 
         if(_navMeshAgent != null && _navMeshAgent.enabled == true)
             throw new MonsterPartyException("NavMeshAgent is enabled while in Player mode");

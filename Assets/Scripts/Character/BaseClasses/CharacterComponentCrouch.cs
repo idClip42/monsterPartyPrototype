@@ -34,7 +34,7 @@ public abstract class CharacterComponentCrouch : CharacterComponent, ISpeedLimit
 
     private void Update()
     {
-        if(this.Character == null) throw new MonsterPartyNullReferenceException("_characterBase");
+        if(this.Character == null) throw new MonsterPartyNullReferenceException(this, "_characterBase");
         
         _canUncrouch = CanUncrouch();
         
@@ -51,7 +51,7 @@ public abstract class CharacterComponentCrouch : CharacterComponent, ISpeedLimit
     }
 
     private void ToggleCrouch(){
-        if(this.Character == null) throw new MonsterPartyNullReferenceException("Character");
+        if(this.Character == null) throw new MonsterPartyNullReferenceException(this, "Character");
         
         if(this._isCrouching && !_canUncrouch)
             return;

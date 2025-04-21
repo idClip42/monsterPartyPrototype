@@ -16,7 +16,7 @@ public class CarryableObject : MonoBehaviour, IInteractible, ICarryable
 
     public Transform CarryHandle { get {
         if(_carryHandle == null)
-            throw new MonsterPartyNullReferenceException("_carryHandle");
+            throw new MonsterPartyNullReferenceException(this, "_carryHandle");
         return _carryHandle;
     }}
 
@@ -25,7 +25,7 @@ public class CarryableObject : MonoBehaviour, IInteractible, ICarryable
 
     public float Mass { get {
         if(_rb == null)
-            throw new MonsterPartyNullReferenceException("_rb");
+            throw new MonsterPartyNullReferenceException(this, "_rb");
         return _rb.mass;
     }}
 
@@ -37,17 +37,17 @@ public class CarryableObject : MonoBehaviour, IInteractible, ICarryable
     {
         _rb = GetComponent<Rigidbody>();
         if(_rb == null)
-            throw new MonsterPartyNullReferenceException("_rb");
+            throw new MonsterPartyNullReferenceException(this, "_rb");
 
         if(_carryHandle == null)
-            throw new MonsterPartyNullReferenceException("_carryHandle");
+            throw new MonsterPartyNullReferenceException(this, "_carryHandle");
 
         _defaultKinematicState = _rb.isKinematic;
     }
 
     public bool IsInteractible(Character interactor){
         if(interactor.Carry == null)
-            throw new MonsterPartyNullReferenceException("interactor.Carry");
+            throw new MonsterPartyNullReferenceException(this, "interactor.Carry");
         if(interactor.Carry.HeldObject != null)
             return false;
         if(this._isHeld)
@@ -57,7 +57,7 @@ public class CarryableObject : MonoBehaviour, IInteractible, ICarryable
 
     public void DoInteraction(Character interactor) {
         if(interactor.Carry == null)
-            throw new MonsterPartyNullReferenceException("interactor.Carry");
+            throw new MonsterPartyNullReferenceException(this, "interactor.Carry");
         interactor.Carry.OnInteractWithCarryable(this);
     }
 
@@ -67,7 +67,7 @@ public class CarryableObject : MonoBehaviour, IInteractible, ICarryable
         if(_isHeld == true)
             throw new MonsterPartyException("Tried to pick up something that is already held.");
         if(_rb == null)
-            throw new MonsterPartyNullReferenceException("_rb");
+            throw new MonsterPartyNullReferenceException(this, "_rb");
             
         _isHeld = true;
         _holder = pickerUpper;
@@ -84,7 +84,7 @@ public class CarryableObject : MonoBehaviour, IInteractible, ICarryable
         if(_isHeld == false)
             throw new MonsterPartyException("Tried to drop something that isn't held.");
         if(_rb == null)
-            throw new MonsterPartyNullReferenceException("_rb");
+            throw new MonsterPartyNullReferenceException(this, "_rb");
 
         _isHeld = false;
         _holder = null;
@@ -98,7 +98,7 @@ public class CarryableObject : MonoBehaviour, IInteractible, ICarryable
 
     public void LockInPlace(Transform targetParent){
         if(_rb == null)
-            throw new MonsterPartyNullReferenceException("_rb");
+            throw new MonsterPartyNullReferenceException(this, "_rb");
         if(_holder != null)
             throw new MonsterPartyException("Cannot lock in place while held. Drop first.");
 

@@ -19,7 +19,7 @@ public class DoorOpener : MonoBehaviour
         float sqrThreshold = _range * _range;
         foreach(var door in _doors){
             if(door == null)
-                throw new MonsterPartyNullReferenceException("door");
+                throw new MonsterPartyNullReferenceException(this, "door");
             if(door.IsOpen == true)
                 continue;
             Vector3 diff = this.transform.position - door.transform.position;

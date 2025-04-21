@@ -38,11 +38,11 @@ public class Door : MonoBehaviour, IInteractible
     void Awake()
     {
         if(_axis == null)
-            throw new MonsterPartyNullReferenceException("_axis");
+            throw new MonsterPartyNullReferenceException(this, "_axis");
         if(_interactor == null)
-            throw new MonsterPartyNullReferenceException("_interactor");
+            throw new MonsterPartyNullReferenceException(this, "_interactor");
         if(_occlusionPortal == null)
-            throw new MonsterPartyNullReferenceException("_occlusionPortal");
+            throw new MonsterPartyNullReferenceException(this, "_occlusionPortal");
 
         _baseRotation = _axis.rotation;
 
@@ -73,7 +73,7 @@ public class Door : MonoBehaviour, IInteractible
 
     public void OpenDoor(Transform opener){
         if(_axis == null)
-            throw new MonsterPartyNullReferenceException("_axis");
+            throw new MonsterPartyNullReferenceException(this, "_axis");
 
         Vector3 doorToChar = opener.position - this.transform.position;
         Vector3 doorForward = _axis.forward;
@@ -106,11 +106,11 @@ public class Door : MonoBehaviour, IInteractible
 
     private void SetDoorState(DoorState newState){
         if(_axis == null)
-            throw new MonsterPartyNullReferenceException("_axis");
+            throw new MonsterPartyNullReferenceException(this, "_axis");
         if(_baseRotation == null)
-            throw new MonsterPartyNullReferenceException("_baseRotation");
+            throw new MonsterPartyNullReferenceException(this, "_baseRotation");
         if(_occlusionPortal == null)
-            throw new MonsterPartyNullReferenceException("_occlusionPortal");
+            throw new MonsterPartyNullReferenceException(this, "_occlusionPortal");
 
         switch(newState){
             case DoorState.Closed:

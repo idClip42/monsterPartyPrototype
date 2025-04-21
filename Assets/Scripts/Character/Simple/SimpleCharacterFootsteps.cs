@@ -35,9 +35,9 @@ public class SimpleCharacterFootsteps : MonoBehaviour {
     void Update()
     {
         if(_character == null)
-            throw new MonsterPartyNullReferenceException("_character");
+            throw new MonsterPartyNullReferenceException(this, "_character");
         if(_audioSource == null)
-            throw new MonsterPartyNullReferenceException("_audioSource");
+            throw new MonsterPartyNullReferenceException(this, "_audioSource");
 
         _stepTimer += Time.deltaTime;
 
@@ -51,7 +51,7 @@ public class SimpleCharacterFootsteps : MonoBehaviour {
 
             _audioSource.clip = _footstepClips[_currentClipIndex];
             if(_audioSource.clip == null)
-                throw new MonsterPartyNullReferenceException("_audioSource.clip");
+                throw new MonsterPartyNullReferenceException(this, "_audioSource.clip");
             _audioSource.Play();
 
             _stepTimer = 0;

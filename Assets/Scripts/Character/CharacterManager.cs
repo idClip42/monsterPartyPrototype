@@ -15,7 +15,7 @@ public class CharacterManager : MonoBehaviour
     private void Awake()
     {
         _cameraControl = FindFirstObjectByType<CameraControl>();
-        if(_cameraControl == null) throw new MonsterPartyNullReferenceException("_cameraControl");
+        if(_cameraControl == null) throw new MonsterPartyNullReferenceException(this, "_cameraControl");
 
         _characters = FindObjectsByType<Character>(FindObjectsSortMode.None);
         foreach(Character c in _characters){
@@ -44,7 +44,7 @@ public class CharacterManager : MonoBehaviour
     }
 
     private void SelectCharacter(Character newSelection, bool immediate){
-        if(_cameraControl == null) throw new MonsterPartyNullReferenceException("_cameraControl");
+        if(_cameraControl == null) throw new MonsterPartyNullReferenceException(this, "_cameraControl");
 
         if(_selectedCharacter == newSelection) return;
         if(newSelection.Alive == false) return;

@@ -41,7 +41,7 @@ public abstract class CharacterComponentInteract : CharacterComponent
     private void Update()
     {
         if(this.Character == null)
-            throw new MonsterPartyNullReferenceException("_characterBase");
+            throw new MonsterPartyNullReferenceException(this, "_characterBase");
 
         if(this.Character.State == Character.StateType.Player){
             _interactibleWithinReach = GetInteractibleWithinReach();
@@ -73,7 +73,7 @@ public abstract class CharacterComponentInteract : CharacterComponent
         using(new Handles.DrawingScope(Color.white)){
             float gizmoMaxDistanceSqr = _gizmoMaxDistance * _gizmoMaxDistance;
             foreach (var interactible in _interactibles){
-                if(interactible == null) throw new MonsterPartyNullReferenceException("interactible");
+                if(interactible == null) throw new MonsterPartyNullReferenceException(this, "interactible");
                 if(interactible.gameObject == this.gameObject) continue;
                 if(interactible.IsInteractible(this.Character) == false) continue;
                 Vector3 diff = interactible.InteractionWorldPosition - ReferencePosition;
@@ -91,7 +91,7 @@ public abstract class CharacterComponentInteract : CharacterComponent
 
     private IInteractible? GetInteractibleWithinReach(){
         if(this.Character == null)
-            throw new MonsterPartyNullReferenceException("_characterBase");
+            throw new MonsterPartyNullReferenceException(this, "_characterBase");
 
         IInteractible? closest = null;
         float closestDistSq = float.MaxValue;

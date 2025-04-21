@@ -17,6 +17,10 @@ public class MonsterPartyNullReferenceException : MonsterPartyException {
     public MonsterPartyNullReferenceException (string fieldName) 
         : base($"'{fieldName}' is NULL.")
     {}
+
+    public MonsterPartyNullReferenceException (MonoBehaviour context, string fieldName) 
+        : base($"'{fieldName}' is NULL on '{context.gameObject.name}' ({context.GetType().Name}).")
+    {}
 }
 
 public class MonsterPartyFindFailException<T> : MonsterPartyException {

@@ -45,7 +45,7 @@ public class SimpleCharacterComponentMovementPlayer : CharacterComponentMovement
 
         _characterController = GetComponent<CharacterController>();
         if(_characterController == null)
-            throw new MonsterPartyNullReferenceException("_characterController");
+            throw new MonsterPartyNullReferenceException(this, "_characterController");
     }
 
     protected override void OnEnable()
@@ -65,7 +65,7 @@ public class SimpleCharacterComponentMovementPlayer : CharacterComponentMovement
     protected sealed override void Move(Vector3 desiredMovementVelocity, float deltaTime)
     {
         if(_characterController == null)
-            throw new MonsterPartyNullReferenceException("_characterController");
+            throw new MonsterPartyNullReferenceException(this, "_characterController");
         _characterController.Move(
             desiredMovementVelocity * deltaTime +
             (Physics.gravity * deltaTime)
@@ -75,7 +75,7 @@ public class SimpleCharacterComponentMovementPlayer : CharacterComponentMovement
     public sealed override float GetDesiredSpeed()
     {
         if(this.Character == null)
-            throw new MonsterPartyNullReferenceException("Character");
+            throw new MonsterPartyNullReferenceException(this, "Character");
         if(this.IsRunning)
             return this.BaseMaxSpeed * _runSpeedPercentage;
         else

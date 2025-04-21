@@ -23,7 +23,7 @@ public class SimpleCharacterComponentMovementAI : CharacterComponentMovementAI
     {
         base.OnEnable();
         if(_doorOpener == null)
-            throw new MonsterPartyNullReferenceException("_doorOpener");
+            throw new MonsterPartyNullReferenceException(this, "_doorOpener");
         _doorOpener.enabled = true;
     }
 
@@ -31,7 +31,7 @@ public class SimpleCharacterComponentMovementAI : CharacterComponentMovementAI
     {
         base.OnDisable();
         if(_doorOpener == null)
-            throw new MonsterPartyNullReferenceException("_doorOpener");
+            throw new MonsterPartyNullReferenceException(this, "_doorOpener");
         _doorOpener.enabled = false;
     }
 

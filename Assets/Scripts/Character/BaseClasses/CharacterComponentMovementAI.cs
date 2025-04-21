@@ -74,19 +74,19 @@ public abstract class CharacterComponentMovementAI : CharacterComponentMovement,
 
         _navManager = FindFirstObjectByType<NavigationManager>();
         if(_navManager == null)
-            throw new MonsterPartyNullReferenceException("_navManager");
+            throw new MonsterPartyNullReferenceException(this, "_navManager");
 
         _navMeshAgent = GetComponent<NavMeshAgent>();
         if(_navMeshAgent == null)
-            throw new MonsterPartyNullReferenceException("_navMeshAgent");
+            throw new MonsterPartyNullReferenceException(this, "_navMeshAgent");
     }
 
     private void Start()
     {
         if(this.Character == null)
-            throw new MonsterPartyNullReferenceException("Character");
+            throw new MonsterPartyNullReferenceException(this, "Character");
         if(this.Character.Crouch == null)
-            throw new MonsterPartyNullReferenceException("Character.Crouch");
+            throw new MonsterPartyNullReferenceException(this, "Character.Crouch");
         this.Character.Crouch.OnCrouchToggle += OnCrouchToggle;
     }
 
@@ -119,15 +119,15 @@ public abstract class CharacterComponentMovementAI : CharacterComponentMovement,
 
     private void UpdateFollow(){
         if(this.Character == null)
-            throw new MonsterPartyNullReferenceException("Character");
+            throw new MonsterPartyNullReferenceException(this, "Character");
         if(this.Character.Crouch == null)
-            throw new MonsterPartyNullReferenceException("Character.Crouch");
+            throw new MonsterPartyNullReferenceException(this, "Character.Crouch");
         if(_navMeshAgent == null) 
-            throw new MonsterPartyNullReferenceException("_navMeshAgent");
+            throw new MonsterPartyNullReferenceException(this, "_navMeshAgent");
         if(_behaviorTarget == null) 
-            throw new MonsterPartyNullReferenceException("_behaviorTarget");
+            throw new MonsterPartyNullReferenceException(this, "_behaviorTarget");
         if(_behaviorTarget.Crouch == null) 
-            throw new MonsterPartyNullReferenceException("_behaviorTarget.Crouch");
+            throw new MonsterPartyNullReferenceException(this, "_behaviorTarget.Crouch");
 
         if(_navMeshAgent.enabled == false)
             throw new MonsterPartyException("Nav mesh agent not enabled");
@@ -140,11 +140,11 @@ public abstract class CharacterComponentMovementAI : CharacterComponentMovement,
 
     // private void UpdateHoldPosition(){
     //     if(this.Character == null)
-    //         throw new MonsterPartyNullReferenceException("Character");
+    //         throw new MonsterPartyNullReferenceException(this, "Character");
     //     if(this.Character.Crouch == null)
-    //         throw new MonsterPartyNullReferenceException("Character.Crouch");
+    //         throw new MonsterPartyNullReferenceException(this, "Character.Crouch");
     //     if(_navMeshAgent == null) 
-    //         throw new MonsterPartyNullReferenceException("_navMeshAgent");
+    //         throw new MonsterPartyNullReferenceException(this, "_navMeshAgent");
 
     //     if(this.Character.Crouch.IsCrouching)
     //         _navMeshAgent.speed = this.Character.Movement.CrouchSpeed;
@@ -155,13 +155,13 @@ public abstract class CharacterComponentMovementAI : CharacterComponentMovement,
     private void OnCrouchToggle(bool isCrouching){
         Debug.Log($"AI Movement for '{gameObject.name}' received a new crouch value of {isCrouching}.");
         if(_navMeshAgent == null) 
-            throw new MonsterPartyNullReferenceException("_navMeshAgent");
+            throw new MonsterPartyNullReferenceException(this, "_navMeshAgent");
         this._navMeshAgent.agentTypeID = CurrentAgentTypeId;
     }
 
     private void SetBehavior(Behavior behavior, Character? target){
         if(_navMeshAgent == null) 
-            throw new MonsterPartyNullReferenceException("_navMeshAgent");
+            throw new MonsterPartyNullReferenceException(this, "_navMeshAgent");
         if(_navMeshAgent.enabled == false) 
             throw new MonsterPartyException("Nav mesh agent not enabled");
 
@@ -225,7 +225,7 @@ public abstract class CharacterComponentMovementAI : CharacterComponentMovement,
 
         if(_behavior == Behavior.Follow){
             if(_behaviorTarget == null)
-                throw new MonsterPartyNullReferenceException("_behaviorTarget");
+                throw new MonsterPartyNullReferenceException(this, "_behaviorTarget");
 
             Vector3 myPos = transform.position;
             Vector3 theirPos = _behaviorTarget.transform.position;
@@ -245,16 +245,16 @@ public abstract class CharacterComponentMovementAI : CharacterComponentMovement,
 
     private float GetFollowSpeed(Character target){
         if(target.Crouch == null) 
-            throw new MonsterPartyNullReferenceException("target.Crouch");
+            throw new MonsterPartyNullReferenceException(this, "target.Crouch");
 
         if(target.State == Character.StateType.AI){
             if(target.AIMovement == null) 
-                throw new MonsterPartyNullReferenceException("target.AIMovement");
+                throw new MonsterPartyNullReferenceException(this, "target.AIMovement");
             return target.AIMovement.MaxSpeed;
         }
         else if(target.State == Character.StateType.Player){
             if(target.PlayerMovement == null) 
-                throw new MonsterPartyNullReferenceException("target.PlayerMovement");
+                throw new MonsterPartyNullReferenceException(this, "target.PlayerMovement");
             return Mathf.Min(
                 target.PlayerMovement.GetDesiredSpeed(),
                 this.GetMaxMoveSpeed()

@@ -44,7 +44,7 @@ public class SimpleCharacter : Character
         base.Awake();
 
         if(_model == null)
-            throw new MonsterPartyNullReferenceException("_model");
+            throw new MonsterPartyNullReferenceException(this, "_model");
 
         _crouch = GetComponent<SimpleCharacterComponentCrouch>();
         if(_crouch == null)
@@ -80,7 +80,7 @@ public class SimpleCharacter : Character
     void Update()
     {
         if(_model == null)
-            throw new MonsterPartyNullReferenceException("_model");
+            throw new MonsterPartyNullReferenceException(this, "_model");
             
         Vector3 projectedMovementVelocity = Vector3.ProjectOnPlane(
             this.CurrentVelocity,
