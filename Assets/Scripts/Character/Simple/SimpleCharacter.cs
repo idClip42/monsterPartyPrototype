@@ -118,7 +118,7 @@ public class SimpleCharacter : Character
             throw new MonsterPartyNullReferenceException(this, "_model");
             
         Vector3 projectedMovementVelocity = Vector3.ProjectOnPlane(
-            this.CurrentVelocity,
+            this.GetCurrentMovementComponent().CurrentVelocity,
             Vector3.up
         );
         if(projectedMovementVelocity != Vector3.zero){

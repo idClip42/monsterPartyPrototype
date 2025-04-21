@@ -14,18 +14,18 @@ public class CarryableObject : MonoBehaviour, IInteractible, ICarryable
     [SerializeField]
     private Transform? _carryHandle;
 
-    public Transform CarryHandle { get {
+    public Transform GetCarryHandle() {
         if(_carryHandle == null)
             throw new MonsterPartyNullReferenceException(this, "_carryHandle");
         return _carryHandle;
-    }}
+    }
 
     public bool IsCarryable => _isHeld == false;
     public CharacterComponentCarry? Carrier => _holder;
 
     public float Mass { get {
         if(_rb == null)
-            throw new MonsterPartyNullReferenceException(this, "_rb");
+            return 0;
         return _rb.mass;
     }}
 

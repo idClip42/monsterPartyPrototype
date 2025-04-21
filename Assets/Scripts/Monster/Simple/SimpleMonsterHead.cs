@@ -227,7 +227,7 @@ public class SimpleMonsterHead{
         {
             this._currentKnowledge.visibleTarget = closestVisibleCharacter;
             this._currentKnowledge.lastSeenPosition = closestVisibleCharacter.transform.position;
-            this._currentKnowledge.lastSeenVelocity = closestVisibleCharacter.CurrentVelocity;
+            this._currentKnowledge.lastSeenVelocity = closestVisibleCharacter.GetCurrentMovementComponent().CurrentVelocity;
         }
         else
         {

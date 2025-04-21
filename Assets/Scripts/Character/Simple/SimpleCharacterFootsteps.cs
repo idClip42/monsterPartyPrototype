@@ -41,7 +41,7 @@ public class SimpleCharacterFootsteps : MonoBehaviour {
 
         _stepTimer += Time.deltaTime;
 
-        float speed = this._character.CurrentVelocity.magnitude;
+        float speed = this._character.GetCurrentMovementComponent().CurrentVelocity.magnitude;
 
         _audioSource.volume = Mathf.InverseLerp(0, _maxVolumeSpeed, speed);
 

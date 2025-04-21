@@ -12,7 +12,7 @@ public abstract class CharacterComponentCarry : CharacterComponent, ISpeedLimite
 
     ICarryable? _heldObject = null;
 
-    protected abstract Transform CarryParent { get; }
+    protected abstract Transform GetCarryParent();
 
     public ICarryable? HeldObject => _heldObject;
 
@@ -66,18 +66,19 @@ public abstract class CharacterComponentCarry : CharacterComponent, ISpeedLimite
         briefcaseTransform.SetParent(null); 
 
         // 2. Calculate relative rotation of the handle to the briefcase
-        Quaternion relativeHandleRotation = Quaternion.Inverse(briefcaseTransform.rotation) * _heldObject.CarryHandle.rotation;
+        Quaternion relativeHandleRotation = Quaternion.Inverse(briefcaseTransform.rotation) * _heldObject.GetCarryHandle().rotation;
 
         // 3. Determine how to rotate the briefcase so its handle matches the hand's rotation
-        Quaternion desiredBriefcaseRotation = CarryParent.rotation * Quaternion.Inverse(relativeHandleRotation);
+        var carryParent = GetCarryParent();
+        Quaternion desiredBriefcaseRotation = carryParent.rotation * Quaternion.Inverse(relativeHandleRotation);
         briefcaseTransform.rotation = desiredBriefcaseRotation;
 
         // 4. Position the briefcase so the handle aligns with the CarryParent
-        Vector3 handleOffset = _heldObject.CarryHandle.position - briefcaseTransform.position;
-        briefcaseTransform.position = CarryParent.position - handleOffset;
+        Vector3 handleOffset = _heldObject.GetCarryHandle().position - briefcaseTransform.position;
+        briefcaseTransform.position = carryParent.position - handleOffset;
 
         // 5. Re-parent it now that transform is in place
-        briefcaseTransform.SetParent(CarryParent, worldPositionStays: true);
+        briefcaseTransform.SetParent(carryParent, worldPositionStays: true);
 
         // 6. Trigger any logic tied to pickup
         target.OnPickUp(this);

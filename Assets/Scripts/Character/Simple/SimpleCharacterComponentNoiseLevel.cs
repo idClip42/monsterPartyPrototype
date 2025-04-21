@@ -47,7 +47,7 @@ public class SimpleCharacterComponentNoiseLevel : CharacterComponentNoiseLevel
         if (this.Character == null)
             throw new MonsterPartyNullReferenceException(this, "Character");
 
-        float speed = this.Character.CurrentVelocity.magnitude;
+        float speed = this.Character.GetCurrentMovementComponent().CurrentVelocity.magnitude;
 
         if (speed < _minNoiseSpeed)
         {

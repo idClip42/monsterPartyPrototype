@@ -37,18 +37,6 @@ public abstract class Character : Entity, IDebugInfoProvider
         infoTarget["Raycast Targets"] = _lookRaycastTargets.Length.ToString();
     }
 
-    public Vector3 CurrentVelocity { get{
-        if(GetPlayerMovementComponent().enabled){
-            return GetPlayerMovementComponent().CurrentVelocity;
-        }
-        else if(GetAiMovementComponent().enabled){
-            return GetAiMovementComponent().CurrentVelocity;
-        }
-        else {
-            return Vector3.zero;
-        }
-    }}
-
     private StateType _state = StateType.AI;
     public StateType State => _state;
 

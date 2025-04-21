@@ -6,7 +6,7 @@ public interface ICarryable
 {
     GameObject gameObject { get; }
 
-    Transform CarryHandle { get; }
+    Transform GetCarryHandle();
 
     CharacterComponentCarry? Carrier { get; }
 
