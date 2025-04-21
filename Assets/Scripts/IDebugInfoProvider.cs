@@ -1,6 +1,6 @@
-#nullable enable
-
 using System.Collections.Generic;
+
+#nullable enable
 
 namespace MonsterParty
 {
