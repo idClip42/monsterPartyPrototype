@@ -100,8 +100,8 @@ namespace MonsterParty
 
         private void MoveHead(float deltaTime)
         {
-            SimpleMonsterState.Knowledge newThing = new();
-            newThing.visibleTarget = null;
+            // SimpleMonsterState.Knowledge newThing = new();
+            // newThing.visibleTarget = null;
 
             if (_config.head == null)
                 throw new MonsterPartyNullReferenceException("_config.head");
