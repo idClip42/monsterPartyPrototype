@@ -78,6 +78,8 @@ namespace MonsterParty
 
         public sealed override void Start(NavMeshAgent agent, Knowledge currentKnowledge)
         {
+            Debug.Log("Monster starting SEARCH behavior.");
+            
             agent.speed = _config.speed;
             agent.acceleration = _config.acceleration;
             _waitTime = Random.Range(_config.minWaitAfterSearchTime, _config.maxWaitAfterSearchTime);
@@ -92,13 +94,14 @@ namespace MonsterParty
 
         public sealed override void Stop(NavMeshAgent agent)
         {
-
+            Debug.Log("Monster stopping SEARCH behavior.");
         }
 
         public sealed override SimpleMonster.State OnUpdate(float deltaTime, Knowledge currentKnowledge, NavMeshAgent agent)
         {
             if (currentKnowledge.visibleTarget != null)
             {
+                Debug.Log($"Monster has spotted target '{currentKnowledge.visibleTarget.gameObject.name}'.");
                 return SimpleMonster.State.Chase;
             }
 
@@ -117,6 +120,7 @@ namespace MonsterParty
                 _waitAfterSearchTimer -= deltaTime;
                 if (_waitAfterSearchTimer <= 0)
                 {
+                    Debug.Log($"Monster has given up searching.");
                     return SimpleMonster.State.Wander;
                 }
             }

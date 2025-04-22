@@ -13,6 +13,10 @@ namespace MonsterParty
             public Character? visibleTarget;
             public Vector3? lastSeenPosition;
             public Vector3? lastSeenVelocity;
+            public override string ToString()
+            {
+                return $"Knowledge: Target '{visibleTarget?.gameObject.name}', Pos {lastSeenPosition}, Vel {lastSeenVelocity}.";
+            }
         }
 
         public abstract void FillInDebugInfo(Dictionary<string, string> infoTarget);

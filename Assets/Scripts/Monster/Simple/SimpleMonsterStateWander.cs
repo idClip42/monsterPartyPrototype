@@ -79,6 +79,8 @@ namespace MonsterParty
 
         public sealed override void Start(NavMeshAgent agent, Knowledge currentKnowledge)
         {
+            Debug.Log("Monster starting WANDER behavior.");
+
             agent.speed = _config.speed;
             agent.acceleration = _config.acceleration;
             Redirect(agent);
@@ -86,6 +88,8 @@ namespace MonsterParty
 
         public sealed override void Stop(NavMeshAgent agent)
         {
+            Debug.Log("Monster stopping WANDER behavior.");
+
             _previousFrameTarget = null;
         }
 
@@ -114,6 +118,7 @@ namespace MonsterParty
                     if (this._chaseDelayTimer <= 0)
                     {
                         // Switch the state to chase.
+                        Debug.Log($"Monster has spotted target '{currentKnowledge.visibleTarget.gameObject.name}'");
                         return SimpleMonster.State.Chase;
                     }
                 }

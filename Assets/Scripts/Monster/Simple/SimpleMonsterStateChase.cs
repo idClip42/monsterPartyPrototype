@@ -67,6 +67,8 @@ namespace MonsterParty
 
         public sealed override void Start(NavMeshAgent agent, Knowledge currentKnowledge)
         {
+            Debug.Log("Monster starting CHASE behavior.");
+
             agent.speed = _config.speed;
             agent.acceleration = _config.acceleration;
             _searchDelayTimer = _config.searchDelay;
@@ -74,6 +76,8 @@ namespace MonsterParty
 
         public sealed override void Stop(NavMeshAgent agent)
         {
+            Debug.Log("Monster stopping CHASE behavior.");
+            
             _targetCharacter = null;
         }
 
@@ -88,6 +92,7 @@ namespace MonsterParty
                 {
                     // And when it hits zero,
                     // we stop chasing.
+                    Debug.Log("Monster has lost sight of target.");
                     return SimpleMonster.State.Search;
                 }
             }
