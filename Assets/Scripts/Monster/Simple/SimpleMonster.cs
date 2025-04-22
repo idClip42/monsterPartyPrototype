@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
@@ -180,8 +181,10 @@ namespace MonsterParty
                 SoundInfo targetSound =
                     SoundInfo.GetNearest(this._currentSoundInfo);
                 // Double check what we got is audible.
-                if (targetSound.isAudible == false)
-                    throw new MonsterPartyException("Target sound should be audible.");
+                if (targetSound.isAudible == false){
+                    Debug.LogError($"Current Sound Info:\n{String.Join('\n', this._currentSoundInfo.Select(s=>$" * " + s))}");
+                    throw new MonsterPartyException($"Target sound should be audible. {targetSound}");
+                }
                 // Redirect next state.
                 newState = State.Search;
                 nextBehavior = _searchBehavior;

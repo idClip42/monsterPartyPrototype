@@ -72,5 +72,10 @@ namespace MonsterParty
                 throw new MonsterPartyNullReferenceException("targetSound");
             return targetSound.Value;
         }
+
+        public override string ToString()
+        {
+            return $"SoundInfo: {(isAudible ? "Audible" : "Inaudible")}, {soundLocation}, {distanceToSound}m, {pathToSound.Length} path nodes, {blockers.Length} blockers.";
+        }
     }
 }
