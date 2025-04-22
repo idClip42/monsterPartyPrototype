@@ -30,42 +30,42 @@ namespace MonsterParty
         public override CharacterComponentCrouch GetCrouchComponent()
         {
             if (_crouch == null)
-                throw new MonsterPartyNullReferenceException("_crouch");
+                throw new MonsterPartyNullReferenceException(this, "_crouch");
             return _crouch;
         }
 
         public override CharacterComponentInteract GetInteractComponent()
         {
             if (_interact == null)
-                throw new MonsterPartyNullReferenceException("_interact");
+                throw new MonsterPartyNullReferenceException(this, "_interact");
             return _interact;
         }
 
         public override CharacterComponentMovementPlayer GetPlayerMovementComponent()
         {
             if (_playerMovement == null)
-                throw new MonsterPartyNullReferenceException("_playerMovement");
+                throw new MonsterPartyNullReferenceException(this, "_playerMovement");
             return _playerMovement;
         }
 
         public override CharacterComponentMovementAI GetAiMovementComponent()
         {
             if (_aiMovement == null)
-                throw new MonsterPartyNullReferenceException("_aiMovement");
+                throw new MonsterPartyNullReferenceException(this, "_aiMovement");
             return _aiMovement;
         }
 
         public override CharacterComponentNoiseLevel GetNoiseLevelComponent()
         {
             if (_noiseLevel == null)
-                throw new MonsterPartyNullReferenceException("_noiseLevel");
+                throw new MonsterPartyNullReferenceException(this, "_noiseLevel");
             return _noiseLevel;
         }
 
         public override CharacterComponentCarry GetCarryComponent()
         {
             if (_carry == null)
-                throw new MonsterPartyNullReferenceException("_carry");
+                throw new MonsterPartyNullReferenceException(this, "_carry");
             return _carry;
         }
 
