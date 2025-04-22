@@ -58,6 +58,9 @@ namespace MonsterParty
             if (_navMeshAgent != null && _navMeshAgent.enabled == true)
                 throw new MonsterPartyException("NavMeshAgent is enabled while in Player mode");
 
+            if(this.Character.Alive == false)
+                return;
+
             float horizontal = Input.GetAxis("Horizontal");
             float vertical = Input.GetAxis("Vertical");
 

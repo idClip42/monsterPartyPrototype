@@ -71,8 +71,13 @@ namespace MonsterParty
 
         protected sealed override void Move(Vector3 desiredMovementVelocity, float deltaTime)
         {
+            if (this.Character == null)
+                throw new MonsterPartyNullReferenceException(this, "Character");
+            if(this.Character.Alive == false)
+                throw new MonsterPartyException("Move shouldn't be called on dead character.");
             if (_characterController == null)
                 throw new MonsterPartyNullReferenceException(this, "_characterController");
+
             _characterController.Move(
                 desiredMovementVelocity * deltaTime +
                 (Physics.gravity * deltaTime)
