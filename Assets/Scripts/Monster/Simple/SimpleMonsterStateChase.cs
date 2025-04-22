@@ -72,6 +72,10 @@ namespace MonsterParty
             agent.speed = _config.speed;
             agent.acceleration = _config.acceleration;
             _searchDelayTimer = _config.searchDelay;
+
+            if(currentKnowledge.visibleTarget == null)
+                throw new MonsterPartyException("Chase should not start with a null visibleTarget.");
+            _targetCharacter = currentKnowledge.visibleTarget;
         }
 
         public sealed override void Stop(NavMeshAgent agent)
@@ -97,7 +101,7 @@ namespace MonsterParty
                 }
                 
                 if(_targetCharacter == null){
-                    throw new MonsterPartyException("Monster Chase first update has a null visibleTarget.");
+                    throw new MonsterPartyException("Monster Chase first update has a null visibleTarget. This should never happen.");
                 }
             }
             else
