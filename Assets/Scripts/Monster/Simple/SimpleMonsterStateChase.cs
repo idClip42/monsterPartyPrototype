@@ -95,6 +95,10 @@ namespace MonsterParty
                     Debug.Log("Monster has lost sight of target.");
                     return SimpleMonster.State.Search;
                 }
+                
+                if(_targetCharacter == null){
+                    throw new MonsterPartyException("Monster Chase first update has a null visibleTarget.");
+                }
             }
             else
             {
@@ -109,19 +113,38 @@ namespace MonsterParty
             Vector3 chaseTargetPosition;
             if (_config.chaseTargetMode == Config.ChaseTargetMode.ActualPosition)
             {
-                if (_targetCharacter == null)
-                {
-                    Debug.LogWarning("We shouldn't be missing a target character. Canceling Chase.");
-                    return SimpleMonster.State.Wander;
-                }
+                // if (_targetCharacter == null)
+                // {
+                //     if(currentKnowledge.lastSeenPosition != null){
+                //         Debug.DrawLine(
+                //             agent.transform.position,
+                //             currentKnowledge.lastSeenPosition.Value,
+                //             Color.red
+                //         );
+                //         if(currentKnowledge.lastSeenVelocity != null){
+                //             Debug.DrawLine(
+                //                 currentKnowledge.lastSeenPosition.Value,
+                //                 currentKnowledge.lastSeenPosition.Value + currentKnowledge.lastSeenVelocity.Value,
+                //                 Color.red
+                //             );
+                //         }
+                //     }
+                //     else {
+                //         Debug.DrawLine(
+                //             agent.transform.position,
+                //             agent.transform.position + Vector3.up * 10,
+                //             Color.red
+                //         );
+                //     }
+                //     throw new MonsterPartyException($"We shouldn't be missing a target character. {currentKnowledge}");
+                // }
                 chaseTargetPosition = _targetCharacter.transform.position;
             }
             else if (_config.chaseTargetMode == Config.ChaseTargetMode.LastSeenPosition)
             {
                 if (currentKnowledge.lastSeenPosition == null)
                 {
-                    Debug.LogWarning("We shouldn't be missing a last seen position. Canceling Chase.");
-                    return SimpleMonster.State.Wander;
+                    throw new MonsterPartyException($"We shouldn't be missing a last seen position. {currentKnowledge}");
                 }
                 chaseTargetPosition = currentKnowledge.lastSeenPosition.Value;
             }
