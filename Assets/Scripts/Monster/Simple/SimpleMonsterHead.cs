@@ -6,7 +6,11 @@ namespace MonsterParty
 {
     public class SimpleMonsterHead
     {
-        public enum HeadFollowBehavior { LastKnownPos, CurrentPos, LastKnownPlusMovementDirection }
+        public enum HeadFollowBehavior { 
+            LastKnownPos, 
+            CurrentPos, 
+            // LastKnownPlusMovementDirection 
+        }
 
         [System.Serializable]
         public class Config
@@ -35,7 +39,8 @@ namespace MonsterParty
             public float fieldOfView = 100;
 
             [SerializeField]
-            public HeadFollowBehavior headFollowBehavior = HeadFollowBehavior.LastKnownPlusMovementDirection;
+            // public HeadFollowBehavior headFollowBehavior = HeadFollowBehavior.LastKnownPlusMovementDirection;
+            public HeadFollowBehavior headFollowBehavior = HeadFollowBehavior.CurrentPos;
 
             [SerializeField]
             [Range(0, 90)]
@@ -132,19 +137,19 @@ namespace MonsterParty
                     return _currentKnowledge.lastSeenPosition;
                 case HeadFollowBehavior.CurrentPos:
                     return _currentKnowledge.visibleTarget?.transform.position;
-                case HeadFollowBehavior.LastKnownPlusMovementDirection:
-                    // If there's no position,
-                    // we can do nothing
-                    if (_currentKnowledge.lastSeenPosition == null)
-                        return null;
-                    // If there's no velocity,
-                    // we can at least return position
-                    if (_currentKnowledge.lastSeenVelocity == null)
-                        return _currentKnowledge.lastSeenPosition.Value;
-                    // If we have both,
-                    // we can "lead" the player position
-                    return _currentKnowledge.lastSeenPosition.Value +
-                        _currentKnowledge.lastSeenVelocity.Value;
+                // case HeadFollowBehavior.LastKnownPlusMovementDirection:
+                //     // If there's no position,
+                //     // we can do nothing
+                //     if (_currentKnowledge.lastSeenPosition == null)
+                //         return null;
+                //     // If there's no velocity,
+                //     // we can at least return position
+                //     if (_currentKnowledge.lastSeenVelocity == null)
+                //         return _currentKnowledge.lastSeenPosition.Value;
+                //     // If we have both,
+                //     // we can "lead" the player position
+                //     return _currentKnowledge.lastSeenPosition.Value +
+                //         _currentKnowledge.lastSeenVelocity.Value;
                 default:
                     throw new MonsterPartyUnhandledEnumException<HeadFollowBehavior>(_config.headFollowBehavior);
             }
