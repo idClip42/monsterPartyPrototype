@@ -18,7 +18,7 @@ namespace MonsterParty
 
         private CharacterController? _characterController = null;
 
-        public sealed override Vector3 CurrentVelocity => _characterController ?
+        public sealed override Vector3 CurrentVelocity => (_characterController && _characterController.enabled) ?
             _characterController.velocity :
             Vector3.zero;
 
