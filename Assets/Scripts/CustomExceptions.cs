@@ -20,12 +20,19 @@ namespace MonsterParty
 
     public class MonsterPartyNullReferenceException : MonsterPartyException
     {
-        public MonsterPartyNullReferenceException(string fieldName)
-            : base($"'{fieldName}' is NULL.")
+        public MonsterPartyNullReferenceException(
+            string fieldName,
+            [System.Runtime.CompilerServices.CallerMemberName] string memberName = ""
+        )
+            : base($"'{fieldName}' is NULL in '{memberName}'.")
         { }
 
-        public MonsterPartyNullReferenceException(MonoBehaviour context, string fieldName)
-            : base($"'{fieldName}' is NULL on '{context.gameObject.name}' ({context.GetType().Name}).")
+        public MonsterPartyNullReferenceException(
+            MonoBehaviour context, 
+            string fieldName,
+            [System.Runtime.CompilerServices.CallerMemberName] string memberName = ""
+        )
+            : base($"'{fieldName}' is NULL on '{context.gameObject.name}' ({context.GetType().Name}) in '{memberName}'")
         { }
     }
 
