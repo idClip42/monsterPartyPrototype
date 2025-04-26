@@ -30,42 +30,42 @@ namespace MonsterParty
         public override CharacterComponentCrouch GetCrouchComponent()
         {
             if (_crouch == null)
-                throw new MonsterPartyNullReferenceException(this, "_crouch");
+                throw new MonsterPartyNullReferenceException(this, nameof(_crouch));
             return _crouch;
         }
 
         public override CharacterComponentInteract GetInteractComponent()
         {
             if (_interact == null)
-                throw new MonsterPartyNullReferenceException(this, "_interact");
+                throw new MonsterPartyNullReferenceException(this, nameof(_interact));
             return _interact;
         }
 
         public override CharacterComponentMovementPlayer GetPlayerMovementComponent()
         {
             if (_playerMovement == null)
-                throw new MonsterPartyNullReferenceException(this, "_playerMovement");
+                throw new MonsterPartyNullReferenceException(this, nameof(_playerMovement));
             return _playerMovement;
         }
 
         public override CharacterComponentMovementAI GetAiMovementComponent()
         {
             if (_aiMovement == null)
-                throw new MonsterPartyNullReferenceException(this, "_aiMovement");
+                throw new MonsterPartyNullReferenceException(this, nameof(_aiMovement));
             return _aiMovement;
         }
 
         public override CharacterComponentNoiseLevel GetNoiseLevelComponent()
         {
             if (_noiseLevel == null)
-                throw new MonsterPartyNullReferenceException(this, "_noiseLevel");
+                throw new MonsterPartyNullReferenceException(this, nameof(_noiseLevel));
             return _noiseLevel;
         }
 
         public override CharacterComponentCarry GetCarryComponent()
         {
             if (_carry == null)
-                throw new MonsterPartyNullReferenceException(this, "_carry");
+                throw new MonsterPartyNullReferenceException(this, nameof(_carry));
             return _carry;
         }
 
@@ -81,7 +81,7 @@ namespace MonsterParty
             base.Awake();
 
             if (_model == null)
-                throw new MonsterPartyNullReferenceException(this, "_model");
+                throw new MonsterPartyNullReferenceException(this, nameof(_model));
 
             _crouch = GetComponent<SimpleCharacterComponentCrouch>();
             if (_crouch == null)
@@ -118,7 +118,7 @@ namespace MonsterParty
         void Update()
         {
             if (_model == null)
-                throw new MonsterPartyNullReferenceException(this, "_model");
+                throw new MonsterPartyNullReferenceException(this, nameof(_model));
 
             Vector3 projectedMovementVelocity = Vector3.ProjectOnPlane(
                 this.GetCurrentMovementComponent().CurrentVelocity,

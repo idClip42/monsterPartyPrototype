@@ -17,7 +17,7 @@ namespace MonsterParty
         private void Awake()
         {
             _cameraControl = FindFirstObjectByType<CameraControl>();
-            if (_cameraControl == null) throw new MonsterPartyNullReferenceException(this, "_cameraControl");
+            if (_cameraControl == null) throw new MonsterPartyNullReferenceException(this, nameof(_cameraControl));
 
             _characters = FindObjectsByType<Character>(FindObjectsSortMode.None);
             foreach (Character c in _characters)
@@ -49,7 +49,7 @@ namespace MonsterParty
 
         private void SelectCharacter(Character newSelection, bool immediate)
         {
-            if (_cameraControl == null) throw new MonsterPartyNullReferenceException(this, "_cameraControl");
+            if (_cameraControl == null) throw new MonsterPartyNullReferenceException(this, nameof(_cameraControl));
 
             if (_selectedCharacter == newSelection) return;
             if (newSelection.Alive == false) return;

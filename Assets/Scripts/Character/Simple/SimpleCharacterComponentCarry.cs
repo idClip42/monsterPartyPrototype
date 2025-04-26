@@ -13,7 +13,7 @@ namespace MonsterParty
         protected override Transform GetCarryParent()
         {
             if (_carryParent == null)
-                throw new MonsterPartyNullReferenceException(this, "_carryParent");
+                throw new MonsterPartyNullReferenceException(this, nameof(_carryParent));
             return _carryParent;
         }
 
@@ -22,7 +22,7 @@ namespace MonsterParty
             base.Awake();
 
             if (_carryParent == null)
-                throw new MonsterPartyNullReferenceException(this, "_carryParent");
+                throw new MonsterPartyNullReferenceException(this, nameof(_carryParent));
         }
     }
 }

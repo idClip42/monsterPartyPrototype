@@ -17,13 +17,13 @@ namespace MonsterParty
         private void Awake()
         {
             if (_killTarget == null)
-                throw new MonsterPartyNullReferenceException(this, "_killTarget");
+                throw new MonsterPartyNullReferenceException(this, nameof(_killTarget));
         }
 
         private void Update()
         {
             if (_killTarget == null)
-                throw new MonsterPartyNullReferenceException(this, "_killTarget");
+                throw new MonsterPartyNullReferenceException(this, nameof(_killTarget));
 
             if (_killTarget.Alive == false) return;
 

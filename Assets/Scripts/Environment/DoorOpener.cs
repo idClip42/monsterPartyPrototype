@@ -23,7 +23,7 @@ namespace MonsterParty
             foreach (var door in _doors)
             {
                 if (door == null)
-                    throw new MonsterPartyNullReferenceException(this, "door");
+                    throw new MonsterPartyNullReferenceException(this, nameof(door));
                 if (door.IsOpen == true)
                     continue;
                 Vector3 diff = this.transform.position - door.transform.position;

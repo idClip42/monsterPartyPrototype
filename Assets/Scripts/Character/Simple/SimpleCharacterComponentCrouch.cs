@@ -46,11 +46,11 @@ namespace MonsterParty
 
             _simpleCharacter = GetComponent<SimpleCharacter>();
             if (_simpleCharacter == null)
-                throw new MonsterPartyNullReferenceException(this, "_simpleCharacter");
+                throw new MonsterPartyNullReferenceException(this, nameof(_simpleCharacter));
 
             _characterController = GetComponent<CharacterController>();
             if (_characterController == null)
-                throw new MonsterPartyNullReferenceException(this, "_characterController");
+                throw new MonsterPartyNullReferenceException(this, nameof(_characterController));
         }
 
 #if UNITY_EDITOR
@@ -75,9 +75,9 @@ namespace MonsterParty
         private void ToggleCrouch(bool isCrouching)
         {
             if (_simpleCharacter == null)
-                throw new MonsterPartyNullReferenceException(this, "_simpleCharacter");
+                throw new MonsterPartyNullReferenceException(this, nameof(_simpleCharacter));
             if (_characterController == null)
-                throw new MonsterPartyNullReferenceException(this, "_characterController");
+                throw new MonsterPartyNullReferenceException(this, nameof(_characterController));
 
             // float meshHeight = _character.ModelHeight;
             float startYScale = transform.localScale.y;
@@ -116,7 +116,7 @@ namespace MonsterParty
         protected sealed override bool CanUncrouch()
         {
             if (_characterController == null)
-                throw new MonsterPartyNullReferenceException(this, "_characterController");
+                throw new MonsterPartyNullReferenceException(this, nameof(_characterController));
             if (this.IsCrouching == false) return false;
 
             float radius = _characterController.radius * _uncrouchRadiusPercentage;

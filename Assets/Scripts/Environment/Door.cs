@@ -44,11 +44,11 @@ namespace MonsterParty
         void Awake()
         {
             if (_axis == null)
-                throw new MonsterPartyNullReferenceException(this, "_axis");
+                throw new MonsterPartyNullReferenceException(this, nameof(_axis));
             if (_interactor == null)
-                throw new MonsterPartyNullReferenceException(this, "_interactor");
+                throw new MonsterPartyNullReferenceException(this, nameof(_interactor));
             if (_occlusionPortal == null)
-                throw new MonsterPartyNullReferenceException(this, "_occlusionPortal");
+                throw new MonsterPartyNullReferenceException(this, nameof(_occlusionPortal));
 
             _baseRotation = _axis.rotation;
 
@@ -83,7 +83,7 @@ namespace MonsterParty
         public void OpenDoor(Transform opener)
         {
             if (_axis == null)
-                throw new MonsterPartyNullReferenceException(this, "_axis");
+                throw new MonsterPartyNullReferenceException(this, nameof(_axis));
 
             Vector3 doorToChar = opener.position - this.transform.position;
             Vector3 doorForward = _axis.forward;
@@ -120,11 +120,11 @@ namespace MonsterParty
         private void SetDoorState(DoorState newState)
         {
             if (_axis == null)
-                throw new MonsterPartyNullReferenceException(this, "_axis");
+                throw new MonsterPartyNullReferenceException(this, nameof(_axis));
             if (_baseRotation == null)
-                throw new MonsterPartyNullReferenceException(this, "_baseRotation");
+                throw new MonsterPartyNullReferenceException(this, nameof(_baseRotation));
             if (_occlusionPortal == null)
-                throw new MonsterPartyNullReferenceException(this, "_occlusionPortal");
+                throw new MonsterPartyNullReferenceException(this, nameof(_occlusionPortal));
 
             switch (newState)
             {

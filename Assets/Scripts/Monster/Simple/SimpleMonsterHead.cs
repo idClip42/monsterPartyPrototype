@@ -75,14 +75,14 @@ namespace MonsterParty
             this._characters = characters;
 
             if (this._config.eye == null)
-                throw new MonsterPartyNullReferenceException("_config.eye");
+                throw new MonsterPartyNullReferenceException(nameof(_config.eye));
             this._config.eye.enabled = true;
         }
 
         public void OnUpdate(float deltaTime, SimpleMonsterState currentStateInfo)
         {
             if (this._config.eye == null)
-                throw new MonsterPartyNullReferenceException("_config.eye");
+                throw new MonsterPartyNullReferenceException(nameof(_config.eye));
             this._config.eye.range = this._config.maxSightDistance;
             this._config.eye.spotAngle = this._config.fieldOfView;
 
@@ -109,7 +109,7 @@ namespace MonsterParty
             // newThing.visibleTarget = null;
 
             if (_config.head == null)
-                throw new MonsterPartyNullReferenceException("_config.head");
+                throw new MonsterPartyNullReferenceException(nameof(_config.head));
 
             Vector3? lookTarget = GetLookTarget();
             if (lookTarget != null && this._currentKnowledge.visibleTarget != null)
@@ -158,7 +158,7 @@ namespace MonsterParty
         private void LookForCharacters(float deltaTime)
         {
             if (_config.eye == null)
-                throw new MonsterPartyNullReferenceException("_config.eye");
+                throw new MonsterPartyNullReferenceException(nameof(_config.eye));
 
             Character? closestVisibleCharacter = null;
             float closestDistance = float.MaxValue;

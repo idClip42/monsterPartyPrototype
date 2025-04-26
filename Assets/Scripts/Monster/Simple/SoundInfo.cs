@@ -69,7 +69,7 @@ namespace MonsterParty
                     targetSound = sound;
             }
             if (targetSound == null)
-                throw new MonsterPartyNullReferenceException("targetSound");
+                throw new MonsterPartyNullReferenceException(nameof(targetSound));
             return targetSound.Value;
         }
 

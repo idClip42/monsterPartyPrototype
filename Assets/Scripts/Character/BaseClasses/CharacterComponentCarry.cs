@@ -38,13 +38,13 @@ namespace MonsterParty
             base.Awake();
 
             if (this.Character == null)
-                throw new MonsterPartyNullReferenceException(this, $"Character");
+                throw new MonsterPartyNullReferenceException(this, nameof(Character));
             this.Character.OnDeath += HandleDeath;
         }
 
         private void Update()
         {
-            if (this.Character == null) throw new MonsterPartyNullReferenceException(this, "Character");
+            if (this.Character == null) throw new MonsterPartyNullReferenceException(this, nameof(Character));
 
             if (this.Character.State == Character.StateType.Player)
             {
@@ -58,7 +58,7 @@ namespace MonsterParty
 
         public void OnInteractWithCarryable(ICarryable target)
         {
-            if (this.Character == null) throw new MonsterPartyNullReferenceException(this, "Character");
+            if (this.Character == null) throw new MonsterPartyNullReferenceException(this, nameof(Character));
 
             if (!target.IsCarryable) return;
             if (_heldObject != null) return;

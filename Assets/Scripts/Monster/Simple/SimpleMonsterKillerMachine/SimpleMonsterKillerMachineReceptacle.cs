@@ -20,7 +20,7 @@ namespace MonsterParty
         private void Awake()
         {
             if (_target == null)
-                throw new MonsterPartyNullReferenceException(this, "_target");
+                throw new MonsterPartyNullReferenceException(this, nameof(_target));
 
             foreach (var thing in _thingsToTurnOn)
                 thing.SetActive(false);
@@ -38,7 +38,7 @@ namespace MonsterParty
         {
             var carryComp = interactor.GetCarryComponent();
             if (carryComp.HeldObject == null)
-                throw new MonsterPartyNullReferenceException(this, $"interactor.Carry.HeldObject");
+                throw new MonsterPartyNullReferenceException(this, nameof(carryComp.HeldObject));
             if (DoesCharacterCarryTarget(interactor) == false)
                 throw new MonsterPartyException($"Character {interactor.gameObject.name} Carry.HeldObject in not target. Code should never have gotten here.");
 
@@ -60,10 +60,10 @@ namespace MonsterParty
             if (Application.IsPlaying(this) == false)
                 throw new MonsterPartyException("Can only call this in play mode.");
             if (_target == null)
-                throw new MonsterPartyNullReferenceException(this, "_target");
+                throw new MonsterPartyNullReferenceException(this, nameof(_target));
             ICarryable? component = _target.GetComponent<ICarryable>();
             if (component == null)
-                throw new MonsterPartyNullReferenceException(this, "component");
+                throw new MonsterPartyNullReferenceException(this, nameof(component));
             LockInTarget(component);
         }
 #endif
@@ -85,7 +85,7 @@ namespace MonsterParty
         private bool DoesCharacterCarryTarget(Character interactor)
         {
             if (_target == null)
-                throw new MonsterPartyNullReferenceException(this, "_target");
+                throw new MonsterPartyNullReferenceException(this, nameof(_target));
 
             var carryComp = interactor.GetCarryComponent();
             if (carryComp.HeldObject == null) return false;

@@ -37,9 +37,9 @@ namespace MonsterParty
         void Update()
         {
             if (_character == null)
-                throw new MonsterPartyNullReferenceException(this, "_character");
+                throw new MonsterPartyNullReferenceException(this, nameof(_character));
             if (_audioSource == null)
-                throw new MonsterPartyNullReferenceException(this, "_audioSource");
+                throw new MonsterPartyNullReferenceException(this, nameof(_audioSource));
 
             _stepTimer += Time.deltaTime;
 
@@ -54,7 +54,7 @@ namespace MonsterParty
 
                 _audioSource.clip = _footstepClips[_currentClipIndex];
                 if (_audioSource.clip == null)
-                    throw new MonsterPartyNullReferenceException(this, "_audioSource.clip");
+                    throw new MonsterPartyNullReferenceException(this, nameof(_audioSource.clip));
                 _audioSource.Play();
 
                 _stepTimer = 0;

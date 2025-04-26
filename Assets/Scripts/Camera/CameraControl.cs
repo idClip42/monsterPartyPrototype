@@ -69,7 +69,7 @@ namespace MonsterParty
         private void OrbitControl()
         {
             if (_characterManager == null)
-                throw new MonsterPartyNullReferenceException(this, "_characterManager");
+                throw new MonsterPartyNullReferenceException(this, nameof(_characterManager));
 
             // TODO: This is for the non-physics movement of the CharacterController
             // TODO: If and when this changes, this'll need to move to FixedUpdate()
@@ -116,9 +116,9 @@ namespace MonsterParty
         private void TransitionUpdate()
         {
             if (_transitioner == null)
-                throw new MonsterPartyNullReferenceException(this, "_transitioner");
+                throw new MonsterPartyNullReferenceException(this, nameof(_transitioner));
             if (_transitionEndCallback == null)
-                throw new MonsterPartyNullReferenceException(this, "_transitionEndCallback");
+                throw new MonsterPartyNullReferenceException(this, nameof(_transitionEndCallback));
 
             bool endTransition = _transitioner.MoveCamera(Time.deltaTime);
 
@@ -135,7 +135,7 @@ namespace MonsterParty
         public void SendCameraToNewCharacter(Character target, Action arrivalCallback)
         {
             if (_transitioner == null)
-                throw new MonsterPartyNullReferenceException(this, "_transitioner");
+                throw new MonsterPartyNullReferenceException(this, nameof(_transitioner));
 
             _currentState = State.Transition;
             _transitioner.Initialize(

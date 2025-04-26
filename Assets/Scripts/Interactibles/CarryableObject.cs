@@ -19,7 +19,7 @@ namespace MonsterParty
         public Transform GetCarryHandle()
         {
             if (_carryHandle == null)
-                throw new MonsterPartyNullReferenceException(this, "_carryHandle");
+                throw new MonsterPartyNullReferenceException(this, nameof(_carryHandle));
             return _carryHandle;
         }
 
@@ -44,10 +44,10 @@ namespace MonsterParty
         {
             _rb = GetComponent<Rigidbody>();
             if (_rb == null)
-                throw new MonsterPartyNullReferenceException(this, "_rb");
+                throw new MonsterPartyNullReferenceException(this, nameof(_rb));
 
             if (_carryHandle == null)
-                throw new MonsterPartyNullReferenceException(this, "_carryHandle");
+                throw new MonsterPartyNullReferenceException(this, nameof(_carryHandle));
 
             _defaultKinematicState = _rb.isKinematic;
         }
@@ -63,8 +63,6 @@ namespace MonsterParty
 
         public void DoInteraction(Character interactor)
         {
-            if (interactor.GetCarryComponent() == null)
-                throw new MonsterPartyNullReferenceException(this, "interactor.Carry");
             interactor.GetCarryComponent().OnInteractWithCarryable(this);
         }
 
@@ -75,7 +73,7 @@ namespace MonsterParty
             if (_isHeld == true)
                 throw new MonsterPartyException("Tried to pick up something that is already held.");
             if (_rb == null)
-                throw new MonsterPartyNullReferenceException(this, "_rb");
+                throw new MonsterPartyNullReferenceException(this, nameof(_rb));
 
             _isHeld = true;
             _holder = pickerUpper;
@@ -93,7 +91,7 @@ namespace MonsterParty
             if (_isHeld == false)
                 throw new MonsterPartyException("Tried to drop something that isn't held.");
             if (_rb == null)
-                throw new MonsterPartyNullReferenceException(this, "_rb");
+                throw new MonsterPartyNullReferenceException(this, nameof(_rb));
 
             _isHeld = false;
             _holder = null;
@@ -108,7 +106,7 @@ namespace MonsterParty
         public void LockInPlace(Transform targetParent)
         {
             if (_rb == null)
-                throw new MonsterPartyNullReferenceException(this, "_rb");
+                throw new MonsterPartyNullReferenceException(this, nameof(_rb));
             if (_holder != null)
                 throw new MonsterPartyException("Cannot lock in place while held. Drop first.");
 

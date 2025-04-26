@@ -36,7 +36,7 @@ namespace MonsterParty
 
         private void Update()
         {
-            if (this.Character == null) throw new MonsterPartyNullReferenceException(this, "_characterBase");
+            if (this.Character == null) throw new MonsterPartyNullReferenceException(this, nameof(this.Character));
 
             _canUncrouch = CanUncrouch();
 
@@ -57,7 +57,7 @@ namespace MonsterParty
 
         private void ToggleCrouch()
         {
-            if (this.Character == null) throw new MonsterPartyNullReferenceException(this, "Character");
+            if (this.Character == null) throw new MonsterPartyNullReferenceException(this, nameof(Character));
 
             if (this._isCrouching && !_canUncrouch)
                 return;

@@ -33,7 +33,7 @@ namespace MonsterParty
 
             _camera = FindFirstObjectByType<CameraControl>();
             if (_camera == null)
-                throw new MonsterPartyNullReferenceException(this, $"_camera");
+                throw new MonsterPartyNullReferenceException(this, nameof(_camera));
 
             _navMeshAgent = GetComponent<NavMeshAgent>();
         }
@@ -51,9 +51,9 @@ namespace MonsterParty
         private void Update()
         {
             if (this.Character == null)
-                throw new MonsterPartyNullReferenceException(this, "Character");
+                throw new MonsterPartyNullReferenceException(this, nameof(Character));
             if (_camera == null)
-                throw new MonsterPartyNullReferenceException(this, "_camera");
+                throw new MonsterPartyNullReferenceException(this, nameof(_camera));
 
             if (_navMeshAgent != null && _navMeshAgent.enabled == true)
                 throw new MonsterPartyException("NavMeshAgent is enabled while in Player mode");

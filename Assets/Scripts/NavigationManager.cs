@@ -77,14 +77,14 @@ namespace MonsterParty
         public int GetStandingAgentTypeId()
         {
             if (_standingNavMesh == null)
-                throw new MonsterPartyNullReferenceException(this, "_standingNavMesh");
+                throw new MonsterPartyNullReferenceException(this, nameof(_standingNavMesh));
             return _standingNavMesh.agentTypeID;
         }
 
         public int GetCrouchingAgentTypeId()
         {
             if (_crouchingNavMesh == null)
-                throw new MonsterPartyNullReferenceException(this, "_crouchingNavMesh");
+                throw new MonsterPartyNullReferenceException(this, nameof(_crouchingNavMesh));
             return _crouchingNavMesh.agentTypeID;
         }
 
@@ -98,9 +98,9 @@ namespace MonsterParty
         public void Refresh()
         {
             if (_standingNavMesh == null)
-                throw new MonsterPartyNullReferenceException(this, "_standingNavMesh");
+                throw new MonsterPartyNullReferenceException(this, nameof(_standingNavMesh));
             if (_crouchingNavMesh == null)
-                throw new MonsterPartyNullReferenceException(this, "_crouchingNavMesh");
+                throw new MonsterPartyNullReferenceException(this, nameof(_crouchingNavMesh));
 
             var standingNavPoints = GetPossiblePointsOnNavMesh(_standingNavMesh);
             var crouchingNavPoints = GetPossiblePointsOnNavMesh(_crouchingNavMesh);
@@ -127,7 +127,7 @@ namespace MonsterParty
         public Vector3 GetRandomDestination(bool excludeStanding, bool excludeCrouching, float minDistFromWall)
         {
             if (_navPoints == null)
-                throw new MonsterPartyNullReferenceException(this, "_navPoints");
+                throw new MonsterPartyNullReferenceException(this, nameof(_navPoints));
             var filteredPoints = _navPoints.Where(pt =>
             {
                 if (excludeStanding && pt.standable) return false;
@@ -178,7 +178,7 @@ namespace MonsterParty
             if (_navPoints == null)
                 Refresh();
             if (_navPoints == null)
-                throw new MonsterPartyNullReferenceException(this, "_navPoints");
+                throw new MonsterPartyNullReferenceException(this, nameof(_navPoints));
 
             foreach (var pt in _navPoints)
             {

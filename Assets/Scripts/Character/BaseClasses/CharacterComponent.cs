@@ -18,7 +18,7 @@ namespace MonsterParty
         {
             _character = GetComponent<Character>();
             if (_character == null)
-                throw new MonsterPartyNullReferenceException(this, $"_character");
+                throw new MonsterPartyNullReferenceException(this, nameof(_character));
         }
 
         public sealed override bool Equals(object other) => base.Equals(other);

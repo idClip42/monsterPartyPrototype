@@ -16,8 +16,8 @@ namespace MonsterParty
 
         public CameraControlTransition(CameraControl owner, NavigationManager navManager)
         {
-            if (owner == null) throw new MonsterPartyNullReferenceException("owner");
-            if (navManager == null) throw new MonsterPartyNullReferenceException("navManager");
+            if (owner == null) throw new MonsterPartyNullReferenceException(nameof(owner));
+            if (navManager == null) throw new MonsterPartyNullReferenceException(nameof(navManager));
             _cameraControl = owner;
             _navManager = navManager;
         }
@@ -45,9 +45,9 @@ namespace MonsterParty
         /// <returns>Whether to finish transitioning</returns>
         public bool MoveCamera(float deltaTime)
         {
-            if (_cameraControl == null) throw new MonsterPartyNullReferenceException("_cameraControl");
-            if (_transitionTarget == null) throw new MonsterPartyNullReferenceException("_transitionTarget");
-            if (_transitionSpeed <= 0) throw new MonsterPartyNullReferenceException("_transitionSpeed");
+            if (_cameraControl == null) throw new MonsterPartyNullReferenceException(nameof(_cameraControl));
+            if (_transitionTarget == null) throw new MonsterPartyNullReferenceException(nameof(_transitionTarget));
+            if (_transitionSpeed <= 0) throw new MonsterPartyNullReferenceException(nameof(_transitionSpeed));
 
             NavMeshPath path = new NavMeshPath();
 

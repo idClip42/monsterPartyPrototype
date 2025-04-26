@@ -43,7 +43,7 @@ namespace MonsterParty
         private void Update()
         {
             if (this.Character == null)
-                throw new MonsterPartyNullReferenceException(this, "_characterBase");
+                throw new MonsterPartyNullReferenceException(this, nameof(this.Character));
 
             if (this.Character.State == Character.StateType.Player)
             {
@@ -82,7 +82,7 @@ namespace MonsterParty
                 float gizmoMaxDistanceSqr = _gizmoMaxDistance * _gizmoMaxDistance;
                 foreach (var interactible in _interactibles)
                 {
-                    if (interactible == null) throw new MonsterPartyNullReferenceException(this, "interactible");
+                    if (interactible == null) throw new MonsterPartyNullReferenceException(this, nameof(interactible));
                     if (interactible.gameObject == this.gameObject) continue;
                     if (interactible.IsInteractible(this.Character) == false) continue;
                     Vector3 diff = interactible.InteractionWorldPosition - ReferencePosition;
@@ -101,7 +101,7 @@ namespace MonsterParty
         private IInteractible? GetInteractibleWithinReach()
         {
             if (this.Character == null)
-                throw new MonsterPartyNullReferenceException(this, "_characterBase");
+                throw new MonsterPartyNullReferenceException(this, nameof(this.Character));
 
             IInteractible? closest = null;
             float closestDistSq = float.MaxValue;

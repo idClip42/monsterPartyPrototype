@@ -51,7 +51,7 @@ namespace MonsterParty
         void Update()
         {
             if (this.Character == null)
-                throw new MonsterPartyNullReferenceException(this, "Character");
+                throw new MonsterPartyNullReferenceException(this, nameof(Character));
 
             float speed = this.Character.GetCurrentMovementComponent().CurrentVelocity.magnitude;
 

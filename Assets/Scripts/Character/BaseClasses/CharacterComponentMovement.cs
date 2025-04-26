@@ -34,7 +34,7 @@ namespace MonsterParty
         public float GetMaxMoveSpeed()
         {
             if (this.Character == null)
-                throw new MonsterPartyNullReferenceException(this, "Character");
+                throw new MonsterPartyNullReferenceException(this, nameof(Character));
 
             float maxSpeedMultiplier = _speedLimiters.Aggregate(
                 1.0f,

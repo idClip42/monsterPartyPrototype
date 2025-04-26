@@ -85,17 +85,17 @@ namespace MonsterParty
             base.Awake();
 
             if (_headConfig == null)
-                throw new MonsterPartyNullReferenceException(this, "_headConfig");
+                throw new MonsterPartyNullReferenceException(this, nameof(_headConfig));
             if (_wanderConfig == null)
-                throw new MonsterPartyNullReferenceException(this, "_wanderConfig");
+                throw new MonsterPartyNullReferenceException(this, nameof(_wanderConfig));
             if (_chaseConfig == null)
-                throw new MonsterPartyNullReferenceException(this, "_chaseConfig");
+                throw new MonsterPartyNullReferenceException(this, nameof(_chaseConfig));
             if (_searchConfig == null)
-                throw new MonsterPartyNullReferenceException(this, "_searchConfig");
+                throw new MonsterPartyNullReferenceException(this, nameof(_searchConfig));
             if (_barksConfig == null)
-                throw new MonsterPartyNullReferenceException(this, "_barksConfig");
+                throw new MonsterPartyNullReferenceException(this, nameof(_barksConfig));
             if (_hearingConfig == null)
-                throw new MonsterPartyNullReferenceException(this, "_hearingConfig");
+                throw new MonsterPartyNullReferenceException(this, nameof(_hearingConfig));
 
             _navManager = FindFirstObjectByType<NavigationManager>();
             if (_navManager == null)
@@ -129,11 +129,11 @@ namespace MonsterParty
         private void Start()
         {
             if (_wanderBehavior == null)
-                throw new MonsterPartyNullReferenceException(this, "_wanderBehavior");
+                throw new MonsterPartyNullReferenceException(this, nameof(_wanderBehavior));
             if (_navMeshAgent == null)
-                throw new MonsterPartyNullReferenceException(this, "_navMeshAgent");
+                throw new MonsterPartyNullReferenceException(this, nameof(_navMeshAgent));
             if (_headBehavior == null)
-                throw new MonsterPartyNullReferenceException(this, "_headBehavior");
+                throw new MonsterPartyNullReferenceException(this, nameof(_headBehavior));
             _wanderBehavior.Start(_navMeshAgent, _headBehavior.CurrentKnowledge);
         }
 
@@ -142,7 +142,7 @@ namespace MonsterParty
             if (this.Alive == false) return;
 
             if (_headBehavior == null)
-                throw new MonsterPartyNullReferenceException(this, "_headBehavior");
+                throw new MonsterPartyNullReferenceException(this, nameof(_headBehavior));
 
             UpdateBehavior();
 
@@ -153,15 +153,15 @@ namespace MonsterParty
         private void UpdateBehavior()
         {
             if (_headBehavior == null)
-                throw new MonsterPartyNullReferenceException(this, "_headBehavior");
+                throw new MonsterPartyNullReferenceException(this, nameof(_headBehavior));
             if (_hearing == null)
-                throw new MonsterPartyNullReferenceException(this, "_hearing");
+                throw new MonsterPartyNullReferenceException(this, nameof(_hearing));
             if (_barks == null)
-                throw new MonsterPartyNullReferenceException(this, "_barks");
+                throw new MonsterPartyNullReferenceException(this, nameof(_barks));
             if (_searchBehavior == null)
-                throw new MonsterPartyNullReferenceException(this, "_searchBehavior");
+                throw new MonsterPartyNullReferenceException(this, nameof(_searchBehavior));
             if (_navMeshAgent == null)
-                throw new MonsterPartyNullReferenceException(this, "_navMeshAgent");
+                throw new MonsterPartyNullReferenceException(this, nameof(_navMeshAgent));
 
             // Handle current behavior and
             // get prospective behavior change.
@@ -248,11 +248,11 @@ namespace MonsterParty
         private SimpleMonsterState StateToBehavior(State state)
         {
             if (_wanderBehavior == null)
-                throw new MonsterPartyNullReferenceException(this, "_wanderBehavior");
+                throw new MonsterPartyNullReferenceException(this, nameof(_wanderBehavior));
             if (_chaseBehavior == null)
-                throw new MonsterPartyNullReferenceException(this, "_chaseBehavior");
+                throw new MonsterPartyNullReferenceException(this, nameof(_chaseBehavior));
             if (_searchBehavior == null)
-                throw new MonsterPartyNullReferenceException(this, "_searchBehavior");
+                throw new MonsterPartyNullReferenceException(this, nameof(_searchBehavior));
 
             return state switch
             {
@@ -266,9 +266,9 @@ namespace MonsterParty
         protected virtual void HandleDeath(Entity deadEntity)
         {
             if (_barks == null)
-                throw new MonsterPartyNullReferenceException(this, "_barks");
+                throw new MonsterPartyNullReferenceException(this, nameof(_barks));
             if (_navMeshAgent == null)
-                throw new MonsterPartyNullReferenceException(this, "_navMeshAgent");
+                throw new MonsterPartyNullReferenceException(this, nameof(_navMeshAgent));
 
             Light[] allLights = GetComponentsInChildren<Light>();
             foreach (Light l in allLights)
@@ -287,7 +287,7 @@ namespace MonsterParty
         public override void Resurrect()
         {
             if (_navMeshAgent == null)
-                throw new MonsterPartyNullReferenceException(this, "_navMeshAgent");
+                throw new MonsterPartyNullReferenceException(this, nameof(_navMeshAgent));
 
             Light[] allLights = GetComponentsInChildren<Light>();
             foreach (Light l in allLights)
@@ -307,9 +307,9 @@ namespace MonsterParty
         protected sealed override void OnDrawGizmos()
         {
             if (_headConfig == null)
-                throw new MonsterPartyNullReferenceException(this, "_headConfig");
+                throw new MonsterPartyNullReferenceException(this, nameof(_headConfig));
             if (_headConfig.eye == null)
-                throw new MonsterPartyNullReferenceException(this, "_headConfig.eye");
+                throw new MonsterPartyNullReferenceException(this, nameof(_headConfig.eye));
 
             base.OnDrawGizmos();
 

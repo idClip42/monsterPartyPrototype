@@ -61,7 +61,7 @@ namespace MonsterParty
             foreach (var noiseSource in this._noiseSources)
             {
                 if (noiseSource == null)
-                    throw new MonsterPartyNullReferenceException("noiseSource");
+                    throw new MonsterPartyNullReferenceException(nameof(noiseSource));
 
                 if (noiseSource.CurrentNoiseRadius <= 0)
                 {

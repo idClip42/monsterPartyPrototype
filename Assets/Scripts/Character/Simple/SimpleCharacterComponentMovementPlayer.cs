@@ -52,7 +52,7 @@ namespace MonsterParty
 
             _characterController = GetComponent<CharacterController>();
             if (_characterController == null)
-                throw new MonsterPartyNullReferenceException(this, "_characterController");
+                throw new MonsterPartyNullReferenceException(this, nameof(_characterController));
         }
 
         protected override void OnEnable()
@@ -72,11 +72,11 @@ namespace MonsterParty
         protected sealed override void Move(Vector3 desiredMovementVelocity, float deltaTime)
         {
             if (this.Character == null)
-                throw new MonsterPartyNullReferenceException(this, "Character");
+                throw new MonsterPartyNullReferenceException(this, nameof(Character));
             if(this.Character.Alive == false)
                 throw new MonsterPartyException("Move shouldn't be called on dead character.");
             if (_characterController == null)
-                throw new MonsterPartyNullReferenceException(this, "_characterController");
+                throw new MonsterPartyNullReferenceException(this, nameof(_characterController));
 
             _characterController.Move(
                 desiredMovementVelocity * deltaTime +
@@ -87,7 +87,7 @@ namespace MonsterParty
         public sealed override float GetDesiredSpeed()
         {
             if (this.Character == null)
-                throw new MonsterPartyNullReferenceException(this, "Character");
+                throw new MonsterPartyNullReferenceException(this, nameof(Character));
             if (this.IsRunning)
                 return this.BaseMaxSpeed * _runSpeedPercentage;
             else

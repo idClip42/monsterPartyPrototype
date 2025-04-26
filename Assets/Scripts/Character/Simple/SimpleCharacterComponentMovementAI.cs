@@ -25,7 +25,7 @@ namespace MonsterParty
         {
             base.OnEnable();
             if (_doorOpener == null)
-                throw new MonsterPartyNullReferenceException(this, "_doorOpener");
+                throw new MonsterPartyNullReferenceException(this, nameof(_doorOpener));
             _doorOpener.enabled = true;
         }
 
@@ -33,7 +33,7 @@ namespace MonsterParty
         {
             base.OnDisable();
             if (_doorOpener == null)
-                throw new MonsterPartyNullReferenceException(this, "_doorOpener");
+                throw new MonsterPartyNullReferenceException(this, nameof(_doorOpener));
             _doorOpener.enabled = false;
         }
 

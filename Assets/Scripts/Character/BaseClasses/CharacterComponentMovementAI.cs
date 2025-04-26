@@ -90,17 +90,17 @@ namespace MonsterParty
 
             _navManager = FindFirstObjectByType<NavigationManager>();
             if (_navManager == null)
-                throw new MonsterPartyNullReferenceException(this, "_navManager");
+                throw new MonsterPartyNullReferenceException(this, nameof(_navManager));
 
             _navMeshAgent = GetComponent<NavMeshAgent>();
             if (_navMeshAgent == null)
-                throw new MonsterPartyNullReferenceException(this, "_navMeshAgent");
+                throw new MonsterPartyNullReferenceException(this, nameof(_navMeshAgent));
         }
 
         private void Start()
         {
             if (this.Character == null)
-                throw new MonsterPartyNullReferenceException(this, "Character");
+                throw new MonsterPartyNullReferenceException(this, nameof(Character));
             this.Character.GetCrouchComponent().OnCrouchToggle += OnCrouchToggle;
         }
 
@@ -137,11 +137,11 @@ namespace MonsterParty
         private void UpdateFollow()
         {
             if (this.Character == null)
-                throw new MonsterPartyNullReferenceException(this, "Character");
+                throw new MonsterPartyNullReferenceException(this, nameof(Character));
             if (_navMeshAgent == null)
-                throw new MonsterPartyNullReferenceException(this, "_navMeshAgent");
+                throw new MonsterPartyNullReferenceException(this, nameof(_navMeshAgent));
             if (_behaviorTarget == null)
-                throw new MonsterPartyNullReferenceException(this, "_behaviorTarget");
+                throw new MonsterPartyNullReferenceException(this, nameof(_behaviorTarget));
 
             if (_navMeshAgent.enabled == false)
                 throw new MonsterPartyException("Nav mesh agent not enabled");
@@ -154,11 +154,11 @@ namespace MonsterParty
 
         // private void UpdateHoldPosition(){
         //     if(this.Character == null)
-        //         throw new MonsterPartyNullReferenceException(this, "Character");
+        //         throw new MonsterPartyNullReferenceException(this, nameof(Character));
         //     if(this.Character.Crouch == null)
-        //         throw new MonsterPartyNullReferenceException(this, "Character.Crouch");
+        //         throw new MonsterPartyNullReferenceException(this, nameof(Character.Crouch));
         //     if(_navMeshAgent == null) 
-        //         throw new MonsterPartyNullReferenceException(this, "_navMeshAgent");
+        //         throw new MonsterPartyNullReferenceException(this, nameof(_navMeshAgent));
 
         //     if(this.Character.Crouch.IsCrouching)
         //         _navMeshAgent.speed = this.Character.Movement.CrouchSpeed;
@@ -170,14 +170,14 @@ namespace MonsterParty
         {
             Debug.Log($"AI Movement for '{gameObject.name}' received a new crouch value of {isCrouching}.");
             if (_navMeshAgent == null)
-                throw new MonsterPartyNullReferenceException(this, "_navMeshAgent");
+                throw new MonsterPartyNullReferenceException(this, nameof(_navMeshAgent));
             this._navMeshAgent.agentTypeID = CurrentAgentTypeId;
         }
 
         private void SetBehavior(Behavior behavior, Character? target)
         {
             if (_navMeshAgent == null)
-                throw new MonsterPartyNullReferenceException(this, "_navMeshAgent");
+                throw new MonsterPartyNullReferenceException(this, nameof(_navMeshAgent));
             if (_navMeshAgent.enabled == false)
                 throw new MonsterPartyException("Nav mesh agent not enabled");
 
@@ -249,7 +249,7 @@ namespace MonsterParty
             if (_behavior == Behavior.Follow)
             {
                 if (_behaviorTarget == null)
-                    throw new MonsterPartyNullReferenceException(this, "_behaviorTarget");
+                    throw new MonsterPartyNullReferenceException(this, nameof(_behaviorTarget));
 
                 Vector3 myPos = transform.position;
                 Vector3 theirPos = _behaviorTarget.transform.position;
